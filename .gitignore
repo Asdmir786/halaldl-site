@@ -86,6 +86,11 @@ web_modules/
 # Next.js build output
 .next
 out
+.vercel
+next-env.d.ts
+site-scaffold-temp/
+.playwright-cli/
+output/playwright/
 
 # Nuxt.js build / generate output
 .nuxt
