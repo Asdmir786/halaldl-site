@@ -4,11 +4,14 @@ import {
   ArrowRight,
   ArrowUpRight,
   BadgeCheck,
+  ChevronRight,
   Download,
   ExternalLink,
   Eye,
+  FileCheck,
   Github,
   LaptopMinimal,
+  Package,
   ShieldCheck,
   Sparkles,
   TerminalSquare,
@@ -31,17 +34,15 @@ function formatMegabytes(input: number | null) {
   if (!input) {
     return "Size varies";
   }
-
   return `${(input / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 function shortenDigest(input: string | null) {
   if (!input) {
-    return "Attached with each release";
+    return "Attached with release";
   }
-
   const digest = input.replace("sha256:", "");
-  return `${digest.slice(0, 10)}...${digest.slice(-8)}`;
+  return `${digest.slice(0, 8)}...${digest.slice(-6)}`;
 }
 
 export default async function Home() {
@@ -89,116 +90,53 @@ export default async function Home() {
     })),
   };
 
-  const heroChips = [
-    "MIT licensed",
-    "No account",
-    "No telemetry",
-    "Windows 10 and 11 x64",
-  ];
-
-  const productSignals = [
-    {
-      title: github.latestVersion,
-      body: `Release verified ${github.latestReleaseLabel}`,
-      icon: BadgeCheck,
-    },
-    {
-      title: github.licenseName,
-      body: "Public source, visible issues, visible releases",
-      icon: Github,
-    },
-    {
-      title: "Windows 10/11 x64",
-      body: "Scope stays explicit instead of pretending to be universal.",
-      icon: LaptopMinimal,
-    },
-    {
-      title: "No account. No telemetry.",
-      body: "The product story stays local-first and practical.",
-      icon: Eye,
-    },
-    {
-      title: "SHA256SUMS.txt",
-      body: `Checksum asset present: ${shortenDigest(github.checksumDigest)}`,
-      icon: ShieldCheck,
-    },
-    {
-      title: `${github.openIssues} open issues`,
-      body: `Main branch pushed ${github.lastPushedLabel}`,
-      icon: TerminalSquare,
-    },
+  const trustSignals = [
+    { label: "MIT License", icon: FileCheck },
+    { label: "No Account", icon: Eye },
+    { label: "No Telemetry", icon: ShieldCheck },
+    { label: "Windows 10/11", icon: LaptopMinimal },
   ];
 
   const workflowSteps = [
     {
-      step: "01",
-      title: "Paste the link and choose a preset.",
-      body: "The entry point feels like a desktop utility, not a flags-first wrapper around a CLI.",
+      num: "01",
+      title: "Paste and choose a preset",
+      body: "URL input and preset selection happen on one surface. No flags, no guessing.",
     },
     {
-      step: "02",
-      title: "Queue it or start immediately.",
-      body: "The download flow stays explicit so you can see what is active, what is waiting, and what comes next.",
+      num: "02",
+      title: "Queue or start immediately",
+      body: "The download flow stays explicit. See what is active, waiting, and completed.",
     },
     {
-      step: "03",
-      title: "Review logs, tools, and history in one place.",
-      body: "The app stays diagnosable and honest instead of smoothing real state into a fake SaaS dashboard tone.",
+      num: "03",
+      title: "Review logs and history",
+      body: "Raw output stays visible. The app is diagnosable, not a mystery.",
     },
   ];
 
-  const valueCards = [
+  const valueProps = [
     {
-      title: "Cleaner GUI over yt-dlp",
-      body: "HalalDL removes repeated flag work without pretending the engine underneath does not exist.",
       icon: Download,
-      accent: "bg-sky/[0.82]",
+      title: "Cleaner GUI over yt-dlp",
+      body: "Removes repeated flag work without hiding the engine underneath.",
     },
     {
-      title: "Visible raw logs",
-      body: "The raw output stays available because trust is better served by clarity than by vague progress text.",
       icon: TerminalSquare,
-      accent: "bg-coral/[0.8]",
+      title: "Visible raw logs",
+      body: "Raw output stays available because clarity beats vague progress.",
     },
     {
-      title: "Preset-driven workflow",
-      body: "Presets make common targets practical while still keeping the choices legible for power users.",
       icon: Sparkles,
-      accent: "bg-mint/[0.8]",
+      title: "Preset-driven workflow",
+      body: "Common targets become practical while keeping choices legible.",
     },
     {
-      title: "Tools and packaging stay explicit",
-      body: "Full and Lite exist because different users want different levels of control over the toolchain.",
       icon: Wrench,
-      accent: "bg-sky/[0.82]",
+      title: "Full vs Lite is explicit",
+      body: "Different users want different control over the toolchain.",
     },
   ];
-
-  const repoFacts = [
-    {
-      label: "Repo URL",
-      value: "github.com/Asdmir786/HalalDL",
-    },
-    {
-      label: "Latest release",
-      value: `${github.latestVersion} on ${github.latestReleaseLabel}`,
-    },
-    {
-      label: "License",
-      value: github.licenseName,
-    },
-    {
-      label: "Last pushed",
-      value: github.lastPushedLabel,
-    },
-  ];
-
-  const buttonPrimary =
-    "inline-flex items-center justify-center gap-2 rounded-full bg-ink px-6 py-3.5 text-sm font-semibold text-paper shadow-[0_18px_38px_rgba(12,26,44,0.16)] transition-transform duration-200 hover:-translate-y-0.5";
-  const buttonPrimaryHeader =
-    "inline-flex items-center justify-center gap-2 rounded-full bg-ink px-4 py-3 text-sm font-semibold text-paper shadow-[0_18px_38px_rgba(12,26,44,0.14)] transition-transform duration-200 hover:-translate-y-0.5 sm:px-6 sm:py-3.5";
-  const buttonSecondary =
-    "inline-flex items-center justify-center gap-2 rounded-full border border-line-strong bg-paper-strong/82 px-6 py-3.5 text-sm font-semibold text-ink transition-transform duration-200 hover:-translate-y-0.5";
 
   return (
     <main id="main-content" className="overflow-x-hidden">
@@ -211,497 +149,451 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
-      <div className="mx-auto max-w-[90rem] px-4 pb-20 pt-5 sm:px-6 lg:px-8">
-        <header className="glass-panel sticky top-4 z-40 rounded-full px-4 py-3 sm:px-6">
-          <div className="flex items-center justify-between gap-4">
-            <Link className="flex shrink-0 items-center gap-3 text-sm font-semibold text-ink" href="/">
-              <Image src="/brand/icon.png" alt="HalalDL icon" width={28} height={28} />
-              <span className="font-display text-base tracking-tight">HalalDL</span>
+      <div className="mx-auto max-w-7xl px-5 pb-24 pt-4 sm:px-8">
+        {/* Header */}
+        <header className="header-bar sticky top-3 z-40 rounded-xl px-4 py-2.5 sm:px-5">
+          <div className="flex items-center justify-between">
+            <Link className="flex items-center gap-2.5" href="/">
+              <Image src="/brand/icon.png" alt="HalalDL" width={26} height={26} className="rounded" />
+              <span className="font-display text-[0.9375rem] font-semibold tracking-tight text-ink">
+                HalalDL
+              </span>
             </Link>
 
-            <nav className="hidden items-center gap-7 text-sm text-ink-soft md:flex">
-              <a href="#why">Why</a>
-              <a href="#proof">Proof</a>
-              <a href="#install">Install</a>
-              <a href="#trust">Trust</a>
-              <a href="#faq">FAQ</a>
+            <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
+              {["Features", "Install", "Trust", "FAQ"].map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase()}`}
+                  className="rounded-lg px-3 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:bg-line hover:text-ink"
+                >
+                  {item}
+                </a>
+              ))}
             </nav>
 
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2">
               <ThemeToggle />
-              <a className="hidden text-sm font-medium text-ink-soft lg:inline-flex" href={SITE_LINKS.repoUrl}>
+              <a
+                href={SITE_LINKS.repoUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="hidden items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:bg-line hover:text-ink lg:flex"
+              >
+                <Github className="h-4 w-4" />
                 GitHub
               </a>
-              <Link className={buttonPrimaryHeader} href="/download">
+              <a
+                href="/download"
+                className="inline-flex items-center gap-2 rounded-lg bg-ink px-4 py-2 text-sm font-semibold text-paper transition-all hover:opacity-90"
+              >
                 <Download className="h-4 w-4" />
-                <span className="sm:hidden">Download</span>
-                <span className="hidden sm:inline">Download Latest Release</span>
-              </Link>
+                <span className="hidden sm:inline">Download</span>
+              </a>
             </div>
           </div>
         </header>
 
-        <section className="relative pt-8 sm:pt-12">
-          <div className="hero-atmosphere absolute inset-x-8 top-10 -z-10 h-[42rem] rounded-[3rem] blur-3xl" />
+        {/* Hero */}
+        <section className="relative pt-16 sm:pt-20 lg:pt-24">
+          <div className="hero-glow" aria-hidden="true" />
 
-          <div className="grid gap-10 xl:grid-cols-[minmax(0,0.86fr)_minmax(34rem,0.82fr)] xl:items-start">
-            <div className="max-w-[45rem] pt-4">
+          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-20">
+            {/* Hero text column */}
+            <div className="max-w-xl lg:max-w-none lg:pt-4">
               <div className="eyebrow">
-                <Sparkles className="h-4 w-4" />
-                Windows-first yt-dlp GUI
+                <Sparkles className="h-3.5 w-3.5" />
+                Open Source Windows GUI
               </div>
 
-              <h1 className="mt-6 max-w-[11ch] font-display text-4xl font-semibold tracking-[-0.06em] text-ink text-balance sm:text-[4.2rem] sm:leading-[0.92]">
-                The Windows-first yt-dlp GUI that feels like a real desktop product.
+              <h1 className="mt-6 font-display text-[2.5rem] font-semibold leading-[1.1] tracking-[-0.03em] text-ink sm:text-5xl lg:text-[3.25rem] xl:text-[3.5rem]">
+                The yt-dlp interface
+                <br className="hidden sm:block" />
+                <span className="text-ink-soft">Windows deserves.</span>
               </h1>
 
-              <p className="mt-6 max-w-2xl text-base leading-8 text-ink-soft sm:text-lg">
-                HalalDL gives Windows users a cleaner path into yt-dlp: presets instead of repeated
-                flags, visible raw logs instead of vague progress, honest Full vs Lite install
-                choices, and a download path that stays anchored to GitHub Releases.
+              <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg sm:leading-relaxed lg:max-w-lg">
+                Presets instead of flags. Visible raw logs instead of vague progress. 
+                Full vs Lite install choices. Downloads anchored to GitHub Releases.
               </p>
 
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <Link className={buttonPrimary} href="/download">
-                  <Download className="h-4 w-4" />
-                  Download Latest Release
-                </Link>
+              {/* CTA cluster */}
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <a
-                  className={buttonSecondary}
+                  href="/download"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-xl bg-ink px-6 py-3.5 text-[0.9375rem] font-semibold text-paper shadow-lg shadow-ink/10 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-ink/15"
+                >
+                  <Download className="h-4 w-4" />
+                  Download {github.latestVersion}
+                </a>
+                <a
                   href={SITE_LINKS.repoUrl}
                   target="_blank"
                   rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-5 py-3.5 text-[0.9375rem] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-ink/20 hover:bg-paper-elevated"
                 >
                   <Github className="h-4 w-4" />
-                  View on GitHub
+                  View Source
                 </a>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                {heroChips.map((item) => (
+              {/* Trust signals row */}
+              <div className="mt-8 flex flex-wrap gap-2">
+                {trustSignals.map((signal) => (
                   <span
-                    key={item}
-                    className="rounded-full border border-line bg-paper-strong/82 px-4 py-2 text-sm font-medium text-ink-soft"
+                    key={signal.label}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-paper-strong/60 px-3 py-1.5 text-xs font-medium text-ink-soft"
                   >
-                    {item}
+                    <signal.icon className="h-3.5 w-3.5" />
+                    {signal.label}
                   </span>
                 ))}
               </div>
 
-              <div className="mt-10 grid gap-4 sm:grid-cols-3">
-                <div className="glass-card rounded-[1.7rem] p-5">
-                  <p className="text-sm font-medium text-ink-soft">Latest release</p>
-                  <p className="mt-3 font-display text-2xl font-semibold text-ink">
+              {/* Stats row */}
+              <div className="mt-10 grid grid-cols-3 gap-4 border-t border-line pt-8">
+                <div>
+                  <p className="font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
                     {github.latestVersion}
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-ink-soft">
-                    Published {github.latestReleaseLabel}
-                  </p>
+                  <p className="mt-1 text-sm text-ink-muted">Latest release</p>
                 </div>
-                <div className="glass-card rounded-[1.7rem] p-5">
-                  <p className="text-sm font-medium text-ink-soft">Public repo</p>
-                  <p className="mt-3 font-display text-2xl font-semibold text-ink">
-                    {formatCompactNumber(github.stars)} stars
+                <div>
+                  <p className="font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+                    {formatCompactNumber(github.stars)}
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-ink-soft">
-                    Open source with visible issue and release history
-                  </p>
+                  <p className="mt-1 text-sm text-ink-muted">GitHub stars</p>
                 </div>
-                <div className="glass-card rounded-[1.7rem] p-5">
-                  <p className="text-sm font-medium text-ink-soft">Canonical source</p>
-                  <p className="mt-3 font-display text-2xl font-semibold text-ink">GitHub</p>
-                  <p className="mt-2 text-sm leading-6 text-ink-soft">
-                    Checksums attached. SmartScreen note stated openly.
+                <div>
+                  <p className="font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+                    {github.licenseName.split(" ")[0]}
                   </p>
+                  <p className="mt-1 text-sm text-ink-muted">License</p>
                 </div>
               </div>
             </div>
 
-            <div className="relative">
-              <div className="glass-panel relative rounded-[2.6rem] p-4 sm:p-5 lg:p-6">
-                <div className="ambient-grid absolute inset-0 rounded-[2.6rem] opacity-35" />
-                <div className="relative flex flex-wrap items-start justify-between gap-4 border-b border-line pb-5">
-                  <div className="max-w-[33rem]">
-                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-ink-soft">
-                      Live release sync
-                    </p>
-                    <p className="mt-3 font-display text-2xl font-semibold tracking-tight text-ink sm:text-[2.2rem]">
-                      {github.latestReleaseName}
-                    </p>
-                    <p className="mt-3 text-sm leading-6 text-ink-soft sm:text-base">
-                      {github.releaseNotes}
-                    </p>
-                  </div>
-                  <div className="rounded-full border border-line-strong bg-paper-strong/82 px-4 py-2 text-sm font-medium text-ink-soft">
-                    Published {github.latestReleaseLabel}
-                  </div>
+            {/* Hero screenshot */}
+            <div className="relative lg:-mr-8 xl:-mr-16">
+              <div className="screenshot-frame p-3 sm:p-4">
+                <div className="screenshot-inner">
+                  <ThemedScreenshot
+                    lightSrc="/screenshots/light/halaldl-downloads.png"
+                  darkSrc="/screenshots/halaldl-downloads.png"
+                  alt="HalalDL downloads screen showing queue management and preset selection"
+                  sizes="(min-width: 1280px) 640px, (min-width: 1024px) 50vw, 100vw"
+                  imageClassName="object-cover object-top"
+                />
                 </div>
-
-                <div className="mt-5 rounded-[2rem] border border-line-strong bg-paper-strong/82 p-3 shadow-[0_30px_80px_rgba(86,118,156,0.12)]">
-                  <div className="screen-shell relative aspect-[1.46/1] overflow-hidden rounded-[1.65rem]">
-                    <ThemedScreenshot
-                      lightSrc="/screenshots/light/halaldl-downloads.png"
-                      darkSrc="/screenshots/halaldl-downloads.png"
-                      alt="HalalDL downloads screen"
-                      priority
-                      sizes="(min-width: 1280px) 41rem, (min-width: 1024px) 36rem, 100vw"
-                      imageClassName="object-cover object-top"
-                    />
+              </div>
+              {/* Floating badge */}
+              <div className="absolute -bottom-4 left-4 right-4 sm:left-6 sm:right-auto">
+                <div className="surface-elevated inline-flex items-center gap-3 rounded-xl px-4 py-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-mint">
+                    <BadgeCheck className="h-4 w-4 text-mint-strong" />
                   </div>
-                </div>
-
-                <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-[1.45rem] border border-line bg-paper-strong/84 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ink-soft">
-                      Recommended
-                    </p>
-                    <p className="mt-2 text-base font-semibold text-ink">Full build</p>
-                    <p className="mt-2 text-sm leading-6 text-ink-soft">
-                      Best for most users and the clearest setup path.
-                    </p>
-                  </div>
-                  <div className="rounded-[1.45rem] border border-line bg-paper-strong/84 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ink-soft">
-                      Power users
-                    </p>
-                    <p className="mt-2 text-base font-semibold text-ink">Lite build</p>
-                    <p className="mt-2 text-sm leading-6 text-ink-soft">
-                      Manage your own tooling if you want tighter control.
-                    </p>
-                  </div>
-                  <div className="rounded-[1.45rem] border border-line bg-paper-strong/84 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ink-soft">
-                      Verify first
-                    </p>
-                    <p className="mt-2 text-base font-semibold text-ink">SHA256SUMS.txt</p>
-                    <p className="mt-2 text-sm leading-6 text-ink-soft">
-                      Confirm the checksum before first run if SmartScreen appears.
-                    </p>
+                  <div>
+                    <p className="text-sm font-semibold text-ink">Released {github.latestReleaseLabel}</p>
+                    <p className="text-xs text-ink-muted">GitHub Releases is canonical</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </section>
 
-        <section className="pt-10 sm:pt-12">
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
-            {productSignals.map((item) => (
-              <article key={item.title} className="glass-card rounded-[1.6rem] p-5">
-                <item.icon className="h-5 w-5 text-ink" />
-                <p className="mt-4 font-display text-lg font-semibold tracking-tight text-ink">
-                  {item.title}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-ink-soft">{item.body}</p>
-              </article>
-            ))}
-          </div>
-          {github.source === "fallback" ? (
-            <p className="mt-4 text-sm text-ink-soft">
-              Live GitHub metadata is temporarily unavailable. The site is using its checked static
-              fallback snapshot so trust notes and release links still resolve correctly.
+          {github.source === "fallback" && (
+            <p className="mt-10 rounded-lg border border-amber bg-amber/50 px-4 py-3 text-sm text-ink-soft">
+              Live GitHub data temporarily unavailable. Showing cached release info.
             </p>
-          ) : null}
+          )}
         </section>
 
-        <section id="why" className="pt-24">
-          <div className="grid gap-10 xl:grid-cols-[minmax(0,0.72fr)_minmax(0,1fr)] xl:items-start">
-            <div className="max-w-3xl">
+        {/* Why section */}
+        <section id="features" className="pt-28 sm:pt-32">
+          <div className="section-divider mb-16" />
+
+          <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+            <div>
               <div className="eyebrow">Why HalalDL</div>
-              <h2 className="mt-6 font-display text-4xl font-semibold tracking-[-0.05em] text-ink text-balance sm:text-5xl">
-                Keep the power of yt-dlp. Drop the shell-heavy workflow.
+              <h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">
+                Keep yt-dlp&apos;s power.
+                <br />
+                <span className="text-ink-soft">Drop the shell workflow.</span>
               </h2>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-ink-soft">
-                The product position is deliberately grounded. HalalDL does not pretend to be a
-                cloud platform. It gives Windows users a clear GUI, keeps the raw engine output
-                visible, and stays honest about install tradeoffs.
+              <p className="mt-5 text-base leading-relaxed text-ink-soft lg:max-w-md">
+                HalalDL stays deliberately grounded. A clear GUI for Windows users, 
+                visible engine output, and honest install tradeoffs.
               </p>
+              <a
+                href="#install"
+                className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-ink transition-colors hover:text-ink-soft"
+              >
+                See install options
+                <ChevronRight className="h-4 w-4" />
+              </a>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-3">
-              {workflowSteps.map((item) => (
-                <article key={item.step} className="glass-card rounded-[1.8rem] p-5 sm:p-6">
-                  <p className="text-sm font-semibold uppercase tracking-[0.24em] text-ink-soft">
-                    {item.step}
-                  </p>
-                  <h3 className="mt-4 font-display text-2xl font-semibold tracking-tight text-ink">
-                    {item.title}
+            <div className="grid gap-3 sm:grid-cols-3">
+              {workflowSteps.map((step) => (
+                <article key={step.num} className="surface-card rounded-2xl p-5">
+                  <span className="font-display text-xs font-semibold text-ink-muted">{step.num}</span>
+                  <h3 className="mt-3 font-display text-lg font-semibold tracking-tight text-ink">
+                    {step.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-ink-soft sm:text-base">{item.body}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">{step.body}</p>
                 </article>
               ))}
             </div>
           </div>
 
-          <div className="mt-10 grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
-            {valueCards.map((item) => (
-              <article key={item.title} className="glass-card rounded-[1.85rem] p-6">
-                <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${item.accent}`}>
-                  <item.icon className="h-5 w-5 text-ink" />
+          {/* Value props grid */}
+          <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {valueProps.map((prop) => (
+              <article key={prop.title} className="surface-card rounded-2xl p-5">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky">
+                  <prop.icon className="h-5 w-5 text-sky-strong" />
                 </div>
-                <h3 className="mt-5 font-display text-2xl font-semibold tracking-tight text-ink">
-                  {item.title}
-                </h3>
-                <p className="mt-3 text-base leading-7 text-ink-soft">{item.body}</p>
+                <h3 className="mt-4 font-display text-base font-semibold text-ink">{prop.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-soft">{prop.body}</p>
               </article>
             ))}
           </div>
         </section>
 
-        <section id="proof" className="pt-24">
-          <div className="max-w-3xl">
+        {/* Product proof / Feature showcase */}
+        <section className="pt-28 sm:pt-32">
+          <div className="section-divider mb-16" />
+
+          <div className="max-w-2xl">
             <div className="eyebrow">Product Proof</div>
-            <h2 className="mt-6 font-display text-4xl font-semibold tracking-[-0.05em] text-ink text-balance sm:text-5xl">
-              Show the interface clearly. Let the product do the convincing.
+            <h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">
+              The interface speaks for itself.
             </h2>
-            <p className="mt-6 text-lg leading-8 text-ink-soft">
-              The strongest part of the site should be the actual workflow: downloads, presets,
-              tools, raw logs, theme settings, and completed history. The motion stays restrained so
-              the screenshots remain the main proof.
+            <p className="mt-5 text-base leading-relaxed text-ink-soft">
+              Downloads, presets, tools, raw logs, settings, and history. 
+              The screenshots are the proof.
             </p>
           </div>
 
-          <div className="mt-10">
+          <div className="mt-12">
             <FeatureShowcase stories={FEATURE_STORIES} />
           </div>
         </section>
 
-        <section id="install" className="pt-24">
-          <div className="grid gap-10 xl:grid-cols-[minmax(0,0.72fr)_minmax(0,1fr)] xl:items-start">
-            <div className="max-w-3xl">
-              <div className="eyebrow">Install Choices</div>
-              <h2 className="mt-6 font-display text-4xl font-semibold tracking-[-0.05em] text-ink text-balance sm:text-5xl">
-                Full, Lite, and WinGet each answer a different trust question.
+        {/* Install section */}
+        <section id="install" className="pt-28 sm:pt-32">
+          <div className="section-divider mb-16" />
+
+          <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr] lg:gap-16">
+            <div>
+              <div className="eyebrow">Install</div>
+              <h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">
+                Full, Lite, or WinGet.
+                <br />
+                <span className="text-ink-soft">Pick your path.</span>
               </h2>
-              <p className="mt-6 text-lg leading-8 text-ink-soft">
-                Full is the default recommendation for most people. Lite is for users who prefer to
-                manage their own tooling. WinGet stays useful, but the fastest path to the newest
-                build is still GitHub Releases.
+              <p className="mt-5 text-base leading-relaxed text-ink-soft lg:max-w-md">
+                Full is the default for most. Lite if you manage your own tooling. 
+                WinGet works but may lag behind GitHub Releases.
               </p>
             </div>
 
-            <div className="grid gap-4 xl:grid-cols-3">
-              <article className="glass-card rounded-[2rem] p-6">
-                <div className="eyebrow bg-mint/[0.72]">Recommended</div>
-                <h3 className="mt-5 font-display text-2xl font-semibold text-ink">Full build</h3>
-                <p className="mt-3 text-base leading-7 text-ink-soft">
-                  Best for most users. Easier setup, app-managed tools, and the clearest install
-                  path.
-                </p>
-                <p className="mt-5 text-sm font-medium text-ink-soft">
-                  Current setup file: {formatMegabytes(github.fullSetupSize)}
-                </p>
-                <div className="mt-6 flex flex-col gap-3">
+            <div className="grid gap-4 sm:grid-cols-3">
+              {/* Full build - primary */}
+              <article className="install-card-primary relative overflow-hidden rounded-2xl p-5">
+                <div className="relative">
+                  <div className="inline-flex items-center gap-1.5 rounded-md bg-mint px-2 py-1 text-xs font-semibold text-mint-strong">
+                    Recommended
+                  </div>
+                  <h3 className="mt-4 font-display text-xl font-semibold text-ink">Full</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                    Easiest setup. App-managed tools.
+                  </p>
+                  <p className="mt-4 text-xs font-medium text-ink-muted">
+                    {formatMegabytes(github.fullSetupSize)}
+                  </p>
                   <a
-                    className={buttonPrimary}
                     href={github.fullSetupUrl}
                     target="_blank"
                     rel="noreferrer"
+                    className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-ink px-4 py-2.5 text-sm font-semibold text-paper transition-all hover:opacity-90"
                   >
-                    Download Full Setup
-                    <ArrowUpRight className="h-4 w-4" />
-                  </a>
-                  <a
-                    className="inline-flex items-center gap-2 text-sm font-medium text-ink-soft"
-                    href={SITE_LINKS.latestReleaseUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    View release page <ExternalLink className="h-4 w-4" />
+                    Download Full
+                    <ArrowUpRight className="h-3.5 w-3.5" />
                   </a>
                 </div>
               </article>
 
-              <article className="glass-card rounded-[2rem] p-6">
-                <div className="eyebrow bg-sky/[0.74]">Power Users</div>
-                <h3 className="mt-5 font-display text-2xl font-semibold text-ink">Lite build</h3>
-                <p className="mt-3 text-base leading-7 text-ink-soft">
-                  Best if you want to manage `yt-dlp`, `ffmpeg`, `aria2`, and optional runtime
-                  support yourself.
-                </p>
-                <p className="mt-5 text-sm font-medium text-ink-soft">
-                  Current setup file: {formatMegabytes(github.liteSetupSize)}
-                </p>
-                <div className="mt-6 flex flex-col gap-3">
-                  <a
-                    className={buttonSecondary}
-                    href={github.liteSetupUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Download Lite Setup
-                    <ArrowUpRight className="h-4 w-4" />
-                  </a>
-                  <a
-                    className="inline-flex items-center gap-2 text-sm font-medium text-ink-soft"
-                    href={SITE_LINKS.supportUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Read support notes <ExternalLink className="h-4 w-4" />
-                  </a>
+              {/* Lite build */}
+              <article className="install-card-secondary rounded-2xl p-5">
+                <div className="inline-flex items-center gap-1.5 rounded-md bg-sky px-2 py-1 text-xs font-semibold text-sky-strong">
+                  Power Users
                 </div>
+                <h3 className="mt-4 font-display text-xl font-semibold text-ink">Lite</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                  Manage yt-dlp, ffmpeg yourself.
+                </p>
+                <p className="mt-4 text-xs font-medium text-ink-muted">
+                  {formatMegabytes(github.liteSetupSize)}
+                </p>
+                <a
+                  href={github.liteSetupUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 flex items-center justify-center gap-2 rounded-lg border border-line-strong bg-paper-strong px-4 py-2.5 text-sm font-semibold text-ink transition-all hover:border-ink/20"
+                >
+                  Download Lite
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </a>
               </article>
 
-              <article className="glass-card rounded-[2rem] p-6">
-                <div className="eyebrow bg-paper-strong/82">Package Manager</div>
-                <h3 className="mt-5 font-display text-2xl font-semibold text-ink">WinGet</h3>
-                <p className="mt-3 text-base leading-7 text-ink-soft">
-                  Good for people who already trust package managers, but the catalog can lag behind
-                  the newest GitHub release.
+              {/* WinGet */}
+              <article className="install-card-secondary rounded-2xl p-5">
+                <div className="inline-flex items-center gap-1.5 rounded-md bg-paper-elevated px-2 py-1 text-xs font-semibold text-ink-muted">
+                  <Package className="h-3 w-3" />
+                  Package Manager
+                </div>
+                <h3 className="mt-4 font-display text-xl font-semibold text-ink">WinGet</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                  May lag behind releases.
                 </p>
-                <div className="mt-5 rounded-[1.45rem] border border-line-strong bg-paper-strong/84 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ink-soft">
-                    Command
-                  </p>
-                  <code className="mt-3 block overflow-x-auto text-sm font-semibold text-ink">
+                <div className="mt-4 rounded-lg border border-line bg-paper-elevated p-3">
+                  <code className="block overflow-x-auto text-xs font-medium text-ink">
                     {SITE_LINKS.wingetCommand}
                   </code>
                 </div>
-                <p className="mt-4 text-sm leading-6 text-ink-soft">
-                  Fastest path to the newest build is still GitHub Releases.
-                </p>
               </article>
             </div>
           </div>
         </section>
 
-        <section id="trust" className="pt-24">
-          <div className="grid gap-10 xl:grid-cols-[minmax(0,0.72fr)_minmax(0,1fr)] xl:items-start">
-            <div className="max-w-3xl">
-              <div className="eyebrow">Trust And Safety</div>
-              <h2 className="mt-6 font-display text-4xl font-semibold tracking-[-0.05em] text-ink text-balance sm:text-5xl">
-                Keep the trust posture direct, then give people a safe verification path.
+        {/* Trust section */}
+        <section id="trust" className="pt-28 sm:pt-32">
+          <div className="section-divider mb-16" />
+
+          <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+            <div>
+              <div className="eyebrow">Trust</div>
+              <h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">
+                Direct about downloads.
+                <br />
+                <span className="text-ink-soft">Clear verification path.</span>
               </h2>
-              <p className="mt-6 text-lg leading-8 text-ink-soft">
-                The site should not dance around the reality of Windows downloads. GitHub Releases is
-                canonical, checksums are present, and SmartScreen may warn because installers are not
-                code-signed yet.
+              <p className="mt-5 text-base leading-relaxed text-ink-soft lg:max-w-md">
+                GitHub Releases is canonical. Checksums are present. SmartScreen may warn 
+                because installers aren&apos;t code-signed yet.
               </p>
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-2">
-              <article className="glass-card rounded-[2rem] p-7">
-                <h3 className="font-display text-2xl font-semibold text-ink">Safe install flow</h3>
-                <ol className="mt-6 space-y-5">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {/* Verification steps */}
+              <article className="surface-card-static rounded-2xl p-6">
+                <h3 className="font-display text-lg font-semibold text-ink">Safe install flow</h3>
+                <ol className="mt-5 space-y-4">
                   {[
-                    "Download only from GitHub Releases or the /download shortcut on this site.",
-                    "Check the attached SHA256SUMS.txt file before first run.",
-                    "If SmartScreen appears, verify the source and checksum before continuing.",
-                  ].map((step, index) => (
-                    <li key={step} className="flex gap-4">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky/[0.78] font-semibold text-ink">
-                        {index + 1}
+                    "Download only from GitHub Releases",
+                    "Check SHA256SUMS.txt before first run",
+                    "If SmartScreen warns, verify checksum",
+                  ].map((step, i) => (
+                    <li key={step} className="flex gap-3">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-sky text-xs font-semibold text-sky-strong">
+                        {i + 1}
                       </span>
-                      <p className="pt-1 text-base leading-7 text-ink-soft">{step}</p>
+                      <span className="text-sm leading-relaxed text-ink-soft">{step}</span>
                     </li>
                   ))}
                 </ol>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <a
-                    className={buttonSecondary}
-                    href={github.checksumsUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    View SHA256SUMS.txt
-                  </a>
-                  <a
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-ink-soft"
-                    href={SITE_LINKS.supportUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Support docs <ExternalLink className="h-4 w-4" />
-                  </a>
-                </div>
+                <a
+                  href={github.checksumsUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-ink transition-colors hover:text-ink-soft"
+                >
+                  View SHA256SUMS.txt
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
               </article>
 
-              <article className="glass-card rounded-[2rem] p-7">
-                <h3 className="font-display text-2xl font-semibold text-ink">
-                  Trust signals on the live repo
-                </h3>
-                <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  {repoFacts.map((item) => (
-                    <div
-                      key={item.label}
-                      className="rounded-[1.4rem] border border-line bg-paper-strong/84 p-4"
-                    >
-                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-ink-soft">
-                        {item.label}
-                      </p>
-                      <p className="mt-3 text-sm font-semibold text-ink">{item.value}</p>
+              {/* Repo facts */}
+              <article className="surface-card-static rounded-2xl p-6">
+                <h3 className="font-display text-lg font-semibold text-ink">Live repo signals</h3>
+                <dl className="mt-5 space-y-4">
+                  {[
+                    { label: "Repository", value: "github.com/Asdmir786/HalalDL" },
+                    { label: "Latest", value: `${github.latestVersion}` },
+                    { label: "License", value: github.licenseName },
+                    { label: "Checksum", value: shortenDigest(github.checksumDigest) },
+                  ].map((item) => (
+                    <div key={item.label} className="flex items-start justify-between gap-4">
+                      <dt className="text-sm text-ink-muted">{item.label}</dt>
+                      <dd className="text-right text-sm font-medium text-ink">{item.value}</dd>
                     </div>
                   ))}
-                </div>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <a
-                    className={buttonSecondary}
-                    href={SITE_LINKS.repoUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Inspect the source
-                  </a>
-                  <a
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-ink-soft"
-                    href={SITE_LINKS.issuesUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Report a bug <ExternalLink className="h-4 w-4" />
-                  </a>
-                </div>
+                </dl>
+                <a
+                  href={SITE_LINKS.repoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-ink transition-colors hover:text-ink-soft"
+                >
+                  Inspect the source
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
               </article>
             </div>
           </div>
         </section>
 
-        <section id="faq" className="pt-24">
-          <div className="max-w-3xl">
+        {/* FAQ */}
+        <section id="faq" className="pt-28 sm:pt-32">
+          <div className="section-divider mb-16" />
+
+          <div className="max-w-2xl">
             <div className="eyebrow">FAQ</div>
-            <h2 className="mt-6 font-display text-4xl font-semibold tracking-[-0.05em] text-ink text-balance sm:text-5xl">
-              The answers people need before they trust a Windows download utility.
+            <h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">
+              Common questions.
             </h2>
           </div>
 
-          <div className="mt-10 grid gap-4">
+          <div className="mt-10 grid gap-3 lg:grid-cols-2">
             {FAQ_ITEMS.map((item) => (
-              <details key={item.question} className="glass-card rounded-[1.7rem] p-6">
-                <summary className="cursor-pointer list-none font-display text-2xl font-semibold text-ink">
-                  {item.question}
+              <details key={item.question} className="faq-item group rounded-xl p-5">
+                <summary className="flex cursor-pointer items-start justify-between gap-4">
+                  <span className="font-display text-base font-semibold text-ink">{item.question}</span>
+                  <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-ink-muted transition-transform group-open:rotate-90" />
                 </summary>
-                <p className="mt-4 max-w-4xl text-base leading-7 text-ink-soft">{item.answer}</p>
+                <p className="mt-3 text-sm leading-relaxed text-ink-soft">{item.answer}</p>
               </details>
             ))}
           </div>
         </section>
 
-        <section className="pt-24">
-          <div className="glass-panel rounded-[2.5rem] px-6 py-8 sm:px-8 sm:py-10 lg:px-10">
-            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-              <div className="max-w-3xl">
-                <div className="eyebrow">Final CTA</div>
-                <h2 className="mt-6 font-display text-4xl font-semibold tracking-[-0.05em] text-ink text-balance sm:text-5xl">
-                  Download from the canonical source and pick the build that matches your setup style.
+        {/* Final CTA */}
+        <section className="pt-28 sm:pt-32">
+          <div className="surface-elevated overflow-hidden rounded-2xl p-8 sm:p-10 lg:p-12">
+            <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div>
+                <h2 className="font-display text-2xl font-semibold tracking-[-0.02em] text-ink sm:text-3xl">
+                  Ready to download?
                 </h2>
-                <p className="mt-5 text-lg leading-8 text-ink-soft">
-                  Latest release is <strong className="text-ink">{github.latestVersion}</strong>,
-                  published {github.latestReleaseLabel}. GitHub Releases stays canonical, and the
-                  checksum file remains attached on every release.
+                <p className="mt-3 max-w-lg text-base leading-relaxed text-ink-soft">
+                  Latest release is <strong className="text-ink">{github.latestVersion}</strong>, 
+                  published {github.latestReleaseLabel}. Checksums attached.
                 </p>
               </div>
-
               <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-                <Link className={buttonPrimary} href="/download">
-                  Download Latest Release
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
                 <a
-                  className={buttonSecondary}
+                  href="/download"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-ink px-6 py-3.5 text-[0.9375rem] font-semibold text-paper transition-all hover:-translate-y-0.5"
+                >
+                  Download Latest
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+                <a
                   href={SITE_LINKS.repoUrl}
                   target="_blank"
                   rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-line-strong px-5 py-3.5 text-[0.9375rem] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-ink/20"
                 >
                   View on GitHub
                 </a>
@@ -710,19 +602,22 @@ export default async function Home() {
           </div>
         </section>
 
-        <footer className="mt-10 flex flex-col gap-4 border-t border-line pt-10 text-sm text-ink-soft md:flex-row md:items-center md:justify-between">
-          <p>HalalDL is a Windows-first, local-first desktop GUI for yt-dlp.</p>
-          <div className="flex flex-wrap gap-4">
-            <a href={SITE_LINKS.supportUrl} target="_blank" rel="noreferrer">
+        {/* Footer */}
+        <footer className="mt-16 flex flex-col gap-5 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-ink-muted">
+            HalalDL is a Windows-first, local-first desktop GUI for yt-dlp.
+          </p>
+          <nav className="flex flex-wrap gap-5 text-sm" aria-label="Footer navigation">
+            <a href={SITE_LINKS.supportUrl} target="_blank" rel="noreferrer" className="text-ink-soft hover:text-ink">
               Support
             </a>
-            <a href={SITE_LINKS.issuesUrl} target="_blank" rel="noreferrer">
+            <a href={SITE_LINKS.issuesUrl} target="_blank" rel="noreferrer" className="text-ink-soft hover:text-ink">
               Issues
             </a>
-            <a href={SITE_LINKS.latestReleaseUrl} target="_blank" rel="noreferrer">
+            <a href={SITE_LINKS.latestReleaseUrl} target="_blank" rel="noreferrer" className="text-ink-soft hover:text-ink">
               Releases
             </a>
-          </div>
+          </nav>
         </footer>
       </div>
     </main>

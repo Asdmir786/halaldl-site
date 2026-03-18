@@ -1,14 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { IBM_Plex_Sans, Space_Grotesk } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { getSiteUrl, SITE_LINKS } from "@/lib/site";
+import { getThemeScript } from "@/lib/theme";
 
-const bodyFont = IBM_Plex_Sans({
+const bodyFont = Inter({
   variable: "--font-body",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700"],
 });
 
 const displayFont = Space_Grotesk({
@@ -75,30 +75,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#eef4fb" },
-    { media: "(prefers-color-scheme: dark)", color: "#09111c" },
+    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
+    { media: "(prefers-color-scheme: dark)", color: "#080e17" },
   ],
 };
-
-const themeScript = `
-  (() => {
-    const storageKey = "halaldl-site-theme";
-    try {
-      const stored = window.localStorage.getItem(storageKey);
-      const theme =
-        stored === "light" || stored === "dark"
-          ? stored
-          : window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? "dark"
-            : "light";
-      document.documentElement.dataset.theme = theme;
-      document.documentElement.style.colorScheme = theme;
-    } catch {
-      document.documentElement.dataset.theme = "light";
-      document.documentElement.style.colorScheme = "light";
-    }
-  })();
-`;
 
 export default function RootLayout({
   children,
@@ -111,7 +91,7 @@ export default function RootLayout({
         className={`${bodyFont.variable} ${displayFont.variable} bg-paper font-sans text-ink antialiased`}
       >
         <Script id="theme-script" strategy="beforeInteractive">
-          {themeScript}
+          {getThemeScript()}
         </Script>
         <a className="skip-link" href="#main-content">
           Skip to content

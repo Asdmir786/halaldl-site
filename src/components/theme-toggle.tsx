@@ -1,20 +1,15 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { MoonStar, SunMedium } from "lucide-react";
-
-const STORAGE_KEY = "halaldl-site-theme";
-const THEME_EVENT = "halaldl-theme-change";
-
-type Theme = "light" | "dark";
-
-function getThemeSnapshot(): Theme {
-  if (typeof document === "undefined") {
-    return "light";
-  }
-
-  return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
-}
+import { Moon, Sun } from "lucide-react";
+import {
+  DEFAULT_THEME,
+  getThemeSnapshotFromDocument,
+  STORAGE_KEY,
+  THEME_COOKIE,
+  THEME_EVENT,
+  type Theme,
+} from "@/lib/theme";
 
 function subscribe(callback: () => void) {
   if (typeof window === "undefined") {
@@ -37,23 +32,27 @@ function applyTheme(theme: Theme) {
   document.documentElement.dataset.theme = theme;
   document.documentElement.style.colorScheme = theme;
   window.localStorage.setItem(STORAGE_KEY, theme);
+  document.cookie = `${THEME_COOKIE}=${theme}; Path=/; Max-Age=31536000; SameSite=Lax`;
   window.dispatchEvent(new CustomEvent(THEME_EVENT));
 }
 
 export function ThemeToggle() {
-  const theme = useSyncExternalStore(subscribe, getThemeSnapshot, () => "light");
+  const theme = useSyncExternalStore(subscribe, getThemeSnapshotFromDocument, () => DEFAULT_THEME);
   const nextTheme = theme === "dark" ? "light" : "dark";
 
   return (
     <button
       type="button"
       onClick={() => applyTheme(nextTheme)}
-      className="theme-toggle inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-ink"
+      className="theme-toggle flex h-9 w-9 items-center justify-center rounded-lg text-ink-soft transition-colors hover:text-ink"
       aria-label={`Switch to ${nextTheme} mode`}
       title={`Switch to ${nextTheme} mode`}
     >
-      {theme === "dark" ? <SunMedium className="h-4 w-4" /> : <MoonStar className="h-4 w-4" />}
-      <span className="hidden sm:inline">{theme === "dark" ? "Light mode" : "Dark mode"}</span>
+      {theme === "dark" ? (
+        <Sun className="h-[1.125rem] w-[1.125rem]" />
+      ) : (
+        <Moon className="h-[1.125rem] w-[1.125rem]" />
+      )}
     </button>
   );
 }

@@ -1,4 +1,8 @@
+"use client";
+
+import { useSyncExternalStore } from "react";
 import Image from "next/image";
+import { DEFAULT_THEME, getThemeSnapshotFromDocument, THEME_EVENT } from "@/lib/theme";
 
 type ThemedScreenshotProps = {
   lightSrc: string;
@@ -19,6 +23,24 @@ export function ThemedScreenshot({
   className,
   imageClassName,
 }: ThemedScreenshotProps) {
+  const theme = useSyncExternalStore(
+    (callback) => {
+      if (typeof window === "undefined") {
+        return () => {};
+      }
+
+      const handleThemeChange = () => callback();
+      window.addEventListener(THEME_EVENT, handleThemeChange);
+
+      return () => {
+        window.removeEventListener(THEME_EVENT, handleThemeChange);
+      };
+    },
+    getThemeSnapshotFromDocument,
+    () => DEFAULT_THEME,
+  );
+  const activeSrc = theme === "dark" ? darkSrc : lightSrc;
+
   return (
     <div
       role="img"
@@ -26,22 +48,13 @@ export function ThemedScreenshot({
       className={`relative block h-full w-full ${className ?? ""}`.trim()}
     >
       <Image
-        src={lightSrc}
+        src={activeSrc}
         alt=""
         aria-hidden="true"
         fill
         priority={priority}
         sizes={sizes}
-        className={`theme-image theme-image-light ${imageClassName ?? ""}`}
-      />
-      <Image
-        src={darkSrc}
-        alt=""
-        aria-hidden="true"
-        fill
-        priority={priority}
-        sizes={sizes}
-        className={`theme-image theme-image-dark ${imageClassName ?? ""}`}
+        className={imageClassName}
       />
     </div>
   );
