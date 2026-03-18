@@ -45,7 +45,7 @@ export function ThemedScreenshot({
     <div
       role="img"
       aria-label={alt}
-      className={`relative block h-full w-full ${className ?? ""}`.trim()}
+      className={`absolute inset-0 block ${className ?? ""}`.trim()}
     >
       <Image
         src={activeSrc}
@@ -54,7 +54,7 @@ export function ThemedScreenshot({
         fill
         priority={priority}
         sizes={sizes}
-        className={imageClassName}
+        className={`bg-paper-strong ${imageClassName ?? ""}`.trim()}
       />
     </div>
   );

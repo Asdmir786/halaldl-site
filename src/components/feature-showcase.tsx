@@ -145,7 +145,7 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
                 animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
                 exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-                className="relative h-full w-full"
+                className="absolute inset-0"
               >
                 {/* Top badges */}
                 <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-2 sm:left-4 sm:top-4">
@@ -170,7 +170,7 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
                   darkSrc={activeStory.media.darkSrc}
                   alt={activeStory.media.alt}
                   sizes="(min-width: 1280px) 680px, (min-width: 1024px) 50vw, 100vw"
-                  imageClassName="object-cover object-top"
+                  imageClassName="border border-line-strong object-cover object-top"
                 />
               </motion.div>
             </AnimatePresence>
