@@ -26,7 +26,7 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
-          .filter((entry) => entry.isIntersecting)
+          .filter((entry) => entry.isIntersecting && entry.intersectionRatio > 0.38)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
         if (!visible) {
@@ -35,12 +35,12 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
 
         const nextId = visible.target.getAttribute("data-feature-card");
         if (nextId) {
-          setActiveId(nextId);
+          setActiveId((current) => (current === nextId ? current : nextId));
         }
       },
       {
-        rootMargin: "-18% 0px -38% 0px",
-        threshold: [0.2, 0.4, 0.65],
+        rootMargin: "-22% 0px -32% 0px",
+        threshold: [0.25, 0.45, 0.65],
       },
     );
 
@@ -58,9 +58,9 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
   }
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_26rem] lg:items-start xl:grid-cols-[minmax(0,1fr)_31rem]">
-      <div className="order-2 flex flex-col gap-5 lg:order-1">
-        {stories.map((story) => {
+    <div className="grid gap-10 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:items-start">
+      <div className="order-2 flex flex-col gap-4 xl:order-1">
+        {stories.map((story, index) => {
           const isActive = story.id === activeStory.id;
 
           return (
@@ -69,27 +69,33 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
               type="button"
               data-feature-card={story.id}
               onClick={() => setActiveId(story.id)}
-              className={`glass-card rounded-[2rem] p-6 text-left transition-all duration-300 sm:p-8 ${
+              className={`group rounded-[1.85rem] border p-6 text-left transition-[transform,background-color,border-color,box-shadow,opacity] duration-200 sm:p-7 ${
                 isActive
-                  ? "translate-x-0 border-line-strong shadow-[0_26px_60px_rgba(81,111,150,0.2)]"
-                  : "translate-x-0 border-line opacity-85 hover:opacity-100"
+                  ? "border-line-strong bg-paper-strong/92 shadow-[0_22px_54px_rgba(88,116,148,0.12)]"
+                  : "border-line bg-paper-strong/72 opacity-90 hover:-translate-y-0.5 hover:border-line-strong hover:bg-paper-strong/84 hover:opacity-100"
               }`}
             >
-              <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="eyebrow">{story.label}</div>
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                    story.accent === "mint"
-                      ? "bg-mint/[0.65] text-ink"
-                      : story.accent === "coral"
-                        ? "bg-coral/[0.75] text-ink"
-                        : "bg-sky/[0.75] text-ink"
-                  }`}
-                >
-                  {story.stat}
-                </span>
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                      story.accent === "mint"
+                        ? "bg-mint/[0.72] text-ink"
+                        : story.accent === "coral"
+                          ? "bg-coral/[0.82] text-ink"
+                          : "bg-sky/[0.82] text-ink"
+                    }`}
+                  >
+                    {story.stat}
+                  </span>
+                  <span className="font-display text-sm font-semibold text-ink-soft">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
               </div>
-              <h3 className="mt-5 font-display text-2xl font-semibold tracking-tight text-ink sm:text-[2rem]">
+
+              <h3 className="mt-5 max-w-2xl font-display text-3xl font-semibold tracking-[-0.04em] text-ink">
                 {story.title}
               </h3>
               <p className="mt-4 max-w-2xl text-base leading-7 text-ink-soft sm:text-lg">
@@ -108,40 +114,37 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
         })}
       </div>
 
-      <div className="order-1 lg:order-2 lg:sticky lg:top-24">
-        <div className="glass-panel ambient-grid rounded-[2rem] p-4 sm:p-5">
-          <div className="screen-shell relative aspect-[1.02/1] overflow-hidden rounded-[1.5rem] border border-line-strong shadow-[0_25px_65px_rgba(89,112,142,0.22)]">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeStory.id}
-                initial={
-                  shouldReduceMotion
-                    ? { opacity: 1 }
-                    : { opacity: 0, y: 14, filter: "blur(12px)" }
-                }
-                animate={
-                  shouldReduceMotion
-                    ? { opacity: 1 }
-                    : { opacity: 1, y: 0, filter: "blur(0px)" }
-                }
-                exit={
-                  shouldReduceMotion
-                    ? { opacity: 0 }
-                    : { opacity: 0, y: -12, filter: "blur(10px)" }
-                }
-                transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-0"
-              >
-                <ThemedScreenshot
-                  lightSrc={activeStory.media.lightSrc}
-                  darkSrc={activeStory.media.darkSrc}
-                  alt={activeStory.media.alt}
-                  sizes="(min-width: 1280px) 31rem, (min-width: 1024px) 26rem, 100vw"
-                  imageClassName="object-cover object-top"
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(243,248,255,0.12),rgba(243,248,255,0)_28%,rgba(16,28,46,0.05)_100%)]" />
-              </motion.div>
-            </AnimatePresence>
+      <div className="order-1 xl:order-2 xl:sticky xl:top-28">
+        <div className="glass-panel rounded-[2.3rem] p-4 sm:p-5">
+          <div className="rounded-[1.95rem] border border-line-strong bg-paper-strong/82 p-3 shadow-[0_28px_70px_rgba(86,118,156,0.12)]">
+            <div className="screen-shell relative aspect-[1.16/1] overflow-hidden rounded-[1.55rem]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeStory.id}
+                  initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 20, scale: 0.985 }}
+                  animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+                  exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -10, scale: 0.99 }}
+                  transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute inset-0"
+                >
+                  <div className="absolute left-4 top-4 z-10 flex flex-wrap gap-2">
+                    <div className="rounded-full border border-line bg-paper-strong/82 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink-soft">
+                      {activeStory.label}
+                    </div>
+                    <div className="rounded-full border border-line bg-paper-strong/82 px-3 py-1 text-xs font-semibold text-ink-soft">
+                      {activeStory.stat}
+                    </div>
+                  </div>
+                  <ThemedScreenshot
+                    lightSrc={activeStory.media.lightSrc}
+                    darkSrc={activeStory.media.darkSrc}
+                    alt={activeStory.media.alt}
+                    sizes="(min-width: 1280px) 42rem, (min-width: 1024px) 36rem, 100vw"
+                    imageClassName="object-cover object-top"
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>
