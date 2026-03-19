@@ -1,4 +1,5 @@
 import { ExternalLink, Github, ShieldCheck } from "lucide-react";
+import Link from "next/link";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { SectionIntro, SectionShell, shortenDigest } from "@/components/home/home-shared";
 import type { GitHubSnapshot } from "@/lib/github";
@@ -63,6 +64,12 @@ export function TrustSection({ github }: { github: GitHubSnapshot }) {
               </div>
 
               <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/trust/verify-checksum"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink transition-colors hover:text-ink-soft"
+                >
+                  Windows verification guide
+                </Link>
                 <a
                   href={github.checksumsUrl}
                   target="_blank"

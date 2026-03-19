@@ -1,4 +1,5 @@
 import { ArrowUpRight, CopyCheck, ExternalLink, Package } from "lucide-react";
+import Link from "next/link";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { SectionIntro, SectionShell, formatMegabytes } from "@/components/home/home-shared";
@@ -19,6 +20,22 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
           body="Full is the default for most users. Lite is for people who want direct control over yt-dlp, ffmpeg, aria2, and optional runtime pieces. WinGet is convenient, but GitHub Releases stays ahead."
           className="lg:max-w-md"
         />
+        <div className="-mt-8 flex flex-wrap gap-4 lg:max-w-md">
+          <Link
+            href="/compare/full-vs-lite"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-ink-soft"
+          >
+            Compare Full vs Lite
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+          <Link
+            href="/install/windows"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-ink-soft"
+          >
+            Windows install guide
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
 
         <ScrollReveal className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
           <article className="install-card-primary overflow-hidden rounded-[1.75rem] p-6">

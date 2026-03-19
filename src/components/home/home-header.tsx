@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { SITE_LINKS } from "@/lib/site";
 
 type SiteHeaderProps = {
-  currentPage?: "home" | "download" | "changelog";
+  currentPage?: "home" | "download" | "changelog" | "compare" | "none";
 };
 
 export function HomeHeader() {
@@ -43,6 +43,12 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
             className={`${navLinkClass} ${currentPage === "changelog" ? "bg-line text-ink" : ""}`.trim()}
           >
             Changelog
+          </Link>
+          <Link
+            href="/compare/full-vs-lite"
+            className={`${navLinkClass} ${currentPage === "compare" ? "bg-line text-ink" : ""}`.trim()}
+          >
+            Full vs Lite
           </Link>
           {navItems.map((item) => (
             <a
@@ -94,6 +100,12 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
           className={`${mobileNavLinkClass} ${currentPage === "changelog" ? "bg-paper text-ink" : ""}`.trim()}
         >
           Changelog
+        </Link>
+        <Link
+          href="/compare/full-vs-lite"
+          className={`${mobileNavLinkClass} ${currentPage === "compare" ? "bg-paper text-ink" : ""}`.trim()}
+        >
+          Full vs Lite
         </Link>
         {navItems.map((item) => (
           <a

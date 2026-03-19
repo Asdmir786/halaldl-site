@@ -66,8 +66,29 @@ export function HomeCtaFooter({ github }: { github: GitHubSnapshot }) {
                 Explore
               </p>
               <nav className="mt-3 flex flex-col gap-2 text-sm" aria-label="Footer navigation">
+                <Link href="/download" className="text-ink-soft transition-colors hover:text-ink">
+                  Download
+                </Link>
                 <Link href="/changelog" className="text-ink-soft transition-colors hover:text-ink">
                   Changelog
+                </Link>
+                <Link
+                  href="/compare/full-vs-lite"
+                  className="text-ink-soft transition-colors hover:text-ink"
+                >
+                  Full vs Lite
+                </Link>
+                <Link
+                  href="/install/windows"
+                  className="text-ink-soft transition-colors hover:text-ink"
+                >
+                  Install on Windows
+                </Link>
+                <Link
+                  href="/trust/verify-checksum"
+                  className="text-ink-soft transition-colors hover:text-ink"
+                >
+                  Verify checksums
                 </Link>
                 <a href="#features" className="text-ink-soft transition-colors hover:text-ink">
                   Features

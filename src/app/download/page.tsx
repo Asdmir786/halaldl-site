@@ -211,6 +211,27 @@ export default async function DownloadPage() {
                 >
                   View changelog
                 </Link>
+                <Link
+                  href="/compare/full-vs-lite"
+                  className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
+                >
+                  Compare Full vs Lite
+                </Link>
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium">
+                <Link
+                  href="/install/windows"
+                  className="text-ink transition-colors hover:text-ink-soft"
+                >
+                  Windows install guide
+                </Link>
+                <Link
+                  href="/trust/verify-checksum"
+                  className="text-ink transition-colors hover:text-ink-soft"
+                >
+                  Verify SHA256 on Windows
+                </Link>
               </div>
             </div>
 
@@ -493,6 +514,12 @@ export default async function DownloadPage() {
               </div>
 
               <div className="flex flex-wrap gap-3">
+                <Link
+                  href="/trust/verify-checksum"
+                  className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
+                >
+                  Verify checksums
+                </Link>
                 <Link
                   href="/changelog"
                   className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
