@@ -32,6 +32,56 @@ export const FAQ_ITEMS = [
     answer:
       "GitHub Releases is the canonical source. WinGet is supported, but the catalog can lag behind the latest GitHub release.",
   },
+  {
+    question: "Does HalalDL send telemetry or analytics?",
+    answer:
+      "No telemetry is part of the current product story or release path. The value proposition is explicitly local-first and account-free.",
+  },
+  {
+    question: "Does the app bundle yt-dlp and ffmpeg?",
+    answer:
+      "The Full build is designed to manage the main toolchain for most users. The Lite build is for people who prefer bringing their own yt-dlp, ffmpeg, aria2, and related tooling.",
+  },
+  {
+    question: "Why are raw logs visible in the UI?",
+    answer:
+      "Because download tools fail in real ways. Keeping raw output visible makes the app easier to trust, debug, and support when site rules or extractor behavior change.",
+  },
+  {
+    question: "Can I use HalalDL without an internet account?",
+    answer:
+      "Yes. There is no app account, sign-in flow, or hosted dashboard involved in the normal desktop workflow.",
+  },
+  {
+    question: "What is the difference between Full and Lite?",
+    answer:
+      "Full aims to reduce setup work and is the recommended path for most users. Lite keeps the app leaner and expects you to manage the underlying tools yourself.",
+  },
+  {
+    question: "Is WinGet the fastest way to get new releases?",
+    answer:
+      "Not always. WinGet is convenient, but the authoritative and fastest path to the newest build is still GitHub Releases.",
+  },
+  {
+    question: "How should I verify an installer before first run?",
+    answer:
+      "Download from GitHub Releases, open the attached SHA256SUMS.txt file, and verify the installer checksum before proceeding if you want the strongest trust path.",
+  },
+  {
+    question: "Is HalalDL meant for Windows only right now?",
+    answer:
+      "Yes. The project is explicitly positioned as Windows-first today, targeting Windows 10 and Windows 11 x64 systems.",
+  },
+  {
+    question: "Where should I report bugs or request features?",
+    answer:
+      "Use the GitHub issues flow for bugs and requests. That keeps the support path public, searchable, and tied to the actual release history.",
+  },
+  {
+    question: "Can I inspect exactly what changed between releases?",
+    answer:
+      "Yes. The website changelog gives a high-level summary, and each entry can link back to the matching GitHub Release for the full raw notes and assets.",
+  },
 ];
 
 export type FeatureStory = {
@@ -71,50 +121,6 @@ export const FEATURE_STORIES: FeatureStory[] = [
       lightSrc: "/screenshots/light/halaldl-downloads.png",
       darkSrc: "/screenshots/halaldl-downloads.png",
       alt: "HalalDL downloads screen",
-      width: 1600,
-      height: 1000,
-    },
-  },
-  {
-    id: "presets",
-    label: "Presets",
-    title: "Save sane defaults instead of repeating yt-dlp flags.",
-    description:
-      "Preset-driven downloads are a core reason this app exists. The UI exposes useful defaults for most people while keeping the workflow transparent for power users.",
-    bullets: [
-      "Built-in presets for common video and audio targets",
-      "Duplicate and customize presets without starting from scratch",
-      "Practical compatibility choices for editors, phones, and archive use",
-    ],
-    accent: "mint",
-    stat: "Preset-first workflow",
-    media: {
-      kind: "image",
-      lightSrc: "/screenshots/light/halaldl-presets.png",
-      darkSrc: "/screenshots/halaldl-presets.png",
-      alt: "HalalDL presets screen",
-      width: 1600,
-      height: 1000,
-    },
-  },
-  {
-    id: "tools",
-    label: "Tools",
-    title: "Handle binaries from one place instead of chasing setup docs.",
-    description:
-      "Full and Lite builds stay honest about how much setup they manage. The tools screen makes that tradeoff visible rather than pretending every machine is identical.",
-    bullets: [
-      "Full is the recommended path for most users",
-      "Lite is for people who want direct control over their toolchain",
-      "yt-dlp, ffmpeg, aria2, and optional runtime support are surfaced clearly",
-    ],
-    accent: "sky",
-    stat: "Full vs Lite stays explicit",
-    media: {
-      kind: "image",
-      lightSrc: "/screenshots/light/halaldl-tools.png",
-      darkSrc: "/screenshots/halaldl-tools.png",
-      alt: "HalalDL tools screen",
       width: 1600,
       height: 1000,
     },

@@ -12,6 +12,8 @@ type ThemedScreenshotProps = {
   priority?: boolean;
   className?: string;
   imageClassName?: string;
+  native?: boolean;
+  renderMode?: "active" | "paired";
 };
 
 export function ThemedScreenshot({
@@ -22,6 +24,8 @@ export function ThemedScreenshot({
   priority = false,
   className,
   imageClassName,
+  native = false,
+  renderMode = "active",
 }: ThemedScreenshotProps) {
   const theme = useSyncExternalStore(
     (callback) => {
@@ -40,6 +44,7 @@ export function ThemedScreenshot({
     () => DEFAULT_THEME,
   );
   const activeSrc = theme === "dark" ? darkSrc : lightSrc;
+  const sharedClassName = `bg-paper-strong ${imageClassName ?? ""}`.trim();
 
   return (
     <div
@@ -47,15 +52,48 @@ export function ThemedScreenshot({
       aria-label={alt}
       className={`absolute inset-0 block ${className ?? ""}`.trim()}
     >
-      <Image
-        src={activeSrc}
-        alt=""
-        aria-hidden="true"
-        fill
-        priority={priority}
-        sizes={sizes}
-        className={`bg-paper-strong ${imageClassName ?? ""}`.trim()}
-      />
+      {renderMode === "paired" ? (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={lightSrc}
+            alt=""
+            aria-hidden="true"
+            loading={priority ? "eager" : "lazy"}
+            className={`theme-image theme-image-light h-full w-full ${sharedClassName}`.trim()}
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={darkSrc}
+            alt=""
+            aria-hidden="true"
+            loading={priority ? "eager" : "lazy"}
+            className={`theme-image theme-image-dark h-full w-full ${sharedClassName}`.trim()}
+          />
+        </>
+      ) : native ? (
+        // Native img avoids theme-switch lag for below-the-fold screenshot stages.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          key={`${theme}-${activeSrc}`}
+          src={activeSrc}
+          alt=""
+          aria-hidden="true"
+          loading={priority ? "eager" : "lazy"}
+          className={`h-full w-full ${sharedClassName}`.trim()}
+        />
+      ) : (
+        <Image
+          key={`${theme}-${activeSrc}`}
+          src={activeSrc}
+          alt=""
+          aria-hidden="true"
+          fill
+          priority={priority}
+          sizes={sizes}
+          className={sharedClassName}
+        />
+      )}
     </div>
   );
 }

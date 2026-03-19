@@ -24,6 +24,8 @@ type GitHubReleaseResponse = {
   html_url: string;
   published_at: string;
   body: string;
+  prerelease: boolean;
+  draft: boolean;
   assets: GitHubReleaseAssetResponse[];
 };
 
@@ -41,6 +43,9 @@ export type GitHubSnapshot = {
   latestReleaseUrl: string;
   latestReleaseDate: string;
   latestReleaseLabel: string;
+  firstPublicVersion: string;
+  firstPublicReleaseDate: string;
+  firstPublicReleaseLabel: string;
   releaseNotes: string;
   fullSetupUrl: string;
   fullSetupSize: number | null;
@@ -65,6 +70,9 @@ const FALLBACK_SNAPSHOT: GitHubSnapshot = {
   latestReleaseUrl: "https://github.com/Asdmir786/HalalDL/releases/tag/v0.3.9",
   latestReleaseDate: "2026-03-12T14:16:26Z",
   latestReleaseLabel: formatDate("2026-03-12T14:16:26Z"),
+  firstPublicVersion: "v0.1.0",
+  firstPublicReleaseDate: "2026-01-10T18:09:25Z",
+  firstPublicReleaseLabel: formatDate("2026-01-10T18:09:25Z"),
   releaseNotes:
     "Latest checked release snapshot from March 18, 2026. Faster Full setup flow, better link feedback, and cleaner install/update UX.",
   fullSetupUrl:
@@ -125,12 +133,16 @@ async function fetchJson<T>(url: string) {
 
 export async function getGitHubSnapshot(): Promise<GitHubSnapshot> {
   try {
-    const [repo, release] = await Promise.all([
+    const [repo, release, releases] = await Promise.all([
       fetchJson<GitHubRepoResponse>("https://api.github.com/repos/Asdmir786/HalalDL"),
       fetchJson<GitHubReleaseResponse>(
         "https://api.github.com/repos/Asdmir786/HalalDL/releases/latest",
       ),
+      fetchJson<GitHubReleaseResponse[]>(
+        "https://api.github.com/repos/Asdmir786/HalalDL/releases?per_page=100",
+      ),
     ]);
+    const firstPublicRelease = releases.filter((entry) => !entry.draft && !entry.prerelease).at(-1);
 
     const fullSetup = release.assets.find(
       (asset) => asset.name.includes("Full") && asset.name.endsWith("-setup.exe"),
@@ -154,6 +166,12 @@ export async function getGitHubSnapshot(): Promise<GitHubSnapshot> {
       latestReleaseUrl: release.html_url,
       latestReleaseDate: release.published_at,
       latestReleaseLabel: formatDate(release.published_at),
+      firstPublicVersion: firstPublicRelease?.tag_name ?? FALLBACK_SNAPSHOT.firstPublicVersion,
+      firstPublicReleaseDate:
+        firstPublicRelease?.published_at ?? FALLBACK_SNAPSHOT.firstPublicReleaseDate,
+      firstPublicReleaseLabel: firstPublicRelease?.published_at
+        ? formatDate(firstPublicRelease.published_at)
+        : FALLBACK_SNAPSHOT.firstPublicReleaseLabel,
       releaseNotes: trimReleaseNotes(release.body),
       fullSetupUrl: fullSetup?.browser_download_url ?? FALLBACK_SNAPSHOT.fullSetupUrl,
       fullSetupSize: fullSetup?.size ?? null,
