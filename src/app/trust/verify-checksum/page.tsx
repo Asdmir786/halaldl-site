@@ -8,6 +8,8 @@ import {
   TerminalSquare,
 } from "lucide-react";
 import { SiteHeader } from "@/components/home/home-header";
+import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { getGitHubSnapshot } from "@/lib/github";
 import { getSiteUrl, SITE_LINKS } from "@/lib/site";
@@ -151,19 +153,27 @@ export default async function VerifyChecksumPage() {
       <main id="main-content" className="overflow-x-hidden">
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
           <SiteHeader currentPage="none" />
+          <ScrollReveal y={14} amount={0.35}>
+            <SubpageRouteStrip currentPage="trust" />
+          </ScrollReveal>
 
-          <nav
-            aria-label="Breadcrumb"
-            className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
+          <ScrollReveal className="mt-6" y={18}>
+            <nav
+              aria-label="Breadcrumb"
+              className="flex items-center gap-2 text-sm text-ink-muted"
+            >
+              <Link href="/" className="transition-colors hover:text-ink">
+                Home
+              </Link>
+              <span>/</span>
+              <span className="font-medium text-ink">Verify SHA256</span>
+            </nav>
+          </ScrollReveal>
+
+          <ScrollReveal
+            className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start"
+            y={22}
           >
-            <Link href="/" className="transition-colors hover:text-ink">
-              Home
-            </Link>
-            <span>/</span>
-            <span className="font-medium text-ink">Verify SHA256</span>
-          </nav>
-
-          <header className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
             <div className="max-w-2xl">
               <div className="eyebrow">
                 <ShieldCheck className="h-3.5 w-3.5" />
@@ -220,12 +230,12 @@ export default async function VerifyChecksumPage() {
                 <span className="font-medium text-ink">{liteSetupName}</span>.
               </p>
             </aside>
-          </header>
+          </ScrollReveal>
 
           <section className="pt-16 sm:pt-20">
             <div className="section-divider mb-12" />
 
-            <div className="grid gap-4 lg:grid-cols-2">
+            <ScrollReveal className="grid gap-4 lg:grid-cols-2">
               {verificationSteps.map((step, index) => (
                 <article key={step.title} className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
                   <div className="flex items-start gap-4">
@@ -239,13 +249,13 @@ export default async function VerifyChecksumPage() {
                   </div>
                 </article>
               ))}
-            </div>
+            </ScrollReveal>
           </section>
 
           <section className="pt-16 sm:pt-20">
             <div className="section-divider mb-12" />
 
-            <div className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
+            <ScrollReveal className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
               <article className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
                 <div className="flex items-start gap-3">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky">
@@ -308,13 +318,13 @@ export default async function VerifyChecksumPage() {
                   ))}
                 </ul>
               </article>
-            </div>
+            </ScrollReveal>
           </section>
 
           <section className="pt-16 sm:pt-20">
             <div className="section-divider mb-10" />
 
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-[1.75rem] border border-line bg-paper/70 p-6 sm:p-7">
+            <ScrollReveal className="flex flex-wrap items-center justify-between gap-4 rounded-[1.75rem] border border-line bg-paper/70 p-6 sm:p-7">
               <div className="max-w-2xl">
                 <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
                   Next move
@@ -346,7 +356,7 @@ export default async function VerifyChecksumPage() {
                   <ExternalLink className="h-4 w-4" />
                 </a>
               </div>
-            </div>
+            </ScrollReveal>
           </section>
         </div>
       </main>

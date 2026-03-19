@@ -9,6 +9,8 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { SiteHeader } from "@/components/home/home-header";
+import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { getGitHubSnapshot } from "@/lib/github";
 import { getSiteUrl, SITE_LINKS } from "@/lib/site";
@@ -140,19 +142,27 @@ export default async function InstallWindowsPage() {
       <main id="main-content" className="overflow-x-hidden">
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
           <SiteHeader currentPage="none" />
+          <ScrollReveal y={14} amount={0.35}>
+            <SubpageRouteStrip currentPage="install" />
+          </ScrollReveal>
 
-          <nav
-            aria-label="Breadcrumb"
-            className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
+          <ScrollReveal className="mt-6" y={18}>
+            <nav
+              aria-label="Breadcrumb"
+              className="flex items-center gap-2 text-sm text-ink-muted"
+            >
+              <Link href="/" className="transition-colors hover:text-ink">
+                Home
+              </Link>
+              <span>/</span>
+              <span className="font-medium text-ink">Install on Windows</span>
+            </nav>
+          </ScrollReveal>
+
+          <ScrollReveal
+            className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start"
+            y={22}
           >
-            <Link href="/" className="transition-colors hover:text-ink">
-              Home
-            </Link>
-            <span>/</span>
-            <span className="font-medium text-ink">Install on Windows</span>
-          </nav>
-
-          <header className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
             <div className="max-w-2xl">
               <div className="eyebrow">
                 <Download className="h-3.5 w-3.5" />
@@ -228,12 +238,12 @@ export default async function InstallWindowsPage() {
                 <CopyCommand command={SITE_LINKS.wingetCommand} />
               </div>
             </aside>
-          </header>
+          </ScrollReveal>
 
           <section className="pt-16 sm:pt-20">
             <div className="section-divider mb-12" />
 
-            <div className="grid gap-5 lg:grid-cols-3">
+            <ScrollReveal className="grid gap-5 lg:grid-cols-3">
               <article className="install-card-primary rounded-[1.75rem] p-6">
                 <div className="inline-flex items-center gap-1.5 rounded-full bg-mint px-3 py-1 text-xs font-semibold text-mint-strong">
                   Recommended
@@ -293,13 +303,13 @@ export default async function InstallWindowsPage() {
                   <FileCheck2 className="h-4 w-4" />
                 </Link>
               </article>
-            </div>
+            </ScrollReveal>
           </section>
 
           <section className="pt-16 sm:pt-20">
             <div className="section-divider mb-12" />
 
-            <div className="rounded-[1.85rem] border border-line bg-paper/70 p-6 sm:p-7">
+            <ScrollReveal className="rounded-[1.85rem] border border-line bg-paper/70 p-6 sm:p-7">
               <div className="max-w-2xl">
                 <div className="eyebrow">
                   <ShieldCheck className="h-3.5 w-3.5" />
@@ -329,13 +339,13 @@ export default async function InstallWindowsPage() {
                   </article>
                 ))}
               </div>
-            </div>
+            </ScrollReveal>
           </section>
 
           <section className="pt-16 sm:pt-20">
             <div className="section-divider mb-12" />
 
-            <div className="grid gap-5 lg:grid-cols-2">
+            <ScrollReveal className="grid gap-5 lg:grid-cols-2">
               <article className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
                 <h2 className="font-display text-2xl font-semibold text-ink">If SmartScreen warns</h2>
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">
@@ -378,7 +388,7 @@ export default async function InstallWindowsPage() {
                   </Link>
                 </div>
               </article>
-            </div>
+            </ScrollReveal>
           </section>
         </div>
       </main>
