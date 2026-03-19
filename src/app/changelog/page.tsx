@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight, CheckCircle2, FileStack, Sparkles } from "lucide-react";
+import { SiteHeader } from "@/components/home/home-header";
 import { CHANGELOG_ENTRIES, RELEASE_CHECKLIST } from "@/lib/changelog";
 
 export const metadata: Metadata = {
@@ -30,6 +31,8 @@ export default function ChangelogPage() {
   return (
     <main id="main-content" className="overflow-x-hidden">
       <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
+        <SiteHeader currentPage="changelog" />
+
         <header className="max-w-3xl">
           <div className="eyebrow">
             <FileStack className="h-3.5 w-3.5" />
@@ -79,6 +82,12 @@ export default function ChangelogPage() {
                   View GitHub release
                   <ArrowUpRight className="h-4 w-4" />
                 </a>
+                <Link
+                  href="/download"
+                  className="inline-flex items-center gap-2 rounded-lg border border-line-strong bg-paper px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
+                >
+                  Download latest
+                </Link>
               </div>
 
               {featured.media?.type === "image" && (

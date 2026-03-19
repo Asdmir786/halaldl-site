@@ -10,6 +10,7 @@ import {
   Package,
   ShieldCheck,
 } from "lucide-react";
+import { SiteHeader } from "@/components/home/home-header";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { getGitHubSnapshot } from "@/lib/github";
 import { getSiteUrl, SITE_LINKS } from "@/lib/site";
@@ -107,6 +108,25 @@ export default async function DownloadPage() {
     ],
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: siteUrl.origin,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Download",
+        item: `${siteUrl.origin}/download`,
+      },
+    ],
+  };
+
   return (
     <>
       <script
@@ -117,10 +137,27 @@ export default async function DownloadPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
       <main id="main-content" className="overflow-x-hidden">
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
-          <header className="grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
+          <SiteHeader currentPage="download" />
+
+          <nav
+            aria-label="Breadcrumb"
+            className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
+          >
+            <Link href="/" className="transition-colors hover:text-ink">
+              Home
+            </Link>
+            <span>/</span>
+            <span className="font-medium text-ink">Download</span>
+          </nav>
+
+          <header className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
             <div className="max-w-2xl">
               <div className="eyebrow">
                 <BadgeCheck className="h-3.5 w-3.5" />
@@ -168,6 +205,12 @@ export default async function DownloadPage() {
                   Check SHA256SUMS
                   <ExternalLink className="h-4 w-4" />
                 </a>
+                <Link
+                  href="/changelog"
+                  className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
+                >
+                  View changelog
+                </Link>
               </div>
             </div>
 
