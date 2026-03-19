@@ -1,11 +1,27 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight, CheckCircle2, FileStack, Sparkles } from "lucide-react";
 import { CHANGELOG_ENTRIES, RELEASE_CHECKLIST } from "@/lib/changelog";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Changelog",
   description:
     "What changed in HalalDL, with release summaries, proof, and a practical release checklist.",
+  alternates: {
+    canonical: "/changelog",
+  },
+  openGraph: {
+    title: "Changelog | HalalDL",
+    description:
+      "What changed in HalalDL, with release summaries, proof, and a practical release checklist.",
+    url: "/changelog",
+    type: "website",
+  },
+  twitter: {
+    title: "Changelog | HalalDL",
+    description:
+      "What changed in HalalDL, with release summaries, proof, and a practical release checklist.",
+  },
 };
 
 export default function ChangelogPage() {

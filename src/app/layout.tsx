@@ -68,6 +68,7 @@ export const metadata: Metadata = {
     apple: "/brand/icon.png",
     shortcut: "/favicon.ico",
   },
+  manifest: "/site.webmanifest",
   category: "software",
 };
 

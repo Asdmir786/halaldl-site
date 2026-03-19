@@ -6,6 +6,8 @@ export const SITE_LINKS = {
   wingetCommand: "winget install --id Asdmir786.HalalDL",
 };
 
+export const PRODUCTION_SITE_URL = "https://halaldl.vercel.app";
+
 export const FAQ_ITEMS = [
   {
     question: "Is HalalDL a cloud service?",
@@ -197,7 +199,7 @@ export function getSiteUrl() {
   const candidate =
     process.env.NEXT_PUBLIC_SITE_URL ??
     process.env.SITE_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://halaldl.vercel.app");
+    PRODUCTION_SITE_URL;
 
   return new URL(candidate);
 }
