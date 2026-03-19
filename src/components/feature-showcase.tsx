@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { Check } from "lucide-react";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
@@ -13,72 +13,172 @@ type FeatureShowcaseProps = {
 
 export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
   const [activeId, setActiveId] = useState(stories[0]?.id ?? "");
+  const stageRef = useRef<HTMLDivElement | null>(null);
   const shouldReduceMotion = useReducedMotion();
-  const rootRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const root = rootRef.current;
-    if (!root) return;
-
-    const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-feature-card]"));
-    if (!cards.length) return;
-    let frame = 0;
-
-    const updateActive = () => {
-      frame = 0;
-      const viewportAnchor = window.innerHeight * 0.52;
-      let nextId = cards[0]?.dataset.featureCard ?? "";
-      let nearest = Number.POSITIVE_INFINITY;
-
-      for (const card of cards) {
-        const rect = card.getBoundingClientRect();
-        const center = rect.top + rect.height / 2;
-        const distance = Math.abs(center - viewportAnchor);
-
-        if (distance < nearest) {
-          nearest = distance;
-          nextId = card.dataset.featureCard ?? nextId;
-        }
-      }
-
-      if (nextId) {
-        setActiveId((current) => (current === nextId ? current : nextId));
-      }
-    };
-
-    const queueUpdate = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(updateActive);
-    };
-
-    queueUpdate();
-    window.addEventListener("scroll", queueUpdate, { passive: true });
-    window.addEventListener("resize", queueUpdate);
-
-    return () => {
-      if (frame) {
-        window.cancelAnimationFrame(frame);
-      }
-      window.removeEventListener("scroll", queueUpdate);
-      window.removeEventListener("resize", queueUpdate);
-    };
-  }, [stories]);
+  const parallaxProgress = useMotionValue(0.5);
+  const smoothParallaxProgress = useSpring(parallaxProgress, {
+    stiffness: 140,
+    damping: 24,
+    mass: 0.22,
+  });
 
   const activeStory = useMemo(
     () => stories.find((story) => story.id === activeId) ?? stories[0],
     [activeId, stories]
   );
+  const activeIndex = stories.findIndex((story) => story.id === activeStory?.id);
+  const stageImageY = useTransform(smoothParallaxProgress, [0, 0.5, 1], [34, 0, -34]);
+  const stageImageScale = useTransform(smoothParallaxProgress, [0, 0.5, 1], [1.06, 1.02, 1.06]);
+  const summaryY = useTransform(smoothParallaxProgress, [0, 0.5, 1], [12, 0, -12]);
+
+  useEffect(() => {
+    if (shouldReduceMotion) {
+      parallaxProgress.set(0.5);
+      return;
+    }
+
+    let rafId = 0;
+
+    const updateParallax = () => {
+      const element = stageRef.current;
+
+      if (!element) {
+        return;
+      }
+
+      const rect = element.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const totalRange = viewportHeight + rect.height;
+      const rawProgress = (viewportHeight - rect.top) / totalRange;
+      const clampedProgress = Math.min(Math.max(rawProgress, 0), 1);
+
+      parallaxProgress.set(clampedProgress);
+    };
+
+    const requestUpdate = () => {
+      cancelAnimationFrame(rafId);
+      rafId = window.requestAnimationFrame(updateParallax);
+    };
+
+    requestUpdate();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+    };
+  }, [parallaxProgress, shouldReduceMotion]);
 
   if (!activeStory) return null;
 
   return (
-    <div
-      ref={rootRef}
-      className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(20rem,0.88fr)] lg:items-start xl:gap-10"
-    >
-      {/* Feature cards */}
-      <div className="order-2 flex flex-col gap-4 lg:order-1 lg:gap-5">
+    <div className="space-y-8 lg:space-y-10">
+      <div
+        ref={stageRef}
+        className="surface-elevated relative overflow-hidden rounded-[2rem] p-4 sm:p-5 lg:p-6"
+      >
+        <div className="mb-4 flex flex-col gap-3 border-b border-line px-1 pb-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap items-center gap-2">
+            <span
+              className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                activeStory.accent === "mint"
+                  ? "bg-mint text-mint-strong"
+                  : activeStory.accent === "coral"
+                    ? "bg-coral text-coral-strong"
+                    : "bg-sky text-sky-strong"
+              }`}
+            >
+              {activeStory.label}
+            </span>
+            <span className="rounded-full border border-line bg-paper px-3 py-1 text-xs font-semibold text-ink-soft">
+              {activeStory.stat}
+            </span>
+          </div>
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
+            {activeIndex + 1} / {stories.length}
+          </p>
+        </div>
+
+        <div className="screenshot-frame p-3 sm:p-4">
+          <div data-feature-stage className="feature-stage">
+            {stories.map((story) => {
+              const isActive = story.id === activeStory.id;
+
+              return (
+                <motion.div
+                  key={story.id}
+                  initial={false}
+                  animate={
+                    shouldReduceMotion
+                      ? { opacity: isActive ? 1 : 0 }
+                      : {
+                          opacity: isActive ? 1 : 0,
+                          scale: isActive ? 1 : 1.01,
+                          y: isActive ? 0 : 8,
+                        }
+                  }
+                  transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                  className={`absolute inset-0 ${
+                    isActive ? "pointer-events-auto" : "pointer-events-none"
+                  }`}
+                  aria-hidden={!isActive}
+                >
+                  <motion.div
+                    className="absolute -inset-x-3 -inset-y-4 will-change-transform"
+                    style={
+                      shouldReduceMotion
+                        ? undefined
+                        : { y: stageImageY, scale: stageImageScale }
+                    }
+                  >
+                    <ThemedScreenshot
+                      lightSrc={story.media.lightSrc}
+                      darkSrc={story.media.darkSrc}
+                      alt={story.media.alt}
+                      sizes="(min-width: 1280px) 1100px, 100vw"
+                      renderMode="paired"
+                      imageClassName="border border-line-strong bg-paper-strong object-cover object-left-top"
+                    />
+                  </motion.div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        <motion.div
+          className="mt-4 grid gap-4 rounded-[1.4rem] border border-line bg-paper/70 p-4 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,0.3fr)] lg:items-start"
+          style={shouldReduceMotion ? undefined : { y: summaryY }}
+        >
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
+              Active panel
+            </p>
+            <p className="mt-2 font-display text-2xl font-semibold text-ink">
+              {activeStory.title}
+            </p>
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-ink-soft sm:text-base">
+              {activeStory.description}
+            </p>
+          </div>
+
+          <ul className="grid gap-2">
+            {activeStory.bullets.map((bullet) => (
+              <li
+                key={bullet}
+                className="flex items-start gap-2 rounded-2xl border border-line bg-paper-strong/80 px-3 py-2 text-sm text-ink-soft"
+              >
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-mint-strong" />
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
         {stories.map((story, index) => {
           const isActive = story.id === activeStory.id;
 
@@ -93,9 +193,9 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
                 type="button"
                 data-feature-card={story.id}
                 onClick={() => setActiveId(story.id)}
-                className={`group relative min-h-[15.5rem] rounded-[1.5rem] border p-5 text-left transition-all duration-200 sm:p-6 lg:min-h-[18.25rem] ${
+                className={`group relative min-h-[14rem] rounded-[1.5rem] border p-5 text-left transition-all duration-200 sm:p-6 ${
                   isActive
-                    ? "border-line-strong bg-paper-elevated shadow-lg"
+                    ? "border-line-strong bg-paper-elevated shadow-lg ring-1 ring-sky-strong/20"
                     : "border-line bg-paper-strong/50 hover:border-line-strong hover:bg-paper-strong"
                 }`}
               >
@@ -138,104 +238,10 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
                 >
                   {story.description}
                 </p>
-
-                <AnimatePresence>
-                  {isActive && (
-                    <motion.ul
-                      initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, height: 0 }}
-                      animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, height: "auto" }}
-                      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
-                      transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="mt-4 space-y-2 overflow-hidden"
-                    >
-                      {story.bullets.map((bullet) => (
-                        <li key={bullet} className="flex items-start gap-2 text-sm text-ink-soft">
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-mint-strong" />
-                          <span>{bullet}</span>
-                        </li>
-                      ))}
-                    </motion.ul>
-                  )}
-                </AnimatePresence>
               </button>
             </ScrollReveal>
           );
         })}
-      </div>
-
-      {/* Screenshot display */}
-      <div
-        data-feature-stage-column
-        className="order-1 lg:order-2 lg:sticky lg:top-24 lg:self-start"
-      >
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-            Interactive proof
-          </p>
-          <p className="text-xs text-ink-muted">
-            {stories.findIndex((story) => story.id === activeStory.id) + 1} / {stories.length}
-          </p>
-        </div>
-        <div className="screenshot-frame p-3 sm:p-4">
-          <div data-feature-stage className="feature-stage">
-            <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-2 sm:left-4 sm:top-4">
-              <span className="rounded-md border border-line bg-paper-strong/90 px-2.5 py-1 text-xs font-semibold text-ink-soft backdrop-blur-sm">
-                {activeStory.label}
-              </span>
-              <span
-                className={`rounded-md px-2.5 py-1 text-xs font-semibold ${
-                  activeStory.accent === "mint"
-                    ? "bg-mint text-mint-strong"
-                    : activeStory.accent === "coral"
-                      ? "bg-coral text-coral-strong"
-                      : "bg-sky text-sky-strong"
-                }`}
-              >
-                {activeStory.stat}
-              </span>
-            </div>
-
-            <div className="absolute inset-0">
-              {stories.map((story) => {
-                const isActive = story.id === activeStory.id;
-
-                return (
-                  <motion.div
-                    key={story.id}
-                    initial={false}
-                    animate={
-                      shouldReduceMotion
-                        ? { opacity: isActive ? 1 : 0 }
-                        : {
-                            opacity: isActive ? 1 : 0,
-                            scale: isActive ? 1 : 1.012,
-                            y: isActive ? 0 : 10,
-                          }
-                    }
-                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                className={`absolute inset-0 ${
-                  isActive ? "pointer-events-auto" : "pointer-events-none"
-                }`}
-                    aria-hidden={!isActive}
-                  >
-                    <ThemedScreenshot
-                      lightSrc={story.media.lightSrc}
-                      darkSrc={story.media.darkSrc}
-                      alt={story.media.alt}
-                      sizes="(min-width: 1280px) 680px, (min-width: 1024px) 50vw, 100vw"
-                      renderMode="paired"
-                      imageClassName="border border-line-strong bg-paper-strong object-cover object-left-top"
-                    />
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-        <div className="mt-3 rounded-[1.35rem] border border-line bg-paper/65 px-4 py-3">
-          <p className="text-sm font-semibold text-ink">{activeStory.title}</p>
-          <p className="mt-1 text-sm leading-relaxed text-ink-soft">{activeStory.description}</p>
-        </div>
       </div>
     </div>
   );

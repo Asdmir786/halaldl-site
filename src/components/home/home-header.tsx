@@ -5,6 +5,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { SITE_LINKS } from "@/lib/site";
 
 export function HomeHeader() {
+  const navItems = ["Features", "Install", "Trust", "FAQ"] as const;
+
   return (
     <header className="header-bar sticky top-3 z-40 rounded-2xl px-4 py-2.5 sm:px-5">
       <div className="flex items-center justify-between gap-3">
@@ -22,7 +24,7 @@ export function HomeHeader() {
           >
             Changelog
           </Link>
-          {["Features", "Install", "Trust", "FAQ"].map((item) => (
+          {navItems.map((item) => (
             <a
               key={item}
               href={`#${item.toLowerCase()}`}
@@ -46,13 +48,35 @@ export function HomeHeader() {
           </a>
           <a
             href="/download"
-            className="inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-2 text-sm font-semibold text-paper transition-all hover:opacity-90"
+            aria-label="Download latest release"
+            className="inline-flex items-center gap-2 rounded-xl bg-ink px-3.5 py-2 text-sm font-semibold text-paper transition-all hover:opacity-90 sm:px-4"
           >
             <Download className="h-4 w-4" />
-            <span className="hidden sm:inline">Download</span>
+            <span>Download</span>
           </a>
         </div>
       </div>
+
+      <nav
+        className="-mx-1 mt-3 flex flex-wrap gap-2 px-1 pb-1 md:hidden"
+        aria-label="Mobile navigation"
+      >
+        <Link
+          href="/changelog"
+          className="shrink-0 rounded-full border border-line bg-paper-strong/70 px-3 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:bg-paper hover:text-ink"
+        >
+          Changelog
+        </Link>
+        {navItems.map((item) => (
+          <a
+            key={item}
+            href={`#${item.toLowerCase()}`}
+            className="shrink-0 rounded-full border border-line bg-paper-strong/70 px-3 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:bg-paper hover:text-ink"
+          >
+            {item}
+          </a>
+        ))}
+      </nav>
     </header>
   );
 }

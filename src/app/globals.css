@@ -425,6 +425,54 @@ summary:focus-visible {
   background: var(--hero-glow);
 }
 
+.hero-copy-enter {
+  animation: hero-copy-in 680ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-stage-enter {
+  animation: hero-stage-in 760ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+}
+
+.hero-band-enter {
+  animation: hero-band-in 720ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+}
+
+@keyframes hero-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-stage-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes hero-band-in {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Eyebrow label */
 .eyebrow {
   display: inline-flex;
@@ -524,6 +572,12 @@ summary:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .hero-copy-enter,
+  .hero-stage-enter,
+  .hero-band-enter {
+    animation: none;
   }
 
   *,

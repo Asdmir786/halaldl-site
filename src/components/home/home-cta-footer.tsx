@@ -46,7 +46,7 @@ export function HomeCtaFooter({ github }: { github: GitHubSnapshot }) {
 
       <footer className="mt-16 border-t border-line pt-8">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] lg:items-start">
-          <div>
+          <div className="rounded-[1.75rem] border border-line bg-paper-strong/75 p-6 sm:p-7">
             <div className="flex items-center gap-2.5">
               <Image src="/brand/icon.png" alt="HalalDL" width={24} height={24} className="rounded" />
               <span className="font-display text-base font-semibold text-ink">HalalDL</span>
@@ -60,8 +60,8 @@ export function HomeCtaFooter({ github }: { github: GitHubSnapshot }) {
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2">
-            <div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="rounded-[1.5rem] border border-line bg-paper-strong/75 p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
                 Explore
               </p>
@@ -80,7 +80,7 @@ export function HomeCtaFooter({ github }: { github: GitHubSnapshot }) {
                 </a>
               </nav>
             </div>
-            <div>
+            <div className="rounded-[1.5rem] border border-line bg-paper-strong/75 p-5">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
                 Project
               </p>
