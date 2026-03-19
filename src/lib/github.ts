@@ -103,7 +103,17 @@ function extractDigest(asset: GitHubReleaseAssetResponse | undefined) {
 }
 
 function trimReleaseNotes(input: string) {
-  const collapsed = input.replace(/\r/g, "").split("\n").filter(Boolean).join(" ");
+  const collapsed = input
+    .replace(/\r/g, "")
+    .replace(/^#{1,6}\s*/gm, "")
+    .replace(/[*_`~]+/g, "")
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, "$1")
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1")
+    .replace(/^\s*[-+]\s+/gm, "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join(" ");
   return collapsed.length > 220 ? `${collapsed.slice(0, 217).trimEnd()}...` : collapsed;
 }
 

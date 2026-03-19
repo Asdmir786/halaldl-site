@@ -5,12 +5,13 @@ import { SectionIntro, SectionShell } from "@/components/home/home-shared";
 
 export function WorkflowSection() {
   return (
-    <SectionShell id="features">
+    <SectionShell>
       <div className="section-divider mb-16" />
 
       <div className="grid gap-12 lg:grid-cols-[minmax(17rem,0.74fr)_minmax(0,1.26fr)] lg:items-start lg:gap-16 xl:gap-20">
         <div data-workflow-copy className="lg:sticky lg:top-28 lg:max-w-md lg:pb-10">
           <SectionIntro
+            id="features"
             eyebrow="Workflow"
             title="Keep yt-dlp's power."
             accent="Drop the shell routine."

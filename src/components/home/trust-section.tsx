@@ -16,11 +16,12 @@ export function TrustSection({ github }: { github: GitHubSnapshot }) {
   ];
 
   return (
-    <SectionShell id="trust">
+    <SectionShell>
       <div className="section-divider mb-16" />
 
       <div className="grid gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
         <SectionIntro
+          id="trust"
           eyebrow="Trust"
           title="Direct about downloads."
           accent="Clear verification path."

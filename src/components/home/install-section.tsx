@@ -7,11 +7,12 @@ import { SITE_LINKS } from "@/lib/site";
 
 export function InstallSection({ github }: { github: GitHubSnapshot }) {
   return (
-    <SectionShell id="install">
+    <SectionShell>
       <div className="section-divider mb-16" />
 
       <div className="grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
         <SectionIntro
+          id="install"
           eyebrow="Install"
           title="Full, Lite, or WinGet."
           accent="Pick the path that matches how hands-on you want to be."

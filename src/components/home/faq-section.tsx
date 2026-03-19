@@ -5,19 +5,21 @@ import { FAQ_ITEMS } from "@/lib/site";
 
 export function FaqSection() {
   return (
-    <SectionShell id="faq">
+    <SectionShell>
       <div className="section-divider mb-16" />
 
-      <ScrollReveal className="max-w-2xl">
-        <div className="eyebrow">FAQ</div>
-        <h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">
-          Common questions.
-        </h2>
-        <p className="mt-5 text-base leading-relaxed text-ink-soft">
-          The answers here should remove the practical uncertainty: install path, SmartScreen,
-          telemetry, Windows support, and where updates really ship first.
-        </p>
-      </ScrollReveal>
+      <div id="faq" className="max-w-2xl scroll-mt-24 sm:scroll-mt-28">
+        <ScrollReveal>
+          <div className="eyebrow">FAQ</div>
+          <h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">
+            Common questions.
+          </h2>
+          <p className="mt-5 text-base leading-relaxed text-ink-soft">
+            The answers here should remove the practical uncertainty: install path, SmartScreen,
+            telemetry, Windows support, and where updates really ship first.
+          </p>
+        </ScrollReveal>
+      </div>
 
       <div className="mt-10 grid gap-3 lg:grid-cols-2">
         {FAQ_ITEMS.map((item, index) => (

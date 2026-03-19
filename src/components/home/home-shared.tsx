@@ -27,6 +27,7 @@ export function shortenDigest(input: string | null) {
 }
 
 type SectionIntroProps = {
+  id?: string;
   eyebrow: string;
   title: string;
   accent: string;
@@ -34,17 +35,19 @@ type SectionIntroProps = {
   className?: string;
 };
 
-export function SectionIntro({ eyebrow, title, accent, body, className }: SectionIntroProps) {
+export function SectionIntro({ id, eyebrow, title, accent, body, className }: SectionIntroProps) {
   return (
-    <ScrollReveal className={className}>
-      <div className="eyebrow">{eyebrow}</div>
-      <h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">
-        {title}
-        <br />
-        <span className="text-ink-soft">{accent}</span>
-      </h2>
-      <p className="mt-5 text-base leading-relaxed text-ink-soft">{body}</p>
-    </ScrollReveal>
+    <div id={id} className={`scroll-mt-24 sm:scroll-mt-28 ${className ?? ""}`.trim()}>
+      <ScrollReveal>
+        <div className="eyebrow">{eyebrow}</div>
+        <h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl">
+          {title}
+          <br />
+          <span className="text-ink-soft">{accent}</span>
+        </h2>
+        <p className="mt-5 text-base leading-relaxed text-ink-soft">{body}</p>
+      </ScrollReveal>
+    </div>
   );
 }
 
@@ -125,14 +128,8 @@ export function TrustChip({ icon: Icon, label }: TrustChipProps) {
 
 export function SectionShell({
   children,
-  id,
 }: {
   children: ReactNode;
-  id?: string;
 }) {
-  return (
-    <section id={id} className="scroll-mt-24 pt-28 sm:scroll-mt-28 sm:pt-32">
-      {children}
-    </section>
-  );
+  return <section className="pt-28 sm:pt-32">{children}</section>;
 }
