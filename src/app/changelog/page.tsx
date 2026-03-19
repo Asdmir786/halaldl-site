@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight, CheckCircle2, FileStack, Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/home/home-header";
-import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
+import { getSiteUrl, getSocialImage } from "@/lib/site";
 import { CHANGELOG_ENTRIES, RELEASE_CHECKLIST } from "@/lib/changelog";
 
 export const metadata: Metadata = {
@@ -19,44 +19,83 @@ export const metadata: Metadata = {
       "What changed in HalalDL, with release summaries, proof, and a practical release checklist.",
     url: "/changelog",
     type: "website",
+    siteName: "HalalDL",
+    images: getSocialImage("HalalDL changelog page social preview"),
   },
   twitter: {
+    card: "summary_large_image",
     title: "Changelog | HalalDL",
     description:
       "What changed in HalalDL, with release summaries, proof, and a practical release checklist.",
+    images: ["/social/halaldl-social-preview.png"],
   },
 };
 
 export default function ChangelogPage() {
   const [featured, ...entries] = CHANGELOG_ENTRIES;
+  const siteUrl = getSiteUrl();
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: siteUrl.origin,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Changelog",
+        item: `${siteUrl.origin}/changelog`,
+      },
+    ],
+  };
 
   return (
-    <main id="main-content" className="overflow-x-hidden">
-      <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
-        <SiteHeader currentPage="changelog" />
-        <ScrollReveal y={14} amount={0.35}>
-          <SubpageRouteStrip currentPage="changelog" />
-        </ScrollReveal>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
-        <ScrollReveal className="max-w-3xl mt-6" y={22}>
-          <div className="eyebrow">
-            <FileStack className="h-3.5 w-3.5" />
-            Changelog
-          </div>
-          <h1 className="mt-5 font-display text-4xl font-semibold tracking-[-0.03em] text-ink sm:text-5xl">
-            What changed in HalalDL.
-          </h1>
-          <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
-            Release notes should prove progress, not just announce it. Use this page for the
-            high-signal version summary, then link back to the full GitHub release when people want
-            the raw details.
-          </p>
-        </ScrollReveal>
+      <main id="main-content" className="overflow-x-hidden">
+        <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
+          <SiteHeader currentPage="changelog" />
 
-        <section className="pt-14 sm:pt-16">
-          <div className="section-divider mb-12" />
+          <ScrollReveal className="mt-6" y={18}>
+            <nav
+              aria-label="Breadcrumb"
+              className="flex items-center gap-2 text-sm text-ink-muted"
+            >
+              <Link href="/" className="transition-colors hover:text-ink">
+                Home
+              </Link>
+              <span>/</span>
+              <span className="font-medium text-ink">Changelog</span>
+            </nav>
+          </ScrollReveal>
 
-          <ScrollReveal className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start">
+          <ScrollReveal className="max-w-3xl mt-6" y={22}>
+            <div className="eyebrow">
+              <FileStack className="h-3.5 w-3.5" />
+              Changelog
+            </div>
+            <h1 className="mt-5 font-display text-4xl font-semibold tracking-[-0.03em] text-ink sm:text-5xl">
+              What changed in HalalDL.
+            </h1>
+            <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
+              Release notes should prove progress, not just announce it. Use this page for the
+              high-signal version summary, then link back to the full GitHub release when people want
+              the raw details.
+            </p>
+          </ScrollReveal>
+
+          <section className="pt-14 sm:pt-16">
+            <div className="section-divider mb-12" />
+
+            <ScrollReveal className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start">
             <article className="surface-elevated overflow-hidden rounded-2xl p-6 sm:p-8">
               <div className="flex flex-wrap items-center gap-3">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-sky px-3 py-1 text-xs font-semibold text-sky-strong">
@@ -134,24 +173,24 @@ export default function ChangelogPage() {
                 ))}
               </div>
             </aside>
-          </ScrollReveal>
-        </section>
+            </ScrollReveal>
+          </section>
 
-        <section className="pt-16 sm:pt-20">
-          <div className="section-divider mb-12" />
+          <section className="pt-16 sm:pt-20">
+            <div className="section-divider mb-12" />
 
-          <ScrollReveal className="flex items-center justify-between gap-4">
+            <ScrollReveal className="flex items-center justify-between gap-4">
             <h2 className="font-display text-2xl font-semibold text-ink">Release history</h2>
             <Link href="/" className="text-sm font-semibold text-ink-soft hover:text-ink">
               Back to home
             </Link>
-          </ScrollReveal>
+            </ScrollReveal>
 
-          <div className="mt-8 space-y-4">
-            {[featured, ...entries].map((entry) => (
-              <ScrollReveal key={entry.version}>
-                <article className="surface-card-static rounded-2xl p-6">
-                <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="mt-8 space-y-4">
+              {[featured, ...entries].map((entry) => (
+                <ScrollReveal key={entry.version}>
+                  <article className="surface-card-static rounded-2xl p-6">
+                    <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <div className="flex flex-wrap items-center gap-3">
                       <h3 className="font-display text-2xl font-semibold text-ink">{entry.version}</h3>
@@ -212,8 +251,8 @@ export default function ChangelogPage() {
                   ) : null}
                 </div>
 
-                {entry.notes?.length ? (
-                  <div className="mt-6 rounded-xl border border-line bg-paper-strong/70 p-4">
+                    {entry.notes?.length ? (
+                      <div className="mt-6 rounded-xl border border-line bg-paper-strong/70 p-4">
                     <h4 className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
                       Notes
                     </h4>
@@ -222,14 +261,15 @@ export default function ChangelogPage() {
                         <li key={item}>{item}</li>
                       ))}
                     </ul>
-                  </div>
-                ) : null}
-                </article>
-              </ScrollReveal>
-            ))}
-          </div>
-        </section>
-      </div>
-    </main>
+                      </div>
+                    ) : null}
+                  </article>
+                </ScrollReveal>
+              ))}
+            </div>
+          </section>
+        </div>
+      </main>
+    </>
   );
 }

@@ -31,9 +31,9 @@ export function WorkflowSection() {
             <ScrollReveal
               key={step.num}
               delay={index * 0.05}
-              y={38}
-              amount={0.62}
-              margin="0px 0px -18% 0px"
+              y={26}
+              amount={0.28}
+              margin="0px 0px 4% 0px"
             >
               <article className="workflow-card rounded-[1.6rem] p-6 sm:p-7">
                 <div className="flex items-start justify-between gap-4">

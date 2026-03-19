@@ -15,7 +15,7 @@ import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { getGitHubSnapshot } from "@/lib/github";
-import { getSiteUrl, SITE_LINKS } from "@/lib/site";
+import { getSiteUrl, getSocialImage, SITE_LINKS } from "@/lib/site";
 import { formatMegabytes, shortenDigest } from "@/components/home/home-shared";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -34,16 +34,11 @@ export async function generateMetadata(): Promise<Metadata> {
         "Download HalalDL for Windows 10 and 11 with Full, Lite, and WinGet paths plus checksum verification.",
       url: "/download",
       type: "website",
-      images: [
-        {
-          url: "/social/halaldl-social-preview.png",
-          width: 1280,
-          height: 640,
-          alt: "HalalDL download page social preview",
-        },
-      ],
+      siteName: "HalalDL",
+      images: getSocialImage("HalalDL download page social preview"),
     },
     twitter: {
+      card: "summary_large_image",
       title: "Download HalalDL for Windows | HalalDL",
       description:
         "Download HalalDL for Windows 10 and 11 with Full, Lite, and WinGet paths plus checksum verification.",

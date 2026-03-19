@@ -13,7 +13,7 @@ import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { getGitHubSnapshot } from "@/lib/github";
-import { getSiteUrl, SITE_LINKS } from "@/lib/site";
+import { getSiteUrl, getSocialImage, SITE_LINKS } from "@/lib/site";
 import { formatMegabytes } from "@/components/home/home-shared";
 
 export const metadata: Metadata = {
@@ -29,11 +29,15 @@ export const metadata: Metadata = {
       "Choose the right HalalDL install path for Windows 10 and 11 with Full, Lite, or WinGet.",
     url: "/install/windows",
     type: "article",
+    siteName: "HalalDL",
+    images: getSocialImage("HalalDL install guide social preview"),
   },
   twitter: {
+    card: "summary_large_image",
     title: "How to Install HalalDL on Windows | HalalDL",
     description:
       "Choose the right HalalDL install path for Windows 10 and 11 with Full, Lite, or WinGet.",
+    images: ["/social/halaldl-social-preview.png"],
   },
 };
 

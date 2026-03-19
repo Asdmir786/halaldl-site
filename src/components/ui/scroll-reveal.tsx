@@ -16,9 +16,9 @@ export function ScrollReveal({
   children,
   delay = 0,
   className,
-  y = 20,
-  amount = 0.55,
-  margin = "0px 0px -14% 0px",
+  y = 18,
+  amount = 0.2,
+  margin = "0px 0px 8% 0px",
 }: ScrollRevealProps) {
   const shouldReduceMotion = useReducedMotion();
 

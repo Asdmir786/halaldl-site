@@ -12,7 +12,7 @@ import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { getGitHubSnapshot } from "@/lib/github";
-import { getSiteUrl, SITE_LINKS } from "@/lib/site";
+import { getSiteUrl, getSocialImage, SITE_LINKS } from "@/lib/site";
 import { shortenDigest } from "@/components/home/home-shared";
 
 export const metadata: Metadata = {
@@ -28,11 +28,15 @@ export const metadata: Metadata = {
       "Verify HalalDL installers on Windows with SHA256SUMS.txt before first run.",
     url: "/trust/verify-checksum",
     type: "article",
+    siteName: "HalalDL",
+    images: getSocialImage("HalalDL SHA256 verification guide social preview"),
   },
   twitter: {
+    card: "summary_large_image",
     title: "How to Verify HalalDL SHA256 Checksums | HalalDL",
     description:
       "Verify HalalDL installers on Windows with SHA256SUMS.txt before first run.",
+    images: ["/social/halaldl-social-preview.png"],
   },
 };
 
@@ -50,7 +54,13 @@ export default async function VerifyChecksumPage() {
   const siteUrl = getSiteUrl();
   const fullSetupName = getDownloadFileName(github.fullSetupUrl, "HalalDL-Full-setup.exe");
   const liteSetupName = getDownloadFileName(github.liteSetupUrl, "HalalDL-Lite-setup.exe");
-  const fullHashCommand = `Get-FileHash "$env:USERPROFILE\\Downloads\\${fullSetupName}" -Algorithm SHA256`;
+  const fullHashCommand = [
+    `$installer = Join-Path $env:USERPROFILE "Downloads\\${fullSetupName}"`,
+    '$checksums = Join-Path $env:USERPROFILE "Downloads\\SHA256SUMS.txt"',
+    '$fileName = Split-Path $installer -Leaf',
+    '$entry = Get-Content $checksums | Where-Object { $_ -match [regex]::Escape($fileName) } | Select-Object -First 1',
+    'if (-not $entry) { "No checksum entry found for $fileName" } else { $expected = ($entry -split "\\s+")[0].ToLower(); $actual = (Get-FileHash $installer -Algorithm SHA256).Hash.ToLower(); if ($actual -eq $expected) { "SHA256 MATCH: $fileName" } else { "SHA256 MISMATCH: $fileName | Expected: $expected | Actual: $actual" } }',
+  ].join("; ");
 
   const verificationSteps = [
     {
@@ -217,10 +227,14 @@ export default async function VerifyChecksumPage() {
 
             <aside className="surface-elevated rounded-[1.75rem] p-6 sm:p-7">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                Example PowerShell command
+                Verification command
               </p>
               <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                This example assumes the installer is still in your Downloads folder.
+                Put the installer file and <span className="font-medium text-ink">SHA256SUMS.txt</span> in
+                your Downloads folder, then run one command to compare them.
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-ink-muted">
+                Verified for Windows PowerShell 5.1 and PowerShell 7.
               </p>
               <div className="mt-5">
                 <CopyCommand command={fullHashCommand} />

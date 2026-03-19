@@ -7,6 +7,18 @@ export const SITE_LINKS = {
 };
 
 export const PRODUCTION_SITE_URL = "https://halaldl.vercel.app";
+export const DEFAULT_SOCIAL_IMAGE = "/social/halaldl-social-preview.png";
+
+export function getSocialImage(alt: string) {
+  return [
+    {
+      url: DEFAULT_SOCIAL_IMAGE,
+      width: 1280,
+      height: 640,
+      alt,
+    },
+  ];
+}
 
 export const FAQ_ITEMS = [
   {

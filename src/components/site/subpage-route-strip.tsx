@@ -1,12 +1,11 @@
 import Link from "next/link";
 
 type SubpageRouteStripProps = {
-  currentPage: "download" | "changelog" | "compare" | "install" | "trust";
+  currentPage: "download" | "compare" | "install" | "trust";
 };
 
 const items = [
   { id: "download", label: "Download", href: "/download" },
-  { id: "changelog", label: "Changelog", href: "/changelog" },
   { id: "compare", label: "Full vs Lite", href: "/compare/full-vs-lite" },
   { id: "install", label: "Install on Windows", href: "/install/windows" },
   { id: "trust", label: "Verify SHA256", href: "/trust/verify-checksum" },

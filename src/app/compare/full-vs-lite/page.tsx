@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
-  BadgeCheck,
   CheckCircle2,
   CircleAlert,
   CircleHelp,
@@ -13,7 +12,7 @@ import { SiteHeader } from "@/components/home/home-header";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { getGitHubSnapshot } from "@/lib/github";
-import { getSiteUrl } from "@/lib/site";
+import { getSiteUrl, getSocialImage } from "@/lib/site";
 import { formatMegabytes } from "@/components/home/home-shared";
 
 export const metadata: Metadata = {
@@ -28,12 +27,16 @@ export const metadata: Metadata = {
     description:
       "Compare HalalDL Full vs Lite for Windows and choose the right install path for your setup style.",
     url: "/compare/full-vs-lite",
-    type: "website",
+    type: "article",
+    siteName: "HalalDL",
+    images: getSocialImage("HalalDL Full vs Lite comparison page social preview"),
   },
   twitter: {
+    card: "summary_large_image",
     title: "HalalDL Full vs Lite | HalalDL",
     description:
       "Compare HalalDL Full vs Lite for Windows and choose the right install path for your setup style.",
+    images: ["/social/halaldl-social-preview.png"],
   },
 };
 
