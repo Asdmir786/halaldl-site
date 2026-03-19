@@ -29,6 +29,24 @@ type GitHubReleaseResponse = {
   assets: GitHubReleaseAssetResponse[];
 };
 
+export type GitHubReleaseAsset = {
+  name: string;
+  browserDownloadUrl: string;
+  size: number;
+  digest: string | null;
+};
+
+export type GitHubRelease = {
+  tagName: string;
+  name: string;
+  htmlUrl: string;
+  publishedAt: string;
+  body: string;
+  prerelease: boolean;
+  draft: boolean;
+  assets: GitHubReleaseAsset[];
+};
+
 export type GitHubSnapshot = {
   source: "live" | "fallback";
   repoUrl: string;
@@ -102,6 +120,28 @@ function extractDigest(asset: GitHubReleaseAssetResponse | undefined) {
   return asset.digest.startsWith("sha256:") ? asset.digest : `sha256:${asset.digest}`;
 }
 
+function mapReleaseAsset(asset: GitHubReleaseAssetResponse): GitHubReleaseAsset {
+  return {
+    name: asset.name,
+    browserDownloadUrl: asset.browser_download_url,
+    size: asset.size,
+    digest: extractDigest(asset),
+  };
+}
+
+function mapRelease(release: GitHubReleaseResponse): GitHubRelease {
+  return {
+    tagName: release.tag_name,
+    name: release.name,
+    htmlUrl: release.html_url,
+    publishedAt: release.published_at,
+    body: release.body,
+    prerelease: release.prerelease,
+    draft: release.draft,
+    assets: release.assets.map(mapReleaseAsset),
+  };
+}
+
 function trimReleaseNotes(input: string) {
   const collapsed = input
     .replace(/\r/g, "")
@@ -139,6 +179,51 @@ async function fetchJson<T>(url: string) {
   }
 
   return (await response.json()) as T;
+}
+
+function getFallbackRelease(): GitHubRelease {
+  return {
+    tagName: FALLBACK_SNAPSHOT.latestVersion,
+    name: FALLBACK_SNAPSHOT.latestReleaseName,
+    htmlUrl: FALLBACK_SNAPSHOT.latestReleaseUrl,
+    publishedAt: FALLBACK_SNAPSHOT.latestReleaseDate,
+    body: FALLBACK_SNAPSHOT.releaseNotes,
+    prerelease: false,
+    draft: false,
+    assets: [
+      {
+        name: `HalalDL-Full-${FALLBACK_SNAPSHOT.latestVersion}-setup.exe`,
+        browserDownloadUrl: FALLBACK_SNAPSHOT.fullSetupUrl,
+        size: FALLBACK_SNAPSHOT.fullSetupSize ?? 0,
+        digest: null,
+      },
+      {
+        name: `HalalDL-Lite-${FALLBACK_SNAPSHOT.latestVersion}-setup.exe`,
+        browserDownloadUrl: FALLBACK_SNAPSHOT.liteSetupUrl,
+        size: FALLBACK_SNAPSHOT.liteSetupSize ?? 0,
+        digest: null,
+      },
+      {
+        name: "SHA256SUMS.txt",
+        browserDownloadUrl: FALLBACK_SNAPSHOT.checksumsUrl,
+        size: 0,
+        digest: FALLBACK_SNAPSHOT.checksumDigest,
+      },
+    ],
+  };
+}
+
+export async function getGitHubReleases(): Promise<GitHubRelease[]> {
+  try {
+    const releases = await fetchJson<GitHubReleaseResponse[]>(
+      "https://api.github.com/repos/Asdmir786/HalalDL/releases?per_page=100",
+    );
+    const publicReleases = releases.filter((entry) => !entry.draft && !entry.prerelease).map(mapRelease);
+
+    return publicReleases.length ? publicReleases : [getFallbackRelease()];
+  } catch {
+    return [getFallbackRelease()];
+  }
 }
 
 export async function getGitHubSnapshot(): Promise<GitHubSnapshot> {
