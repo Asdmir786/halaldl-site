@@ -24,14 +24,14 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Download HalalDL for Windows",
     description:
-      "Download HalalDL for Windows 10 and 11. Compare Full, Lite, and WinGet paths, verify SHA256 checksums, and use GitHub Releases as the canonical source.",
+      "Download HalalDL for Windows 10 and 11. Compare Full, Lite, and WinGet paths, verify SHA256, and use GitHub Releases as the canonical source.",
     alternates: {
       canonical: "/download",
     },
     openGraph: {
       title: "Download HalalDL for Windows | HalalDL",
       description:
-        "Download HalalDL for Windows 10 and 11 with Full, Lite, and WinGet paths plus checksum verification.",
+        "Download HalalDL for Windows 10 and 11 with Full, Lite, and WinGet paths plus SHA256 verification.",
       url: "/download",
       type: "website",
       siteName: "HalalDL",
@@ -41,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: "Download HalalDL for Windows | HalalDL",
       description:
-        "Download HalalDL for Windows 10 and 11 with Full, Lite, and WinGet paths plus checksum verification.",
+        "Download HalalDL for Windows 10 and 11 with Full, Lite, and WinGet paths plus SHA256 verification.",
       images: ["/social/halaldl-social-preview.png"],
     },
     other: {
@@ -62,7 +62,7 @@ export default async function DownloadPage() {
     operatingSystem: "Windows 10, Windows 11",
     softwareVersion: github.latestVersion,
     description:
-      "Windows-first, local-first desktop GUI for yt-dlp with Full and Lite installers, visible raw logs, and a checksum verification path.",
+      "Windows-first, local-first desktop GUI for yt-dlp with Full and Lite installers, visible raw logs, and a SHA256 verification path.",
     downloadUrl: `${siteUrl.origin}/download`,
     installUrl: `${siteUrl.origin}/download`,
     releaseNotes: github.releaseNotes,
@@ -99,7 +99,7 @@ export default async function DownloadPage() {
         name: "How should I verify the installer?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Download from GitHub Releases, open SHA256SUMS.txt, and verify the installer checksum before first run if you want the strongest trust path.",
+          text: "Download from GitHub Releases, open SHA256SUMS.txt, and verify SHA256 before first run if you want the strongest trust path.",
         },
       },
     ],
@@ -207,7 +207,7 @@ export default async function DownloadPage() {
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
-                  Check SHA256SUMS
+                  Open SHA256SUMS.txt
                   <ExternalLink className="h-4 w-4" />
                 </a>
                 <Link
@@ -400,8 +400,9 @@ export default async function DownloadPage() {
                       Verify before first run
                     </h2>
                     <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                      The trust path should be explicit. Download from GitHub Releases, inspect the
-                      attached checksum file, and then decide how to handle any SmartScreen warning.
+                      The trust path should be explicit. Download from GitHub Releases, open
+                      SHA256SUMS.txt from the same release, and then decide how to handle any
+                      SmartScreen warning.
                     </p>
                   </div>
                 </div>
@@ -409,7 +410,7 @@ export default async function DownloadPage() {
                 <ol className="mt-6 space-y-3">
                   {[
                     "Download from the Full or Lite release asset, or open the GitHub Release page directly.",
-                    "Open SHA256SUMS.txt and verify the installer checksum before first run.",
+                    "Open SHA256SUMS.txt and verify SHA256 before first run.",
                     "If SmartScreen warns, verify source plus checksum before continuing.",
                   ].map((item, index) => (
                     <li key={item} className="rounded-2xl border border-line bg-paper/70 p-4">
@@ -507,14 +508,14 @@ export default async function DownloadPage() {
             <ScrollReveal className="flex flex-wrap items-center justify-between gap-4 rounded-[1.75rem] border border-line bg-paper/70 p-6 sm:p-7">
               <div className="max-w-2xl">
                 <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                  Next steps
+                  Still deciding?
                 </p>
                 <h2 className="mt-3 font-display text-2xl font-semibold text-ink">
-                  Install now, then use the changelog and trust path if you want more proof.
+                  Take one last check before you install.
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                  The home page explains the product, this page handles download decisions, and the
-                  changelog gives release-by-release proof.
+                  Verify the checksum if you want to confirm the file, read the changelog to see
+                  what changed, or head back home for the broader product overview.
                 </p>
               </div>
 
@@ -523,19 +524,19 @@ export default async function DownloadPage() {
                   href="/trust/verify-checksum"
                   className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
-                  Verify checksums
+                  Verify SHA256
                 </Link>
                 <Link
                   href="/changelog"
                   className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
-                  View changelog
+                  Read changelog
                 </Link>
                 <Link
                   href="/"
                   className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
-                  Back to home
+                  Return home
                 </Link>
               </div>
             </ScrollReveal>

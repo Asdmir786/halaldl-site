@@ -88,7 +88,7 @@ export function HomeCtaFooter({ github }: { github: GitHubSnapshot }) {
                   href="/trust/verify-checksum"
                   className="text-ink-soft transition-colors hover:text-ink"
                 >
-                  Verify checksums
+                  Verify SHA256
                 </Link>
                 <a href="#features" className="text-ink-soft transition-colors hover:text-ink">
                   Features

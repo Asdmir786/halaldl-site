@@ -39,7 +39,7 @@ export const FAQ_ITEMS = [
   {
     question: "Why does SmartScreen warn on first run?",
     answer:
-      "Current installers are not code-signed yet. The safe path is to download only from GitHub Releases and verify the installer against the SHA256SUMS.txt file attached to the release.",
+      "Current installers are not code-signed yet. The safe path is to download only from GitHub Releases and verify SHA256 against the SHA256SUMS.txt file attached to the release.",
   },
   {
     question: "What is the canonical download source?",
@@ -79,7 +79,7 @@ export const FAQ_ITEMS = [
   {
     question: "How should I verify an installer before first run?",
     answer:
-      "Download from GitHub Releases, open the attached SHA256SUMS.txt file, and verify the installer checksum before proceeding if you want the strongest trust path.",
+      "Download from GitHub Releases, open the attached SHA256SUMS.txt file, and verify SHA256 before proceeding if you want the strongest trust path.",
   },
   {
     question: "Is HalalDL meant for Windows only right now?",

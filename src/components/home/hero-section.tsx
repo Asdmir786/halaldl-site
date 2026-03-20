@@ -52,7 +52,7 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
 
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg">
             Presets instead of flags. Visible raw logs instead of vague progress. Full or Lite
-            install paths. Downloads anchored to GitHub Releases, checksums, and a trust path that
+            install paths. Downloads anchored to GitHub Releases, SHA256, and a trust path that
             stays explicit.
           </p>
 
@@ -115,8 +115,7 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
                 <div>
                   <p className="text-sm font-semibold text-ink">GitHub Releases is canonical</p>
                   <p className="mt-1 text-xs leading-relaxed text-ink-muted">
-                    Verify attached SHA256 checksums before first run if you want the strongest
-                    trust path.
+                    Verify SHA256 before first run if you want the strongest trust path.
                   </p>
                 </div>
               </div>

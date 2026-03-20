@@ -19,7 +19,7 @@ import { formatMegabytes } from "@/components/home/home-shared";
 export const metadata: Metadata = {
   title: "How to Install HalalDL on Windows 10 and 11",
   description:
-    "Install HalalDL on Windows 10 and 11 with the right Full, Lite, or WinGet path. Includes checksum, SmartScreen, and first-run guidance.",
+    "Install HalalDL on Windows 10 and 11 with the right Full, Lite, or WinGet path. Includes SHA256, SmartScreen, and first-run guidance.",
   alternates: {
     canonical: "/install/windows",
   },
@@ -69,7 +69,7 @@ export default async function InstallWindowsPage() {
     "@type": "HowTo",
     name: "How to install HalalDL on Windows",
     description:
-      "Install HalalDL on Windows 10 and 11 using Full, Lite, or WinGet with checksum and SmartScreen guidance.",
+      "Install HalalDL on Windows 10 and 11 using Full, Lite, or WinGet with SHA256 and SmartScreen guidance.",
     step: installSteps.map((step, index) => ({
       "@type": "HowToStep",
       position: index + 1,
@@ -177,7 +177,7 @@ export default async function InstallWindowsPage() {
               </h1>
               <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
                 The cleanest path is simple: most people should use Full, download from GitHub
-                Releases, verify checksums if they want the strongest trust path, then run the
+                Releases, verify SHA256 if they want the strongest trust path, then run the
                 installer.
               </p>
 
@@ -303,7 +303,7 @@ export default async function InstallWindowsPage() {
                   href="/trust/verify-checksum"
                   className="mt-5 inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
-                  Verify checksums
+                  Verify SHA256
                   <FileCheck2 className="h-4 w-4" />
                 </Link>
               </article>
@@ -355,7 +355,7 @@ export default async function InstallWindowsPage() {
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">
                   That warning is expected while the installer is not code-signed. Do not treat it
                   as a reason to skip verification. Treat it as a reason to verify source plus
-                  checksum first.
+                  SHA256 first.
                 </p>
                 <ul className="mt-6 space-y-3">
                   {[
@@ -375,7 +375,7 @@ export default async function InstallWindowsPage() {
                 <h2 className="font-display text-2xl font-semibold text-ink">Best next move</h2>
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">
                   If you are ready to install, the download page is still the main decision page.
-                  If you want more proof before first run, go straight to the checksum guide.
+                  If you want more proof before first run, go straight to the SHA256 guide.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Link

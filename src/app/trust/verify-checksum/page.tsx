@@ -18,7 +18,7 @@ import { shortenDigest } from "@/components/home/home-shared";
 export const metadata: Metadata = {
   title: "How to Verify HalalDL SHA256 Checksums on Windows",
   description:
-    "Verify HalalDL SHA256 checksums on Windows before first run. Compare GitHub Release assets against SHA256SUMS.txt and handle SmartScreen correctly.",
+    "Verify HalalDL SHA256 on Windows before first run. Compare GitHub Release assets against SHA256SUMS.txt and handle SmartScreen correctly.",
   alternates: {
     canonical: "/trust/verify-checksum",
   },
@@ -65,11 +65,11 @@ export default async function VerifyChecksumPage() {
   const verificationSteps = [
     {
       title: "Download the installer from GitHub Releases",
-      body: "Use the Full or Lite asset from the latest public release. That keeps the file source tied directly to the published release notes and attached checksum file.",
+      body: "Use the Full or Lite asset from the latest public release. That keeps the file source tied directly to the published release notes and attached SHA256SUMS.txt file.",
     },
     {
       title: "Open SHA256SUMS.txt from the same release",
-      body: "The checksum file must come from the same GitHub Release as the installer you downloaded. Do not compare against an older release.",
+      body: "SHA256SUMS.txt must come from the same GitHub Release as the installer you downloaded. Do not compare against an older release.",
     },
     {
       title: "Compute the SHA256 hash on your Windows machine",
@@ -101,10 +101,10 @@ export default async function VerifyChecksumPage() {
     mainEntity: [
       {
         "@type": "Question",
-        name: "Why should I verify the installer checksum?",
+        name: "Why should I verify SHA256?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Verifying the checksum confirms that the file you downloaded matches the release asset published on GitHub Releases.",
+          text: "Verifying SHA256 confirms that the file you downloaded matches the release asset published on GitHub Releases.",
         },
       },
       {
@@ -313,7 +313,7 @@ export default async function VerifyChecksumPage() {
                       If SmartScreen warns
                     </h2>
                     <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                      That warning does not replace checksum verification. It is exactly why the
+                      That warning does not replace SHA256 verification. It is exactly why the
                       source and hash should be explicit before first run.
                     </p>
                   </div>

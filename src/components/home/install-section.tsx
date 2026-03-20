@@ -86,7 +86,7 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
                   rel="noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
                 >
-                  Check SHA256SUMS
+                  Open SHA256SUMS.txt
                   <ExternalLink className="h-4 w-4" />
                 </a>
               </div>
