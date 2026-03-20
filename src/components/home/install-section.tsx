@@ -18,7 +18,7 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
             eyebrow="Install"
             title="Full, Lite, or WinGet."
             accent="Pick the path that matches how hands-on you want to be."
-            body="Full is the default for most users. Lite is for people who want direct control over yt-dlp, ffmpeg, aria2, and optional runtime pieces. WinGet is convenient, but GitHub Releases stays ahead."
+            body="Full is the default for most users. Lite is for people who want direct control over yt-dlp, ffmpeg, aria2, and optional runtime pieces. WinGet is convenient, but the download page is the better place to choose deliberately."
           />
           <div className="mt-6 flex flex-wrap gap-4">
             <Link

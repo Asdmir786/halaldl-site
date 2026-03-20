@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { BadgeCheck, CalendarClock, Download, Github, ShieldCheck, Sparkles } from "lucide-react";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
 import type { GitHubSnapshot } from "@/lib/github";
@@ -29,7 +30,7 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
       icon: ShieldCheck,
       label: "License",
       value: github.licenseName,
-      detail: "MIT and GitHub Releases as canonical source",
+      detail: "MIT licensed with public GitHub releases",
     },
   ];
 
@@ -52,18 +53,18 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
 
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg">
             Presets instead of flags. Visible raw logs instead of vague progress. Full or Lite
-            install paths. Downloads anchored to GitHub Releases, SHA256, and a trust path that
-            stays explicit.
+            install paths. Start on the download page, then verify SHA256 if you want to confirm
+            the file before first run.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <a
+            <Link
               href="/download"
               className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-ink px-6 py-3.5 text-[0.95rem] font-semibold text-paper shadow-[0_18px_36px_rgba(12,25,41,0.16)] transition-all hover:-translate-y-0.5 hover:shadow-[0_24px_46px_rgba(12,25,41,0.2)]"
             >
               <Download className="h-4 w-4" />
               Download {github.latestVersion}
-            </a>
+            </Link>
             <a
               href={SITE_LINKS.repoUrl}
               target="_blank"
@@ -113,9 +114,10 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
                   <BadgeCheck className="h-4.5 w-4.5 text-mint-strong" />
                 </span>
                 <div>
-                  <p className="text-sm font-semibold text-ink">GitHub Releases is canonical</p>
+                  <p className="text-sm font-semibold text-ink">Public GitHub releases</p>
                   <p className="mt-1 text-xs leading-relaxed text-ink-muted">
-                    Verify SHA256 before first run if you want the strongest trust path.
+                    Open the release assets, then verify SHA256 before first run if you want the
+                    extra check.
                   </p>
                 </div>
               </div>

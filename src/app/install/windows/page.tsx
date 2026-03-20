@@ -47,11 +47,11 @@ const installSteps = [
     body: "Most people should choose Full. Use Lite only if you actively prefer managing more of the yt-dlp and ffmpeg boundary yourself. Use WinGet for convenience, not as the most authoritative release source.",
   },
   {
-    title: "Download from the canonical source",
-    body: "If you want the clearest trust path, open the latest GitHub Release and download the Full or Lite installer from there. WinGet is supported, but GitHub Releases is still the canonical source.",
+    title: "Download from the release page",
+    body: "Open the latest GitHub Release and download the Full or Lite installer from there. WinGet is supported, but the release page is the direct route to the newest build.",
   },
   {
-    title: "Verify the installer if you want the strongest trust path",
+    title: "Verify the installer if you want an extra check",
     body: "Open SHA256SUMS.txt from the same release and compare the installer hash before first run. This matters more because the installer is not code-signed yet.",
   },
   {
@@ -95,7 +95,7 @@ export default async function InstallWindowsPage() {
         name: "Can I install HalalDL with WinGet?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes. WinGet is supported and convenient, but GitHub Releases remains the canonical source for the latest release assets.",
+          text: "Yes. WinGet is supported and convenient, but GitHub Releases remains the direct source for the latest release assets.",
         },
       },
       {
@@ -177,7 +177,7 @@ export default async function InstallWindowsPage() {
               </h1>
               <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
                 The cleanest path is simple: most people should use Full, download from GitHub
-                Releases, verify SHA256 if they want the strongest trust path, then run the
+                Releases, verify SHA256 if they want an extra check, then run the
                 installer.
               </p>
 
@@ -189,7 +189,7 @@ export default async function InstallWindowsPage() {
                   Windows 10/11 x64
                 </span>
                 <span className="rounded-full border border-line bg-paper-strong/80 px-3 py-1.5">
-                  GitHub Releases is canonical
+                  Start from GitHub Releases
                 </span>
               </div>
 
@@ -233,7 +233,8 @@ export default async function InstallWindowsPage() {
                   </p>
                   <p className="mt-2 text-sm font-medium text-ink">Good for convenience</p>
                   <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                    Useful for quick installs and updates, but not the canonical release path.
+                    Useful for quick installs and updates, but not the best route when you want the
+                    newest release assets first.
                   </p>
                 </div>
               </div>
@@ -296,8 +297,8 @@ export default async function InstallWindowsPage() {
                   Verify before first run
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                  If you want the strongest install path, verify SHA256 before running the
-                  installer and use GitHub Releases as the public source of truth.
+                  If you want the most cautious install flow, verify SHA256 before running the
+                  installer and start from GitHub Releases.
                 </p>
                 <Link
                   href="/trust/verify-checksum"
@@ -323,8 +324,8 @@ export default async function InstallWindowsPage() {
                   Install flow on Windows.
                 </h2>
                 <p className="mt-5 text-base leading-relaxed text-ink-soft">
-                  The install process should be direct: choose the right build, verify if you
-                  care about the strongest trust path, then run the installer and launch the app.
+                  The install process should be direct: choose the right build, verify if you want
+                  the extra check, then run the installer and launch the app.
                 </p>
               </div>
 

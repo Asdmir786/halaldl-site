@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Download HalalDL for Windows",
     description:
-      "Download HalalDL for Windows 10 and 11. Compare Full, Lite, and WinGet paths, verify SHA256, and use GitHub Releases as the canonical source.",
+      "Download HalalDL for Windows 10 and 11. Compare Full, Lite, and WinGet paths, verify SHA256, and use GitHub Releases as the direct source for the latest build.",
     alternates: {
       canonical: "/download",
     },
@@ -91,7 +91,7 @@ export default async function DownloadPage() {
         name: "What is the canonical download source?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "GitHub Releases is the canonical source. WinGet is convenient, but GitHub Releases is the authoritative path to the newest build.",
+          text: "GitHub Releases is the direct source for the latest build. WinGet is convenient, but it can lag behind the newest release assets.",
         },
       },
       {
@@ -99,7 +99,7 @@ export default async function DownloadPage() {
         name: "How should I verify the installer?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Download from GitHub Releases, open SHA256SUMS.txt, and verify SHA256 before first run if you want the strongest trust path.",
+          text: "Download from GitHub Releases, open SHA256SUMS.txt, and verify SHA256 before first run if you want an extra integrity check.",
         },
       },
     ],
@@ -176,7 +176,7 @@ export default async function DownloadPage() {
               <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
                 Choose the install path that matches how hands-on you want to be. Full is best for
                 most people. Lite keeps more of the underlying toolchain boundary explicit. WinGet
-                is convenient, but GitHub Releases remains the canonical source.
+                is convenient, but GitHub Releases is still the direct route to the newest build.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3 text-sm text-ink-soft">
@@ -400,7 +400,7 @@ export default async function DownloadPage() {
                       Verify before first run
                     </h2>
                     <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                      The trust path should be explicit. Download from GitHub Releases, open
+                      Keep the file path explicit. Download from GitHub Releases, open
                       SHA256SUMS.txt from the same release, and then decide how to handle any
                       SmartScreen warning.
                     </p>
@@ -465,7 +465,7 @@ export default async function DownloadPage() {
                     { label: "Latest release", value: `${github.latestVersion} · ${github.latestReleaseLabel}` },
                     { label: "First public release", value: `${github.firstPublicVersion} · ${github.firstPublicReleaseLabel}` },
                     { label: "Checksum sample", value: shortenDigest(github.checksumDigest) },
-                    { label: "Canonical source", value: "GitHub Releases" },
+                    { label: "Primary source", value: "GitHub Releases" },
                   ].map((item) => (
                     <div key={item.label} className="rounded-2xl border border-line bg-paper/70 p-4">
                       <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
@@ -514,7 +514,7 @@ export default async function DownloadPage() {
                   Take one last check before you install.
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                  Verify the checksum if you want to confirm the file, read the changelog to see
+                  Verify SHA256 if you want to confirm the file, read the changelog to see
                   what changed, or head back home for the broader product overview.
                 </p>
               </div>

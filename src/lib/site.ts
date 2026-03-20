@@ -44,7 +44,7 @@ export const FAQ_ITEMS = [
   {
     question: "What is the canonical download source?",
     answer:
-      "GitHub Releases is the canonical source. WinGet is supported, but the catalog can lag behind the latest GitHub release.",
+      "GitHub Releases is the direct source for the latest build. WinGet is supported, but the catalog can lag behind the latest GitHub release.",
   },
   {
     question: "Does HalalDL send telemetry or analytics?",
@@ -79,7 +79,7 @@ export const FAQ_ITEMS = [
   {
     question: "How should I verify an installer before first run?",
     answer:
-      "Download from GitHub Releases, open the attached SHA256SUMS.txt file, and verify SHA256 before proceeding if you want the strongest trust path.",
+      "Download from GitHub Releases, open the attached SHA256SUMS.txt file, and verify SHA256 before proceeding if you want an extra integrity check.",
   },
   {
     question: "Is HalalDL meant for Windows only right now?",

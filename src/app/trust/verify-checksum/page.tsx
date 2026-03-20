@@ -9,8 +9,8 @@ import {
 } from "lucide-react";
 import { SiteHeader } from "@/components/home/home-header";
 import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
+import { VerifyCommandPanel } from "@/components/trust/verify-command-panel";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
-import { CopyCommand } from "@/components/ui/copy-command";
 import { getGitHubSnapshot } from "@/lib/github";
 import { getSiteUrl, getSocialImage, SITE_LINKS } from "@/lib/site";
 import { shortenDigest } from "@/components/home/home-shared";
@@ -56,6 +56,13 @@ export default async function VerifyChecksumPage() {
   const liteSetupName = getDownloadFileName(github.liteSetupUrl, "HalalDL-Lite-setup.exe");
   const fullHashCommand = [
     `$installer = Join-Path $env:USERPROFILE "Downloads\\${fullSetupName}"`,
+    '$checksums = Join-Path $env:USERPROFILE "Downloads\\SHA256SUMS.txt"',
+    '$fileName = Split-Path $installer -Leaf',
+    '$entry = Get-Content $checksums | Where-Object { $_ -match [regex]::Escape($fileName) } | Select-Object -First 1',
+    'if (-not $entry) { "No checksum entry found for $fileName" } else { $expected = ($entry -split "\\s+")[0].ToLower(); $actual = (Get-FileHash $installer -Algorithm SHA256).Hash.ToLower(); if ($actual -eq $expected) { "SHA256 MATCH: $fileName" } else { "SHA256 MISMATCH: $fileName | Expected: $expected | Actual: $actual" } }',
+  ].join("; ");
+  const liteHashCommand = [
+    `$installer = Join-Path $env:USERPROFILE "Downloads\\${liteSetupName}"`,
     '$checksums = Join-Path $env:USERPROFILE "Downloads\\SHA256SUMS.txt"',
     '$fileName = Split-Path $installer -Leaf',
     '$entry = Get-Content $checksums | Where-Object { $_ -match [regex]::Escape($fileName) } | Select-Object -First 1',
@@ -192,10 +199,11 @@ export default async function VerifyChecksumPage() {
               <h1 className="mt-5 font-display text-4xl font-semibold tracking-[-0.03em] text-ink sm:text-5xl">
                 How to verify HalalDL SHA256 checksums on Windows.
               </h1>
-              <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
-                The rule is simple: download from GitHub Releases, open the SHA256SUMS file from
-                the same release, compute the local hash, and only continue when both values match.
-              </p>
+               <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
+                 This page is the exact verification step. Download from GitHub Releases, open the
+                 SHA256SUMS file from the same release, compute the local hash, and only continue
+                 when both values match.
+               </p>
 
               <div className="mt-6 flex flex-wrap gap-3 text-sm text-ink-soft">
                 <span className="rounded-full border border-line bg-paper-strong/80 px-3 py-1.5">
@@ -231,18 +239,29 @@ export default async function VerifyChecksumPage() {
               </p>
               <p className="mt-3 text-sm leading-relaxed text-ink-soft">
                 Put the installer file and <span className="font-medium text-ink">SHA256SUMS.txt</span> in
-                your Downloads folder, then run one command to compare them.
+                your Downloads folder, then choose the installer you downloaded.
               </p>
               <p className="mt-2 text-xs leading-relaxed text-ink-muted">
                 Verified for Windows PowerShell 5.1 and PowerShell 7.
               </p>
-              <div className="mt-5">
-                <CopyCommand command={fullHashCommand} />
-              </div>
-              <p className="mt-4 text-xs leading-relaxed text-ink-muted">
-                If you downloaded Lite instead, replace the file name with{" "}
-                <span className="font-medium text-ink">{liteSetupName}</span>.
-              </p>
+              <VerifyCommandPanel
+                options={[
+                  {
+                    id: "full",
+                    label: "Full installer",
+                    fileName: fullSetupName,
+                    command: fullHashCommand,
+                    description: "Use this if you downloaded the Full setup from the release assets.",
+                  },
+                  {
+                    id: "lite",
+                    label: "Lite installer",
+                    fileName: liteSetupName,
+                    command: liteHashCommand,
+                    description: "Use this if you downloaded the Lite setup and manage more of the toolchain yourself.",
+                  },
+                ]}
+              />
             </aside>
           </ScrollReveal>
 
@@ -347,8 +366,8 @@ export default async function VerifyChecksumPage() {
                   Verify first, then install.
                 </h2>
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                  If the checksum matches, go back to the download page or inspect the public
-                  release source directly on GitHub.
+                  If SHA256 matches, go back to the download page or inspect the public release
+                  source directly on GitHub.
                 </p>
               </div>
 

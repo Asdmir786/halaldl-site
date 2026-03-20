@@ -14,7 +14,7 @@ export function HomeCtaFooter({ github }: { github: GitHubSnapshot }) {
             <div>
               <div className="eyebrow">Ready</div>
               <h2 className="mt-5 font-display text-2xl font-semibold tracking-[-0.02em] text-ink sm:text-3xl">
-                Download the latest build with the trust path intact.
+                Pick the build, then install with confidence.
               </h2>
               <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink-soft">
                 Latest public release is <strong className="text-ink">{github.latestVersion}</strong>,
@@ -24,13 +24,13 @@ export function HomeCtaFooter({ github }: { github: GitHubSnapshot }) {
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-              <a
+              <Link
                 href="/download"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-ink px-6 py-3.5 text-[0.95rem] font-semibold text-paper transition-all hover:-translate-y-0.5"
               >
                 Download latest
                 <ArrowRight className="h-4 w-4" />
-              </a>
+              </Link>
               <a
                 href={SITE_LINKS.repoUrl}
                 target="_blank"

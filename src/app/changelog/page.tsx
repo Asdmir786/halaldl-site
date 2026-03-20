@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/home/home-header";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { getSiteUrl, getSocialImage } from "@/lib/site";
-import { getChangelogEntries, RELEASE_CHECKLIST } from "@/lib/changelog";
+import { getChangelogEntries } from "@/lib/changelog";
 
 export const metadata: Metadata = {
   title: "Changelog",
@@ -34,6 +34,8 @@ export const metadata: Metadata = {
 
 export default async function ChangelogPage() {
   const [featured, ...entries] = await getChangelogEntries();
+  const releaseHistory = [featured, ...entries];
+  const earliestRelease = releaseHistory[releaseHistory.length - 1];
   const siteUrl = getSiteUrl();
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -87,14 +89,46 @@ export default async function ChangelogPage() {
               What changed in HalalDL.
             </h1>
             <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
-              Release notes should prove progress, not just announce it. Use this page for the
-              high-signal version summary, then link back to the full GitHub release when people want
-              the raw details.
+              Use this page when you want release-by-release proof before you download or update.
+              Each entry gives the high-signal summary first, then links back to the full GitHub
+              release for raw notes and assets.
             </p>
           </ScrollReveal>
 
           <section className="pt-14 sm:pt-16">
             <div className="section-divider mb-12" />
+
+            <ScrollReveal className="grid gap-4 md:grid-cols-3">
+              <article className="surface-card-static rounded-2xl p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
+                  Latest release
+                </p>
+                <p className="mt-2 font-display text-2xl font-semibold text-ink">{featured.version}</p>
+                <p className="mt-2 text-sm leading-relaxed text-ink-soft">{featured.date}</p>
+              </article>
+              <article className="surface-card-static rounded-2xl p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
+                  Public history
+                </p>
+                <p className="mt-2 font-display text-2xl font-semibold text-ink">
+                  {releaseHistory.length} releases
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                  From {earliestRelease.version} to {featured.version}.
+                </p>
+              </article>
+              <article className="surface-card-static rounded-2xl p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
+                  Reading pattern
+                </p>
+                <p className="mt-2 font-display text-2xl font-semibold text-ink">Added. Improved. Fixed.</p>
+                <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                  Notes are reserved for install, migration, or trust-related context.
+                </p>
+              </article>
+            </ScrollReveal>
+
+            <div className="section-divider my-12" />
 
             <ScrollReveal className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start">
               <article className="surface-elevated overflow-hidden rounded-2xl p-6 sm:p-8">
@@ -153,29 +187,25 @@ export default async function ChangelogPage() {
               </article>
 
               <aside className="surface-card-static rounded-2xl p-6">
-                <h2 className="font-display text-xl font-semibold text-ink">Release checklist</h2>
+                <h2 className="font-display text-xl font-semibold text-ink">How to read this page</h2>
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                  Use this on every release so the website stays current without making every update a
-                  custom one-off.
+                  This page should help you judge momentum quickly instead of making you read every
+                  raw release note line-by-line.
                 </p>
 
-                <div className="mt-6 space-y-6">
-                  {RELEASE_CHECKLIST.map((group) => (
-                    <section key={group.title}>
-                      <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                        {group.title}
-                      </h3>
-                      <ul className="mt-3 space-y-3">
-                        {group.items.map((item) => (
-                          <li key={item} className="flex gap-3 text-sm leading-relaxed text-ink-soft">
-                            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-mint-strong" />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </section>
+                <ul className="mt-6 space-y-3">
+                  {[
+                    "Start with the newest entry to see what changed in plain language.",
+                    "Use Added, Improved, and Fixed to scan for the kind of change you care about.",
+                    "Open the linked GitHub Release when you want the exact assets or full raw notes.",
+                    "Pay extra attention to Notes when a release affects install flow, SmartScreen, or verification.",
+                  ].map((item) => (
+                    <li key={item} className="flex gap-3 text-sm leading-relaxed text-ink-soft">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-mint-strong" />
+                      <span>{item}</span>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </aside>
             </ScrollReveal>
           </section>

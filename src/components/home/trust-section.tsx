@@ -26,7 +26,7 @@ export function TrustSection({ github }: { github: GitHubSnapshot }) {
           eyebrow="Trust"
           title="Direct about downloads."
           accent="Clear verification path."
-          body="GitHub Releases is canonical. SHA256SUMS.txt is attached. SmartScreen may warn because the installers are not code-signed yet. That should read like a practical checklist, not a vague reassurance panel."
+          body="Use this section for the practical check: release source, SHA256SUMS.txt, and SmartScreen context. It should read like a checklist, not a vague reassurance panel."
           className="lg:max-w-md"
         />
 
@@ -40,8 +40,8 @@ export function TrustSection({ github }: { github: GitHubSnapshot }) {
                 <div>
                   <h3 className="font-display text-xl font-semibold text-ink">Download path</h3>
                   <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                    The safe path is visible: download from GitHub Releases, verify SHA256, then
-                    decide how you want to handle the SmartScreen warning.
+                    Download from GitHub Releases, verify SHA256, then decide how you want to
+                    handle the SmartScreen warning.
                   </p>
                 </div>
               </div>
