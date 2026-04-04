@@ -52,9 +52,9 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
           </h1>
 
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg">
-            Presets instead of flags. Visible raw logs instead of vague progress. Full or Lite
-            install paths. Start on the download page, then verify SHA256 if you want to confirm
-            the file before first run.
+            Quick tray flow instead of repeated shell work. Subtitle-aware presets, visible raw
+            logs, and safer app-update checks. Download from GitHub Releases, then verify SHA256
+            if you want the extra trust step before first run.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -87,9 +87,9 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
           <div className="screenshot-frame hero-stage-shell p-3 sm:p-4">
             <div className="screenshot-inner hero-screenshot-inner">
               <ThemedScreenshot
-                lightSrc="/screenshots/light/halaldl-downloads.png"
-                darkSrc="/screenshots/halaldl-downloads.png"
-                alt="HalalDL downloads screen showing queue management and preset selection"
+                lightSrc="/releases/0.4.0/promo/hero.png"
+                darkSrc="/releases/0.4.0/promo/hero-dark.png"
+                alt="HalalDL 0.4.0 hero art showing quick flow, presets, and update experience"
                 sizes="(min-width: 1280px) 680px, (min-width: 1024px) 52vw, 100vw"
                 priority
                 renderMode="paired"

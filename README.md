@@ -21,7 +21,7 @@ The site is built around the current public HalalDL product story:
 - Upstream README: [HalalDL README](https://github.com/Asdmir786/HalalDL#readme)
 - Support: [SUPPORT.md](https://github.com/Asdmir786/HalalDL/blob/main/SUPPORT.md)
 
-Live product details were checked against GitHub on March 18, 2026. At that point, the latest public release was `v0.3.9`, published on March 12, 2026, and the repo described HalalDL as a Windows-first, local-first desktop GUI for `yt-dlp` with presets, raw logs, and optional tool bundling.
+Live product details were checked against GitHub on April 4, 2026. At that point, the latest public release was `v0.4.0`, published on April 4, 2026, and the repo described HalalDL as a Windows-first, local-first desktop GUI for `yt-dlp` with presets, raw logs, optional tool bundling, quick tray downloads, subtitle-aware presets, and safer app-update flow.
 
 ## Site Goals
 

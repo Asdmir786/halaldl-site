@@ -11,7 +11,7 @@ export function ProofSection() {
         eyebrow="Product Proof"
         title="The interface speaks for itself."
         accent="The stage should feel stable."
-        body="As you move through downloads, logs, settings, and history, the screenshot panel should stay pinned, theme-correct, and visually stable instead of collapsing or drifting."
+        body="As you move through quick flow, subtitle presets, verified updates, notification routing, history, and logs, the screenshot panel should stay pinned, theme-correct, and visually stable instead of collapsing or drifting."
         className="max-w-2xl"
       />
 

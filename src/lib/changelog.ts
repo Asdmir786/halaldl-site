@@ -34,6 +34,12 @@ export type ReleaseChecklistGroup = {
 };
 
 const RELEASE_MEDIA_BY_VERSION: Record<string, ChangelogMedia> = {
+  "v0.4.0": {
+    type: "image",
+    lightSrc: "/releases/0.4.0/promo/update-flow.png",
+    darkSrc: "/releases/0.4.0/promo/update-flow-dark.png",
+    alt: "HalalDL 0.4.0 update flow and verified app update experience",
+  },
   "v0.3.9": {
     type: "image",
     lightSrc: "/screenshots/light/halaldl-downloads.png",

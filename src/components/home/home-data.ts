@@ -19,32 +19,32 @@ export const trustSignals = [
 export const workflowSteps = [
   {
     num: "01",
-    label: "Start clean",
-    title: "Paste the link and choose a preset without hunting for flags.",
-    body: "Input, preset choice, and queue controls sit on one authored surface. It should feel like a desktop tool that already understands the next question you would ask in the terminal.",
-    detail: "URL, preset, and action state stay visible together.",
+    label: "Start faster",
+    title: "Drop a copied link into the full app or quick tray flow without rebuilding the routine.",
+    body: "The point of the new quick flow is not just speed. It is that the fast path still keeps the URL, preset, and next action understandable instead of turning into a mysterious one-click shortcut.",
+    detail: "Clipboard, preset, and launch intent stay readable together.",
   },
   {
     num: "02",
-    label: "Control the queue",
-    title: "Start now or queue it deliberately instead of guessing the app state.",
-    body: "The important difference is not just that a queue exists. It is that active, waiting, and completed work read clearly enough that you can scan the window and trust what happens next.",
-    detail: "Queueing stays explicit, not hidden behind shell output.",
+    label: "Reuse the preset",
+    title: "Carry subtitle choices and cleaner labels into the moment you actually download.",
+    body: "Preset-driven workflow matters more when the preset remembers the parts people redo every day. In 0.4.0 that now includes subtitle behavior, cleaner grouping, and a flow that reads better in both the full window and tray panel.",
+    detail: "Preset logic stays reusable instead of becoming repeated setup work.",
   },
   {
     num: "03",
-    label: "Inspect what happened",
-    title: "Logs and history stay available when something succeeds or fails.",
-    body: "Completed runs, raw output, and repeatable settings make the app usable over time. You should not need to reconstruct a session from memory after the terminal closes.",
-    detail: "Visible output and archived history make the tool auditable.",
+    label: "Follow the signal",
+    title: "Updates, notifications, logs, and history should point you straight to what changed.",
+    body: "A desktop downloader becomes more trustworthy when the app can surface the right update package, route a notification to the right place, and still leave enough raw output and history behind to explain the result.",
+    detail: "Visible output plus guided attention makes the tool auditable.",
   },
 ];
 
 export const valueProps = [
   {
     icon: Download,
-    title: "Cleaner GUI over yt-dlp",
-    body: "Less repeated flag work, without pretending the engine disappeared.",
+    title: "Tray-friendly quick flow",
+    body: "Repeat downloads get faster without collapsing into a black-box shortcut.",
   },
   {
     icon: TerminalSquare,
@@ -53,12 +53,12 @@ export const valueProps = [
   },
   {
     icon: Sparkles,
-    title: "Preset-driven workflow",
-    body: "Common video and audio targets become practical, not repetitive.",
+    title: "Subtitle-aware presets",
+    body: "Common video, audio, and subtitle targets become practical instead of repetitive.",
   },
   {
     icon: Wrench,
-    title: "Full vs Lite is explicit",
-    body: "Tooling tradeoffs stay visible instead of being buried in install docs.",
+    title: "Safer update path",
+    body: "App-update checks and package verification feel more deliberate in 0.4.0.",
   },
 ];

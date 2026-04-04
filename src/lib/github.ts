@@ -81,27 +81,27 @@ const FALLBACK_SNAPSHOT: GitHubSnapshot = {
   stars: 3,
   openIssues: 0,
   licenseName: "MIT License",
-  lastPushedAt: "2026-03-17T18:48:16Z",
-  lastPushedLabel: formatDate("2026-03-17T18:48:16Z"),
-  latestVersion: "v0.3.9",
-  latestReleaseName: "v0.3.9 - The Faster Flow Update",
-  latestReleaseUrl: "https://github.com/Asdmir786/HalalDL/releases/tag/v0.3.9",
-  latestReleaseDate: "2026-03-12T14:16:26Z",
-  latestReleaseLabel: formatDate("2026-03-12T14:16:26Z"),
+  lastPushedAt: "2026-04-04T14:27:58Z",
+  lastPushedLabel: formatDate("2026-04-04T14:27:58Z"),
+  latestVersion: "v0.4.0",
+  latestReleaseName: "v0.4.0 - The Quick Flow Update",
+  latestReleaseUrl: "https://github.com/Asdmir786/HalalDL/releases/tag/v0.4.0",
+  latestReleaseDate: "2026-04-04T14:39:10Z",
+  latestReleaseLabel: formatDate("2026-04-04T14:39:10Z"),
   firstPublicVersion: "v0.1.0",
   firstPublicReleaseDate: "2026-01-10T18:09:25Z",
   firstPublicReleaseLabel: formatDate("2026-01-10T18:09:25Z"),
   releaseNotes:
-    "Latest checked release snapshot from March 18, 2026. Faster Full setup flow, better link feedback, and cleaner install/update UX.",
+    "Latest checked release snapshot from April 4, 2026. Quick tray downloads, subtitle-aware presets, verified app updates, and clearer notification routing.",
   fullSetupUrl:
-    "https://github.com/Asdmir786/HalalDL/releases/download/v0.3.9/HalalDL-Full-v0.3.9-win10%2B11-x64-setup.exe",
-  fullSetupSize: 4188336,
+    "https://github.com/Asdmir786/HalalDL/releases/download/v0.4.0/HalalDL-Full-v0.4.0-win10%2B11-x64-setup.exe",
+  fullSetupSize: 4495881,
   liteSetupUrl:
-    "https://github.com/Asdmir786/HalalDL/releases/download/v0.3.9/HalalDL-Lite-v0.3.9-win10%2B11-x64-setup.exe",
-  liteSetupSize: 4189308,
+    "https://github.com/Asdmir786/HalalDL/releases/download/v0.4.0/HalalDL-Lite-v0.4.0-win10%2B11-x64-setup.exe",
+  liteSetupSize: 4498961,
   checksumsUrl:
-    "https://github.com/Asdmir786/HalalDL/releases/download/v0.3.9/SHA256SUMS.txt",
-  checksumDigest: "sha256:b9cfcda9b5c38d9ead6c3b5829aa782265da2b9a85109e2dbb05fd6aff72246a",
+    "https://github.com/Asdmir786/HalalDL/releases/download/v0.4.0/SHA256SUMS.txt",
+  checksumDigest: "sha256:f13ad15ebf3c40a7b8609d00a40a476195def3b25c6a0270eceda9cf0f2b3c49",
 };
 
 function formatDate(input: string) {
