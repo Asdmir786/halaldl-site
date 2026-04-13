@@ -277,10 +277,5 @@ export const FEATURE_STORIES: FeatureStory[] = [
 ];
 
 export function getSiteUrl() {
-  const candidate =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    process.env.SITE_URL ??
-    PRODUCTION_SITE_URL;
-
-  return new URL(candidate);
+  return new URL(PRODUCTION_SITE_URL);
 }

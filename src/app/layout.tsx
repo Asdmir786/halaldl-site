@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { getSiteUrl, SITE_LINKS } from "@/lib/site";
+import { getSiteStructuredData, serializeJsonLd, SITE_DESCRIPTION, SITE_NAME } from "@/lib/seo";
 import { getThemeScript } from "@/lib/theme";
 
 const bodyFont = Inter({
@@ -23,11 +24,10 @@ const displayFont = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
   title: {
-    default: "HalalDL | Windows-first yt-dlp GUI for local-first downloads",
+    default: `${SITE_NAME} | Windows-first yt-dlp GUI for local-first downloads`,
     template: "%s | HalalDL",
   },
-  description:
-    "HalalDL is a Windows-first, local-first desktop GUI for yt-dlp with presets, visible raw logs, Full and Lite installers, and zero telemetry.",
+  description: SITE_DESCRIPTION,
   keywords: [
     "HalalDL",
     "Windows yt-dlp GUI",
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     apple: "/brand/icon.png",
     shortcut: "/favicon.ico",
   },
-  manifest: "/site.webmanifest",
+  manifest: "/manifest.webmanifest",
   category: "software",
 };
 
@@ -88,6 +88,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteStructuredData = getSiteStructuredData();
+
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body
@@ -96,6 +98,13 @@ export default function RootLayout({
         <Script id="theme-script" strategy="beforeInteractive">
           {getThemeScript()}
         </Script>
+        {siteStructuredData.map((schema, index) => (
+          <script
+            key={schema["@id"] ?? index}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: serializeJsonLd(schema) }}
+          />
+        ))}
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>

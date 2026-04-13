@@ -16,6 +16,7 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { getGitHubSnapshot } from "@/lib/github";
 import { getSiteUrl, getSocialImage, SITE_LINKS } from "@/lib/site";
+import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { formatMegabytes, shortenDigest } from "@/components/home/home-shared";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -105,38 +106,24 @@ export default async function DownloadPage() {
     ],
   };
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: siteUrl.origin,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Download",
-        item: `${siteUrl.origin}/download`,
-      },
-    ],
-  };
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Download", path: "/download" },
+  ]);
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(downloadSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(downloadSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />
 
       <main id="main-content" className="overflow-x-hidden">

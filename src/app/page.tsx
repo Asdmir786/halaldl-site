@@ -1,6 +1,7 @@
 import { LandingPage } from "@/components/home/landing-page";
 import { getGitHubSnapshot } from "@/lib/github";
 import { FAQ_ITEMS, getSiteUrl, SITE_LINKS } from "@/lib/site";
+import { getSoftwareSourceCodeSchema, serializeJsonLd } from "@/lib/seo";
 
 export default async function Home() {
   const github = await getGitHubSnapshot();
@@ -13,6 +14,7 @@ export default async function Home() {
     applicationCategory: "UtilitiesApplication",
     operatingSystem: "Windows 10, Windows 11",
     softwareVersion: github.latestVersion,
+    url: siteUrl.origin,
     headline: "Windows-first yt-dlp GUI for local-first downloads",
     description:
       "HalalDL is an open-source Windows desktop GUI for yt-dlp with presets, visible raw logs, Full and Lite installers, and no telemetry.",
@@ -28,9 +30,9 @@ export default async function Home() {
     releaseNotes: github.releaseNotes,
     sameAs: [SITE_LINKS.repoUrl, SITE_LINKS.supportUrl, SITE_LINKS.issuesUrl],
     screenshot: [
-      new URL("/screenshots/halaldl-downloads.png", siteUrl).toString(),
-      new URL("/screenshots/halaldl-presets.png", siteUrl).toString(),
-      new URL("/screenshots/halaldl-tools.png", siteUrl).toString(),
+      new URL("/releases/0.4.1/promo/hero-light.png", siteUrl).toString(),
+      new URL("/releases/0.4.1/promo/preset-filenames-light.png", siteUrl).toString(),
+      new URL("/releases/0.4.1/promo/download-details-light.png", siteUrl).toString(),
     ],
   };
 
@@ -51,11 +53,15 @@ export default async function Home() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(softwareApplicationSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(getSoftwareSourceCodeSchema()) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
       />
       <LandingPage github={github} />
     </>

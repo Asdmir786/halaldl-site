@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { SectionShell } from "@/components/home/home-shared";
@@ -34,6 +35,28 @@ export function FaqSection() {
           </ScrollReveal>
         ))}
       </div>
+
+      <ScrollReveal className="mt-8">
+        <nav
+          aria-label="Related HalalDL guides"
+          className="flex flex-wrap gap-3 rounded-lg border border-line bg-paper/70 p-4"
+        >
+          {[
+            { href: "/download", label: "Download HalalDL" },
+            { href: "/compare/full-vs-lite", label: "Compare Full vs Lite" },
+            { href: "/install/windows", label: "Install on Windows" },
+            { href: "/trust/verify-checksum", label: "Verify SHA256" },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-lg border border-line bg-paper-strong px-3 py-2 text-sm font-semibold text-ink transition-colors hover:bg-paper"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </ScrollReveal>
     </SectionShell>
   );
 }

@@ -4,8 +4,9 @@ import { ArrowUpRight, CheckCircle2, FileStack, Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/home/home-header";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
-import { getSiteUrl, getSocialImage } from "@/lib/site";
+import { getSocialImage } from "@/lib/site";
 import { getChangelogEntries } from "@/lib/changelog";
+import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Changelog",
@@ -36,31 +37,16 @@ export default async function ChangelogPage() {
   const [featured, ...entries] = await getChangelogEntries();
   const releaseHistory = [featured, ...entries];
   const earliestRelease = releaseHistory[releaseHistory.length - 1];
-  const siteUrl = getSiteUrl();
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: siteUrl.origin,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Changelog",
-        item: `${siteUrl.origin}/changelog`,
-      },
-    ],
-  };
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Changelog", path: "/changelog" },
+  ]);
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />
 
       <main id="main-content" className="overflow-x-hidden">

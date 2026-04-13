@@ -12,7 +12,8 @@ import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { VerifyCommandPanel } from "@/components/trust/verify-command-panel";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { getGitHubSnapshot } from "@/lib/github";
-import { getSiteUrl, getSocialImage, SITE_LINKS } from "@/lib/site";
+import { getSocialImage, SITE_LINKS } from "@/lib/site";
+import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { shortenDigest } from "@/components/home/home-shared";
 
 export const metadata: Metadata = {
@@ -51,7 +52,6 @@ function getDownloadFileName(downloadUrl: string, fallbackName: string) {
 
 export default async function VerifyChecksumPage() {
   const github = await getGitHubSnapshot();
-  const siteUrl = getSiteUrl();
   const fullSetupName = getDownloadFileName(github.fullSetupUrl, "HalalDL-Full-setup.exe");
   const liteSetupName = getDownloadFileName(github.liteSetupUrl, "HalalDL-Lite-setup.exe");
   const fullHashCommand = [
@@ -133,38 +133,24 @@ export default async function VerifyChecksumPage() {
     ],
   };
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: siteUrl.origin,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Verify SHA256",
-        item: `${siteUrl.origin}/trust/verify-checksum`,
-      },
-    ],
-  };
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Verify SHA256", path: "/trust/verify-checksum" },
+  ]);
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(howToSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />
 
       <main id="main-content" className="overflow-x-hidden">

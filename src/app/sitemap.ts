@@ -1,45 +1,12 @@
 import type { MetadataRoute } from "next";
 import { getSiteUrl } from "@/lib/site";
+import { SITEMAP_ROUTES } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = getSiteUrl();
 
-  return [
-    {
-      url: siteUrl.origin,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${siteUrl.origin}/changelog`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl.origin}/download`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${siteUrl.origin}/compare/full-vs-lite`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl.origin}/install/windows`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl.origin}/trust/verify-checksum`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-  ];
+  return SITEMAP_ROUTES.map((route) => ({
+    ...route,
+    url: new URL(route.url, siteUrl).toString(),
+  }));
 }

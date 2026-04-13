@@ -13,7 +13,8 @@ import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { getGitHubSnapshot } from "@/lib/github";
-import { getSiteUrl, getSocialImage, SITE_LINKS } from "@/lib/site";
+import { getSocialImage, SITE_LINKS } from "@/lib/site";
+import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { formatMegabytes } from "@/components/home/home-shared";
 
 export const metadata: Metadata = {
@@ -62,7 +63,6 @@ const installSteps = [
 
 export default async function InstallWindowsPage() {
   const github = await getGitHubSnapshot();
-  const siteUrl = getSiteUrl();
 
   const howToSchema = {
     "@context": "https://schema.org",
@@ -109,38 +109,24 @@ export default async function InstallWindowsPage() {
     ],
   };
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: siteUrl.origin,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Install on Windows",
-        item: `${siteUrl.origin}/install/windows`,
-      },
-    ],
-  };
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Install on Windows", path: "/install/windows" },
+  ]);
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(howToSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />
 
       <main id="main-content" className="overflow-x-hidden">
