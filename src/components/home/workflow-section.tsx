@@ -26,7 +26,7 @@ export function WorkflowSection() {
           </a>
         </div>
 
-        <div className="workflow-rail space-y-5 lg:space-y-7 lg:pl-6">
+        <div className="workflow-rail space-y-5 lg:space-y-7 lg:pl-8">
           {workflowSteps.map((step, index) => (
             <ScrollReveal
               key={step.num}
@@ -36,19 +36,16 @@ export function WorkflowSection() {
               margin="0px 0px 4% 0px"
             >
               <article className="workflow-card rounded-[1.6rem] p-6 sm:p-7">
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-4">
                   <div>
                     <div className="inline-flex items-center gap-2 rounded-full border border-line bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                      <span>{step.num}</span>
+                      <span className="font-display text-ink-soft">{step.num}</span>
                       <span>{step.label}</span>
                     </div>
                     <h3 className="mt-4 max-w-2xl font-display text-xl font-semibold tracking-tight text-ink sm:text-[1.6rem]">
                       {step.title}
                     </h3>
                   </div>
-                  <span className="hidden rounded-full border border-line bg-paper px-3 py-1 text-xs font-medium text-ink-muted sm:inline-flex">
-                    Step {step.num}
-                  </span>
                 </div>
                 <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft sm:text-base">
                   {step.body}
@@ -62,10 +59,10 @@ export function WorkflowSection() {
         </div>
       </div>
 
-      <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-12 grid items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {valueProps.map((prop, index) => (
-          <ScrollReveal key={prop.title} delay={index * 0.04} amount={0.42}>
-            <article className="surface-card rounded-2xl p-5">
+          <ScrollReveal key={prop.title} className="h-full" delay={index * 0.04} amount={0.42}>
+            <article className="surface-card flex h-full min-h-[12.25rem] flex-col rounded-2xl p-5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky">
                 <prop.icon className="h-5 w-5 text-sky-strong" />
               </div>

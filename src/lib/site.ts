@@ -96,6 +96,31 @@ export const FAQ_ITEMS = [
     answer:
       "Yes. The website changelog gives a high-level summary, and each entry can link back to the matching GitHub Release for the full raw notes and assets.",
   },
+  {
+    question: "What changed in HalalDL 0.4.1?",
+    answer:
+      "0.4.1 is a precision polish release: preset filename templates, a more compact quick panel, settings that persist reliably, clearer finished download cards, optional clip start and end controls, and better latest-result spotlight behavior.",
+  },
+  {
+    question: "Do preset filename templates need %(ext)s?",
+    answer:
+      "No. Custom presets can include a filename template, and HalalDL makes extension handling safe when the template omits %(ext)s so downloaded files still keep a proper extension.",
+  },
+  {
+    question: "Why are the Full and Lite installers close in size?",
+    answer:
+      "Both are Windows desktop installers for the same app. The practical difference is responsibility: Full is meant to manage more of the local tool setup, while Lite is for people who already manage yt-dlp, FFmpeg, aria2, and related tools themselves.",
+  },
+  {
+    question: "What should I do if settings used to revert for me?",
+    answer:
+      "Update to v0.4.1, set the behavior option once, then leave and reopen Settings. The release fixes the draft-state issue that could lose tray click behavior after navigation.",
+  },
+  {
+    question: "Does clip mode always cut with frame-perfect accuracy?",
+    answer:
+      "No. Clip mode depends on yt-dlp download-section behavior, so exact cut behavior can depend on the source, selected format, and available local tooling.",
+  },
 ];
 
 export type FeatureStory = {

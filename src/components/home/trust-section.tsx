@@ -7,7 +7,7 @@ import { SITE_LINKS } from "@/lib/site";
 
 export function TrustSection({ github }: { github: GitHubSnapshot }) {
   const repoSignals = [
-    { label: "Repository", value: "github.com/Asdmir786/HalalDL" },
+    { label: "Repository", value: "Asdmir786/HalalDL" },
     { label: "Latest release", value: `${github.latestVersion} · ${github.latestReleaseLabel}` },
     {
       label: "First public release",
@@ -20,19 +20,19 @@ export function TrustSection({ github }: { github: GitHubSnapshot }) {
     <SectionShell>
       <div className="section-divider mb-16" />
 
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-16">
+      <div className="grid gap-10">
         <SectionIntro
           id="trust"
           eyebrow="Trust"
           title="Direct about downloads."
           accent="Clear verification path."
           body="Use this section for the practical check: release source, SHA256SUMS.txt, and SmartScreen context. It should read like a checklist, not a vague reassurance panel."
-          className="lg:max-w-md"
+          className="max-w-3xl"
         />
 
-        <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+        <div className="grid items-stretch gap-4 lg:grid-cols-2">
           <ScrollReveal>
-            <article className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
+            <article className="surface-card-static h-full rounded-[1.75rem] p-6 sm:p-7">
               <div className="flex items-start gap-3">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky">
                   <ShieldCheck className="h-5 w-5 text-sky-strong" />
@@ -46,7 +46,7 @@ export function TrustSection({ github }: { github: GitHubSnapshot }) {
                 </div>
               </div>
 
-              <div className="mt-6 space-y-3">
+              <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
                 {[
                   "Download only from the GitHub Releases page.",
                   "Open SHA256SUMS.txt and verify the installer before first run.",
@@ -93,7 +93,7 @@ export function TrustSection({ github }: { github: GitHubSnapshot }) {
           </ScrollReveal>
 
           <ScrollReveal delay={0.06}>
-            <article className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
+            <article className="surface-card-static h-full rounded-[1.75rem] p-6 sm:p-7">
               <div className="flex items-start gap-3">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-mint">
                   <Github className="h-5 w-5 text-mint-strong" />
@@ -106,13 +106,13 @@ export function TrustSection({ github }: { github: GitHubSnapshot }) {
                 </div>
               </div>
 
-              <dl className="mt-6 space-y-3">
+              <dl className="mt-6 grid gap-3 sm:grid-cols-2">
                 {repoSignals.map((item) => (
                   <div key={item.label} className="rounded-2xl border border-line bg-paper/70 p-4">
                     <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
                       {item.label}
                     </dt>
-                    <dd className="mt-2 break-all text-sm font-medium leading-relaxed text-ink">
+                    <dd className="mt-2 text-sm font-medium leading-relaxed text-ink [overflow-wrap:anywhere]">
                       {item.value}
                     </dd>
                   </div>

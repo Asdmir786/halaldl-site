@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
+import { useMemo, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Check } from "lucide-react";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
@@ -13,72 +13,19 @@ type FeatureShowcaseProps = {
 
 export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
   const [activeId, setActiveId] = useState(stories[0]?.id ?? "");
-  const stageRef = useRef<HTMLDivElement | null>(null);
   const shouldReduceMotion = useReducedMotion();
-  const parallaxProgress = useMotionValue(0.5);
-  const smoothParallaxProgress = useSpring(parallaxProgress, {
-    stiffness: 140,
-    damping: 24,
-    mass: 0.22,
-  });
 
   const activeStory = useMemo(
     () => stories.find((story) => story.id === activeId) ?? stories[0],
     [activeId, stories]
   );
   const activeIndex = stories.findIndex((story) => story.id === activeStory?.id);
-  const stageImageY = useTransform(smoothParallaxProgress, [0, 0.5, 1], [34, 0, -34]);
-  const stageImageScale = useTransform(smoothParallaxProgress, [0, 0.5, 1], [1.06, 1.02, 1.06]);
-  const summaryY = useTransform(smoothParallaxProgress, [0, 0.5, 1], [12, 0, -12]);
-
-  useEffect(() => {
-    if (shouldReduceMotion) {
-      parallaxProgress.set(0.5);
-      return;
-    }
-
-    let rafId = 0;
-
-    const updateParallax = () => {
-      const element = stageRef.current;
-
-      if (!element) {
-        return;
-      }
-
-      const rect = element.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const totalRange = viewportHeight + rect.height;
-      const rawProgress = (viewportHeight - rect.top) / totalRange;
-      const clampedProgress = Math.min(Math.max(rawProgress, 0), 1);
-
-      parallaxProgress.set(clampedProgress);
-    };
-
-    const requestUpdate = () => {
-      cancelAnimationFrame(rafId);
-      rafId = window.requestAnimationFrame(updateParallax);
-    };
-
-    requestUpdate();
-    window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
-    };
-  }, [parallaxProgress, shouldReduceMotion]);
 
   if (!activeStory) return null;
 
   return (
     <div className="space-y-8 lg:space-y-10">
-      <div
-        ref={stageRef}
-        className="surface-elevated relative overflow-hidden rounded-[2rem] p-4 sm:p-5 lg:p-6"
-      >
+      <div className="surface-elevated relative overflow-hidden rounded-[2rem] p-4 sm:p-5 lg:p-6">
         <div className="mb-4 flex flex-col gap-3 border-b border-line px-1 pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-2">
             <span
@@ -103,58 +50,36 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
 
         <div className="screenshot-frame p-3 sm:p-4">
           <div data-feature-stage className="feature-stage">
-            {stories.map((story) => {
-              const isActive = story.id === activeStory.id;
-
-              return (
-                <motion.div
-                  key={story.id}
-                  initial={false}
-                  animate={
-                    shouldReduceMotion
-                      ? { opacity: isActive ? 1 : 0 }
-                      : {
-                          opacity: isActive ? 1 : 0,
-                          scale: isActive ? 1 : 1.01,
-                          y: isActive ? 0 : 8,
-                        }
-                  }
-                  transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-                  className={`absolute inset-0 ${
-                    isActive ? "pointer-events-auto" : "pointer-events-none"
-                  }`}
-                  aria-hidden={!isActive}
-                >
-                  <motion.div
-                    className="absolute -inset-x-3 -inset-y-4 will-change-transform"
-                    style={
-                      shouldReduceMotion
-                        ? undefined
-                        : { y: stageImageY, scale: stageImageScale }
-                    }
-                  >
-                    <ThemedScreenshot
-                      lightSrc={story.media.lightSrc}
-                      darkSrc={story.media.darkSrc}
-                      alt={story.media.alt}
-                      sizes="(min-width: 1280px) 1100px, 100vw"
-                      renderMode="paired"
-                      imageClassName="border border-line-strong bg-paper-strong object-cover object-left-top"
-                    />
-                  </motion.div>
-                </motion.div>
-              );
-            })}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeStory.id}
+                initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.985, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 1.01, y: -8 }}
+                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute inset-0"
+              >
+                <ThemedScreenshot
+                  lightSrc={activeStory.media.lightSrc}
+                  darkSrc={activeStory.media.darkSrc}
+                  alt={activeStory.media.alt}
+                  sizes="(min-width: 1280px) 1100px, 100vw"
+                  renderMode="active"
+                  imageClassName="border border-line-strong bg-paper-strong object-contain object-center"
+                />
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
         <motion.div
-          className="mt-4 grid gap-4 rounded-[1.4rem] border border-line bg-paper/70 p-4 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,0.3fr)] lg:items-start"
-          style={shouldReduceMotion ? undefined : { y: summaryY }}
+          className="mt-4 grid gap-4 rounded-[1.4rem] border border-line bg-paper/70 p-4 lg:grid-cols-[minmax(0,0.64fr)_minmax(0,0.36fr)] lg:items-start"
+          initial={false}
+          animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
         >
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-              Active panel
+              What changed
             </p>
             <p className="mt-2 font-display text-2xl font-semibold text-ink">
               {activeStory.title}

@@ -383,7 +383,7 @@ summary:focus-visible {
 .workflow-rail::before {
   content: "";
   position: absolute;
-  left: 1.2rem;
+  left: 0.7rem;
   top: 1rem;
   bottom: 1rem;
   width: 1px;
@@ -401,8 +401,9 @@ summary:focus-visible {
 .workflow-card::before {
   content: "";
   position: absolute;
-  left: 1.15rem;
-  top: 1.7rem;
+  left: -1.23rem;
+  top: 1.95rem;
+  z-index: 1;
   height: 0.85rem;
   width: 0.85rem;
   border-radius: 999px;
