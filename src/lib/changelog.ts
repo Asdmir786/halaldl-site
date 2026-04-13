@@ -34,6 +34,12 @@ export type ReleaseChecklistGroup = {
 };
 
 const RELEASE_MEDIA_BY_VERSION: Record<string, ChangelogMedia> = {
+  "v0.4.1": {
+    type: "image",
+    lightSrc: "/releases/0.4.1/promo/hero-light.png",
+    darkSrc: "/releases/0.4.1/promo/hero-dark.png",
+    alt: "HalalDL 0.4.1 precision polish release hero",
+  },
   "v0.4.0": {
     type: "image",
     lightSrc: "/releases/0.4.0/promo/update-flow.png",
@@ -159,7 +165,12 @@ function looksLikeFix(item: string) {
 
 function isMetaLine(line: string) {
   const normalized = line.replace(/^[-*]\s+/, "").trim();
-  return normalized === "---" || /^Full Changelog:/i.test(normalized) || /^Built with/i.test(normalized);
+  return (
+    normalized === "---" ||
+    /^Released:/i.test(normalized) ||
+    /^Full Changelog:/i.test(normalized) ||
+    /^Built with/i.test(normalized)
+  );
 }
 
 function prefixCategory(item: string, category: string | null) {
@@ -202,7 +213,7 @@ function parseReleaseBody(release: GitHubRelease): ParsedReleaseContent {
     release.tagName,
   );
   let parsedHeadline = parsedHeadlineFromName || release.tagName;
-  let currentSection: "summary" | "added" | "fixes" | "choice" | "note" | null = null;
+  let currentSection: "summary" | "added" | "fixes" | "choice" | "note" | null = "summary";
   let currentSubsection: string | null = null;
   const summaryLines: string[] = [];
   const noteLines: string[] = [];
@@ -235,13 +246,21 @@ function parseReleaseBody(release: GitHubRelease): ParsedReleaseContent {
 
       currentSubsection = null;
 
-      if (normalizedHeading.includes("what") && normalizedHeading.includes("new")) {
+      if (
+        (normalizedHeading.includes("what") && normalizedHeading.includes("new")) ||
+        normalizedHeading.includes("community-reported") ||
+        normalizedHeading.includes("more improvements")
+      ) {
         currentSection = "added";
       } else if (normalizedHeading.includes("fix")) {
         currentSection = "fixes";
       } else if (normalizedHeading.includes("choosing your version")) {
         currentSection = "choice";
-      } else if (normalizedHeading.includes("note from the developer")) {
+      } else if (
+        normalizedHeading.includes("known note") ||
+        normalizedHeading.includes("upgrade note") ||
+        normalizedHeading.includes("note from the developer")
+      ) {
         currentSection = "note";
       } else if (normalizedHeading.includes("update")) {
         currentSection = "summary";

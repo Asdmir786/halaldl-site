@@ -20,23 +20,23 @@ export const workflowSteps = [
   {
     num: "01",
     label: "Start faster",
-    title: "Drop a copied link into the full app or quick tray flow without rebuilding the routine.",
-    body: "The point of the new quick flow is not just speed. It is that the fast path still keeps the URL, preset, and next action understandable instead of turning into a mysterious one-click shortcut.",
-    detail: "Clipboard, preset, and launch intent stay readable together.",
+    title: "Use the compact quick panel without losing the next action.",
+    body: "The 0.4.1 quick panel trims repeated metadata so the download button stays easier to reach on smaller layouts, while the URL, preset, save location, and start mode still remain understandable.",
+    detail: "Compact summary, reachable action, and keyboard-friendly repeat downloads.",
   },
   {
     num: "02",
-    label: "Reuse the preset",
-    title: "Carry subtitle choices and cleaner labels into the moment you actually download.",
-    body: "Preset-driven workflow matters more when the preset remembers the parts people redo every day. In 0.4.0 that now includes subtitle behavior, cleaner grouping, and a flow that reads better in both the full window and tray panel.",
-    detail: "Preset logic stays reusable instead of becoming repeated setup work.",
+    label: "Name it once",
+    title: "Carry filename templates inside the preset instead of repeating them per job.",
+    body: "Custom presets can now include their own filename template. HalalDL also keeps extension handling safe when a template leaves out the extension token.",
+    detail: "Preset choices cover format, subtitles, and filename intent together.",
   },
   {
     num: "03",
-    label: "Follow the signal",
-    title: "Updates, notifications, logs, and history should point you straight to what changed.",
-    body: "A desktop downloader becomes more trustworthy when the app can surface the right update package, route a notification to the right place, and still leave enough raw output and history behind to explain the result.",
-    detail: "Visible output plus guided attention makes the tool auditable.",
+    label: "Trust the finish",
+    title: "Saved settings, clearer result cards, and latest-result spotlight make the end state easier to read.",
+    body: "Behavior settings now persist as they change. Finished cards can show total output size and duration, and notification-routed results get a finite glow instead of permanent noise.",
+    detail: "The app is quieter where it should be and louder only where attention matters.",
   },
 ];
 
@@ -53,12 +53,12 @@ export const valueProps = [
   },
   {
     icon: Sparkles,
-    title: "Subtitle-aware presets",
-    body: "Common video, audio, and subtitle targets become practical instead of repetitive.",
+    title: "Preset filename templates",
+    body: "Custom presets can carry naming rules and keep extensions safe automatically.",
   },
   {
     icon: Wrench,
-    title: "Safer update path",
-    body: "App-update checks and package verification feel more deliberate in 0.4.0.",
+    title: "Settings that persist",
+    body: "Tray click behavior and related settings now save as soon as they change.",
   },
 ];

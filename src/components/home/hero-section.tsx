@@ -45,16 +45,15 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
             Open-source Windows downloader
           </div>
 
-          <h1 className="mt-6 font-display text-[2.6rem] font-semibold leading-[0.98] tracking-[-0.05em] text-ink sm:text-[3.35rem] lg:text-[4rem] xl:text-[4.35rem]">
+          <h1 className="mt-6 font-display text-[2.45rem] font-semibold leading-[1.02] tracking-normal text-ink sm:text-[3.35rem] lg:text-[4rem] xl:text-[4.35rem]">
             The yt-dlp interface
             <br className="hidden sm:block" />
             <span className="block text-ink-soft sm:inline">Windows deserves.</span>
           </h1>
 
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg">
-            Quick tray flow instead of repeated shell work. Subtitle-aware presets, visible raw
-            logs, and safer app-update checks. Download from GitHub Releases, then verify SHA256
-            if you want the extra trust step before first run.
+            Compact quick downloads, preset naming, saved tray behavior, clearer finished cards,
+            raw logs, and SHA256 checks before first run.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -87,12 +86,12 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
           <div className="screenshot-frame hero-stage-shell p-3 sm:p-4">
             <div className="screenshot-inner hero-screenshot-inner">
               <ThemedScreenshot
-                lightSrc="/releases/0.4.0/promo/hero.png"
-                darkSrc="/releases/0.4.0/promo/hero-dark.png"
-                alt="HalalDL 0.4.0 hero art showing quick flow, presets, and update experience"
+                lightSrc="/releases/0.4.1/promo/hero-light.png"
+                darkSrc="/releases/0.4.1/promo/hero-dark.png"
+                alt="HalalDL 0.4.1 hero art showing preset filenames, compact quick downloads, and settings polish"
                 sizes="(min-width: 1280px) 680px, (min-width: 1024px) 52vw, 100vw"
                 priority
-                renderMode="paired"
+                renderMode="active"
                 className="inset-0"
                 imageClassName="border border-line-strong bg-paper-strong object-cover object-left-top"
               />
@@ -100,12 +99,12 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
           </div>
 
           <div className="mt-4 grid gap-3 sm:grid-cols-[auto_minmax(0,1fr)]">
-            <div className="surface-elevated rounded-2xl px-4 py-3 shadow-[0_18px_38px_rgba(12,25,41,0.12)]">
+            <div className="surface-elevated rounded-2xl px-4 py-3 shadow-[0_18px_38px_rgba(12,25,41,0.12)] sm:min-w-[9.5rem]">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
                 Latest release
               </p>
               <p className="mt-1 font-display text-lg font-semibold text-ink">{github.latestVersion}</p>
-              <p className="text-sm text-ink-soft">{github.latestReleaseLabel}</p>
+              <p className="whitespace-nowrap text-sm text-ink-soft">{github.latestReleaseLabel}</p>
             </div>
 
             <div className="surface-elevated rounded-2xl px-4 py-3 shadow-[0_18px_40px_rgba(12,25,41,0.14)]">

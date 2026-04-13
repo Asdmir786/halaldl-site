@@ -21,7 +21,7 @@ The site is built around the current public HalalDL product story:
 - Upstream README: [HalalDL README](https://github.com/Asdmir786/HalalDL#readme)
 - Support: [SUPPORT.md](https://github.com/Asdmir786/HalalDL/blob/main/SUPPORT.md)
 
-Live product details were checked against GitHub on April 4, 2026. At that point, the latest public release was `v0.4.0`, published on April 4, 2026, and the repo described HalalDL as a Windows-first, local-first desktop GUI for `yt-dlp` with presets, raw logs, optional tool bundling, quick tray downloads, subtitle-aware presets, and safer app-update flow.
+Live product details were checked against GitHub on April 12, 2026. At that point, the latest public release was `v0.4.1`, published on April 12, 2026, and the repo described HalalDL as a Windows-first, local-first desktop GUI for `yt-dlp` with presets, raw logs, optional tool bundling, compact quick downloads, preset filename templates, settings persistence fixes, and clearer finished-result cards.
 
 ## Site Goals
 
@@ -42,14 +42,14 @@ The landing page is intentionally product-led:
 - Trust and safety section explaining canonical source and verification flow
 - FAQ and final CTA
 
-The visual system uses layered glass surfaces, restrained motion, theme-aware screenshots, and a light/dark switch that matches the product screenshots already added to the site.
+The visual system uses layered glass surfaces, restrained CSS motion, theme-aware screenshots, and a light/dark switch that matches the product screenshots already added to the site.
 
 ## Technical Stack
 
 - [Next.js 16](https://nextjs.org/)
 - [React 19](https://react.dev/)
 - [Tailwind CSS 4](https://tailwindcss.com/)
-- [Motion](https://motion.dev/) for the feature showcase transitions
+- [Motion](https://motion.dev/) for scroll reveals and feature showcase transitions
 - `lucide-react`, `clsx`, and `tailwind-merge` for UI composition
 
 ## Runtime Behavior

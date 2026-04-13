@@ -9,9 +9,9 @@ export function ProofSection() {
 
       <SectionIntro
         eyebrow="Product Proof"
-        title="The interface speaks for itself."
-        accent="The stage should feel stable."
-        body="As you move through quick flow, subtitle presets, verified updates, notification routing, history, and logs, the screenshot panel should stay pinned, theme-correct, and visually stable instead of collapsing or drifting."
+        title="Daily polish lands where people touch the app."
+        accent="The stage stays stable."
+        body="Preset filename templates, compact quick downloads, saved behavior settings, clearer finished cards, latest-result spotlight, and raw logs all stay easy to compare in light or dark mode."
         className="max-w-2xl"
       />
 

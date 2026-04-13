@@ -177,7 +177,7 @@ export default async function ChangelogPage() {
                         darkSrc={featured.media.darkSrc}
                         alt={featured.media.alt}
                         sizes="(min-width: 1024px) 700px, 100vw"
-                        renderMode="paired"
+                        renderMode="active"
                         className="inset-0"
                         imageClassName="border border-line-strong bg-paper-strong object-contain object-center"
                       />
