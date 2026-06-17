@@ -1,5 +1,5 @@
 import { ArrowUpRight, CopyCheck, ExternalLink, Package } from "lucide-react";
-import Link from "next/link";
+import { TrackSectionView, TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { SectionIntro, SectionShell, formatMegabytes } from "@/components/home/home-shared";
@@ -21,24 +21,32 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
             body="Full is the default for most users. Lite is for people who want direct control over yt-dlp, ffmpeg, aria2, and optional runtime pieces. WinGet is convenient, but the download page is the better place to choose deliberately."
           />
           <div className="mt-6 flex flex-wrap gap-4">
-            <Link
+            <TrackedLink
               href="/compare/full-vs-lite"
+              eventName="cta_click"
+              eventData={{ cta: "compare_full_vs_lite", page: "home" }}
               className="inline-flex items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-ink-soft"
             >
               Compare Full vs Lite
               <ArrowUpRight className="h-4 w-4" />
-            </Link>
-            <Link
+            </TrackedLink>
+            <TrackedLink
               href="/install/windows"
+              eventName="cta_click"
+              eventData={{ cta: "open_install_guide", page: "home" }}
               className="inline-flex items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-ink-soft"
             >
               Windows install guide
               <ArrowUpRight className="h-4 w-4" />
-            </Link>
+            </TrackedLink>
           </div>
         </div>
 
-        <ScrollReveal className="grid items-stretch gap-4 lg:grid-cols-3">
+        <TrackSectionView
+          eventName="section_view"
+          eventData={{ section: "install_options", page: "home" }}
+        >
+          <ScrollReveal className="grid items-stretch gap-4 lg:grid-cols-3">
           <article className="install-card-primary overflow-hidden rounded-[1.5rem] p-6">
             <div className="relative flex h-full flex-col">
               <div className="flex items-center justify-between gap-3">
@@ -69,24 +77,28 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
               </ul>
 
               <div className="mt-auto grid gap-3 pt-6">
-                <a
+                <TrackedAnchor
                   href={github.fullSetupUrl}
                   target="_blank"
                   rel="noreferrer"
+                  eventName="cta_click"
+                  eventData={{ cta: "download_full", page: "home" }}
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition-all hover:opacity-90"
                 >
                   Download Full
                   <ArrowUpRight className="h-4 w-4" />
-                </a>
-                <a
+                </TrackedAnchor>
+                <TrackedAnchor
                   href={github.checksumsUrl}
                   target="_blank"
                   rel="noreferrer"
+                  eventName="cta_click"
+                  eventData={{ cta: "open_checksums", page: "home" }}
                   className="inline-flex items-center justify-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
                 >
                   Open SHA256SUMS.txt
                   <ExternalLink className="h-4 w-4" />
-                </a>
+                </TrackedAnchor>
               </div>
             </div>
           </article>
@@ -104,15 +116,17 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
               <p className="mt-4 text-xs font-medium uppercase tracking-[0.12em] text-ink-muted">
                 {formatMegabytes(github.liteSetupSize)}
               </p>
-              <a
+              <TrackedAnchor
                 href={github.liteSetupUrl}
                 target="_blank"
                 rel="noreferrer"
+                eventName="cta_click"
+                eventData={{ cta: "download_lite", page: "home" }}
                 className="mt-auto inline-flex items-center justify-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
               >
                 Download Lite
                 <ArrowUpRight className="h-4 w-4" />
-              </a>
+              </TrackedAnchor>
             </div>
           </article>
 
@@ -128,11 +142,16 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
                 to the newest release.
               </p>
               <div className="mt-auto pt-6">
-                <CopyCommand command={SITE_LINKS.wingetCommand} />
+                <CopyCommand
+                  command={SITE_LINKS.wingetCommand}
+                  eventName="command_copy"
+                  eventData={{ command: "winget_install", page: "home" }}
+                />
               </div>
             </div>
           </article>
-        </ScrollReveal>
+          </ScrollReveal>
+        </TrackSectionView>
       </div>
     </SectionShell>
   );

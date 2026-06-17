@@ -9,6 +9,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { SiteHeader } from "@/components/home/home-header";
+import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { getGitHubSnapshot } from "@/lib/github";
@@ -165,21 +166,25 @@ export default async function FullVsLitePage() {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link
+                <TrackedLink
                   href="/download"
+                  eventName="cta_click"
+                  eventData={{ cta: "go_to_download", page: "compare_full_vs_lite" }}
                   className="inline-flex items-center gap-2 rounded-2xl bg-ink px-5 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                 >
                   Go to download page
                   <ArrowRight className="h-4 w-4" />
-                </Link>
-                <a
+                </TrackedLink>
+                <TrackedAnchor
                   href={github.fullSetupUrl}
                   target="_blank"
                   rel="noreferrer"
+                  eventName="cta_click"
+                  eventData={{ cta: "download_full", page: "compare_full_vs_lite" }}
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Download Full
-                </a>
+                </TrackedAnchor>
               </div>
             </div>
 
@@ -239,15 +244,17 @@ export default async function FullVsLitePage() {
                   ))}
                 </ul>
 
-                <a
+                <TrackedAnchor
                   href={github.fullSetupUrl}
                   target="_blank"
                   rel="noreferrer"
+                  eventName="cta_click"
+                  eventData={{ cta: "download_full", page: "compare_full_vs_lite" }}
                   className="mt-6 inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                 >
                   Download Full
                   <ArrowRight className="h-4 w-4" />
-                </a>
+                </TrackedAnchor>
               </article>
 
               <article className="install-card-secondary rounded-[1.9rem] p-6 sm:p-7">
@@ -275,15 +282,17 @@ export default async function FullVsLitePage() {
                   ))}
                 </ul>
 
-                <a
+                <TrackedAnchor
                   href={github.liteSetupUrl}
                   target="_blank"
                   rel="noreferrer"
+                  eventName="cta_click"
+                  eventData={{ cta: "download_lite", page: "compare_full_vs_lite" }}
                   className="mt-6 inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
                 >
                   Download Lite
                   <ArrowRight className="h-4 w-4" />
-                </a>
+                </TrackedAnchor>
               </article>
             </ScrollReveal>
           </section>
@@ -423,18 +432,22 @@ export default async function FullVsLitePage() {
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <Link
+                <TrackedLink
                   href="/download"
+                  eventName="cta_click"
+                  eventData={{ cta: "go_to_download", page: "compare_full_vs_lite" }}
                   className="inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                 >
                   Go to download page
-                </Link>
-                <Link
+                </TrackedLink>
+                <TrackedLink
                   href="/"
+                  eventName="cta_click"
+                  eventData={{ cta: "return_home", page: "compare_full_vs_lite" }}
                   className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Back to home
-                </Link>
+                </TrackedLink>
               </div>
             </ScrollReveal>
           </section>

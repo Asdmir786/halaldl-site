@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { SiteHeader } from "@/components/home/home-header";
 import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
+import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { getGitHubSnapshot } from "@/lib/github";
@@ -180,19 +181,23 @@ export default async function InstallWindowsPage() {
               </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link
+                <TrackedLink
                   href="/download"
+                  eventName="cta_click"
+                  eventData={{ cta: "go_to_download", page: "install_windows" }}
                   className="inline-flex items-center gap-2 rounded-2xl bg-ink px-5 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                 >
                   Go to download page
                   <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
+                </TrackedLink>
+                <TrackedLink
                   href="/compare/full-vs-lite"
+                  eventName="cta_click"
+                  eventData={{ cta: "compare_full_vs_lite", page: "install_windows" }}
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Compare Full vs Lite
-                </Link>
+                </TrackedLink>
               </div>
             </div>
 
@@ -226,7 +231,11 @@ export default async function InstallWindowsPage() {
               </div>
 
               <div className="mt-5">
-                <CopyCommand command={SITE_LINKS.wingetCommand} />
+                <CopyCommand
+                  command={SITE_LINKS.wingetCommand}
+                  eventName="command_copy"
+                  eventData={{ command: "winget_install", page: "install_windows" }}
+                />
               </div>
             </aside>
           </ScrollReveal>
@@ -243,15 +252,17 @@ export default async function InstallWindowsPage() {
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">
                   Best first install for most people who want the smoother setup path.
                 </p>
-                <a
+                <TrackedAnchor
                   href={github.fullSetupUrl}
                   target="_blank"
                   rel="noreferrer"
+                  eventName="cta_click"
+                  eventData={{ cta: "download_full", page: "install_windows" }}
                   className="mt-5 inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                 >
                   Download Full
                   <ArrowRight className="h-4 w-4" />
-                </a>
+                </TrackedAnchor>
               </article>
 
               <article className="install-card-secondary rounded-[1.75rem] p-6">
@@ -263,15 +274,17 @@ export default async function InstallWindowsPage() {
                   Better when you prefer to keep more of the tooling boundary under your own
                   control.
                 </p>
-                <a
+                <TrackedAnchor
                   href={github.liteSetupUrl}
                   target="_blank"
                   rel="noreferrer"
+                  eventName="cta_click"
+                  eventData={{ cta: "download_lite", page: "install_windows" }}
                   className="mt-5 inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
                 >
                   Download Lite
                   <ArrowRight className="h-4 w-4" />
-                </a>
+                </TrackedAnchor>
               </article>
 
               <article className="surface-card-static rounded-[1.75rem] p-6">
@@ -286,13 +299,15 @@ export default async function InstallWindowsPage() {
                   If you want the most cautious install flow, verify SHA256 before running the
                   installer and start from GitHub Releases.
                 </p>
-                <Link
+                <TrackedLink
                   href="/trust/verify-checksum"
+                  eventName="cta_click"
+                  eventData={{ cta: "open_verify_guide", page: "install_windows" }}
                   className="mt-5 inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Verify SHA256
                   <FileCheck2 className="h-4 w-4" />
-                </Link>
+                </TrackedLink>
               </article>
             </ScrollReveal>
           </section>
@@ -365,18 +380,22 @@ export default async function InstallWindowsPage() {
                   If you want more proof before first run, go straight to the SHA256 guide.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <Link
+                  <TrackedLink
                     href="/download"
+                    eventName="cta_click"
+                    eventData={{ cta: "go_to_download", page: "install_windows" }}
                     className="inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                   >
                     Go to download page
-                  </Link>
-                  <Link
+                  </TrackedLink>
+                  <TrackedLink
                     href="/trust/verify-checksum"
+                    eventName="cta_click"
+                    eventData={{ cta: "open_verify_guide", page: "install_windows" }}
                     className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                   >
                     Verify SHA256
-                  </Link>
+                  </TrackedLink>
                 </div>
               </article>
             </ScrollReveal>

@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Inter, Space_Grotesk } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
+import { PageViewTracker } from "@/components/analytics/tracked-interactions";
 import { getSiteUrl, SITE_LINKS } from "@/lib/site";
 import { getSiteStructuredData, serializeJsonLd, SITE_DESCRIPTION, SITE_NAME } from "@/lib/seo";
 import { getThemeScript } from "@/lib/theme";
@@ -109,7 +109,7 @@ export default function RootLayout({
           Skip to content
         </a>
         {children}
-        <Analytics />
+        <PageViewTracker />
         <SpeedInsights />
         <div className="sr-only">
           Canonical downloads route: {SITE_LINKS.latestReleaseUrl}

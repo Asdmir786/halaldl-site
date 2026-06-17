@@ -140,6 +140,15 @@ No environment variables are strictly required for local development.
   - server-side fallback if `NEXT_PUBLIC_SITE_URL` is not set
 - `GITHUB_TOKEN`
   - optional GitHub token for higher API rate limits when fetching live repo and release data
+- `DATABASE_URL`
+  - required for the private in-site analytics dashboard
+  - use a small Postgres database connected through Vercel Marketplace
+- `AUTH_SECRET`
+  - required by Auth.js for encrypted session handling
+- `AUTH_GOOGLE_ID`
+  - Google OAuth client ID for the private dashboard sign-in
+- `AUTH_GOOGLE_SECRET`
+  - Google OAuth client secret for the private dashboard sign-in
 
 If no explicit site URL is set, the app falls back to `VERCEL_URL`, then `https://halaldl.vercel.app`.
 
@@ -157,7 +166,78 @@ Recommended deployment flow:
 1. Push the repo.
 2. Import it into Vercel.
 3. Set `NEXT_PUBLIC_SITE_URL` to the final production domain.
-4. Optionally set `GITHUB_TOKEN` if you want more GitHub API headroom.
+4. Connect a small Postgres database and add `DATABASE_URL`.
+5. Set `AUTH_SECRET`, `AUTH_GOOGLE_ID`, and `AUTH_GOOGLE_SECRET`.
+6. In Google Cloud Console, add the authorized redirect URI:
+   `https://YOUR_DOMAIN/api/auth/callback/google`
+7. For local testing, also add:
+   `http://localhost:3000/api/auth/callback/google`
+8. Optionally set `GITHUB_TOKEN` if you want more GitHub API headroom.
+
+## Analytics
+
+The site now includes a private in-site analytics dashboard at `/dashboard`.
+
+### What is tracked
+
+- Page views
+- Anonymous visitor IDs and rolling visit/session IDs
+- CTA click events under `cta_click`
+- WinGet copy actions under `command_copy`
+- Download/install section visibility under `section_view`
+- Referrer host, country, device type, browser, and OS summaries
+
+Current tracked CTA values include:
+
+- `download_full`
+- `download_lite`
+- `open_github_release`
+- `open_changelog`
+- `open_install_guide`
+- `open_verify_guide`
+- `open_support_docs`
+- `open_support_issues`
+- `open_checksums`
+- `view_github_repo`
+- `compare_full_vs_lite`
+- `go_to_download`
+
+Current tracked section values include:
+
+- `install_options` on the home page
+- `download_options` on the download page
+
+Current tracked command values include:
+
+- `winget_install`
+
+### Where to view it
+
+- Open `/dashboard` in the deployed site
+- Sign in with `asmir.alams.com@gmail.com`
+- The dashboard shows last-30-day summaries plus week-over-week change cards
+
+### Limits and setup notes
+
+- This setup does not require a Vercel Analytics paid plan because tracking is stored in your own database
+- It does require a persistent database such as Postgres
+- The dashboard login is intentionally minimal: Google OAuth plus a hardcoded one-email allowlist
+- Country data depends on the deployment platform forwarding geolocation headers in production
+
+### What this setup will not tell you
+
+- It does not identify individual users
+- It does not tell you whether a GitHub download completed after the click
+- It does not provide multi-step user funnels across external systems
+- It does not track behavior inside the desktop app itself
+- It does not reconstruct perfect people-based journeys across devices or browsers
+
+### How to extend later
+
+- Add more `cta_click` values for new important buttons
+- Add more `section_view` values for major content blocks
+- Add extra dashboard panels by querying the `analytics_events` table
+- Keep event payloads small so the setup stays easy to maintain
 
 ## Content Notes
 

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Download, Github } from "lucide-react";
+import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SITE_LINKS } from "@/lib/site";
 
@@ -63,25 +64,29 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <a
+          <TrackedAnchor
             href={SITE_LINKS.repoUrl}
             target="_blank"
             rel="noreferrer"
+            eventName="cta_click"
+            eventData={{ cta: "view_github_repo", page: currentPage }}
             className={`hidden items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:bg-line hover:text-ink lg:flex`}
           >
             <Github className="h-4 w-4" />
             GitHub
-          </a>
-          <a
+          </TrackedAnchor>
+          <TrackedLink
             href="/download"
             aria-label="Download latest release"
+            eventName="cta_click"
+            eventData={{ cta: "go_to_download", page: currentPage }}
             className={`inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-semibold transition-all hover:opacity-90 sm:px-4 ${
               currentPage === "download" ? "bg-paper text-ink" : "bg-ink text-paper"
             }`}
           >
             <Download className="h-4 w-4" />
             <span>Download</span>
-          </a>
+          </TrackedLink>
         </div>
       </div>
 

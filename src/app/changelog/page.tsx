@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowUpRight, CheckCircle2, FileStack, Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/home/home-header";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
+import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { getSocialImage } from "@/lib/site";
 import { getChangelogEntries } from "@/lib/changelog";
@@ -138,21 +139,25 @@ export default async function ChangelogPage() {
                 </p>
 
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <a
+                  <TrackedAnchor
                     href={featured.releaseUrl}
                     target="_blank"
                     rel="noreferrer"
+                    eventName="cta_click"
+                    eventData={{ cta: "open_github_release", page: "changelog" }}
                     className="inline-flex items-center gap-2 rounded-lg bg-ink px-4 py-2.5 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                   >
                     View GitHub release
                     <ArrowUpRight className="h-4 w-4" />
-                  </a>
-                  <Link
+                  </TrackedAnchor>
+                  <TrackedLink
                     href="/download"
+                    eventName="cta_click"
+                    eventData={{ cta: "go_to_download", page: "changelog" }}
                     className="inline-flex items-center gap-2 rounded-lg border border-line-strong bg-paper px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                   >
                     Download latest
-                  </Link>
+                  </TrackedLink>
                 </div>
 
                 {featured.media?.type === "image" && (
@@ -221,15 +226,17 @@ export default async function ChangelogPage() {
                           {entry.summary}
                         </p>
                       </div>
-                      <a
+                      <TrackedAnchor
                         href={entry.releaseUrl}
                         target="_blank"
                         rel="noreferrer"
+                        eventName="cta_click"
+                        eventData={{ cta: "open_github_release", page: "changelog" }}
                         className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink hover:text-ink-soft"
                       >
                         GitHub Release
                         <ArrowUpRight className="h-4 w-4" />
-                      </a>
+                      </TrackedAnchor>
                     </div>
 
                     <div className="mt-6 grid gap-5 md:grid-cols-3">

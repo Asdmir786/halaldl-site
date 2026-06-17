@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { BadgeCheck, CalendarClock, Download, Github, ShieldCheck, Sparkles } from "lucide-react";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
+import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
 import type { GitHubSnapshot } from "@/lib/github";
 import { SITE_LINKS } from "@/lib/site";
 import { trustSignals } from "@/components/home/home-data";
@@ -57,22 +57,26 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Link
+            <TrackedLink
               href="/download"
+              eventName="cta_click"
+              eventData={{ cta: "go_to_download", page: "home" }}
               className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-ink px-6 py-3.5 text-[0.95rem] font-semibold text-paper shadow-[0_18px_36px_rgba(12,25,41,0.16)] transition-all hover:-translate-y-0.5 hover:shadow-[0_24px_46px_rgba(12,25,41,0.2)]"
             >
               <Download className="h-4 w-4" />
               Download {github.latestVersion}
-            </Link>
-            <a
+            </TrackedLink>
+            <TrackedAnchor
               href={SITE_LINKS.repoUrl}
               target="_blank"
               rel="noreferrer"
+              eventName="cta_click"
+              eventData={{ cta: "view_github_repo", page: "home" }}
               className="inline-flex items-center justify-center gap-2 rounded-2xl border border-line-strong bg-paper-strong px-5 py-3.5 text-[0.95rem] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-ink/20 hover:bg-paper-elevated"
             >
               <Github className="h-4 w-4" />
               View Source
-            </a>
+            </TrackedAnchor>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-2.5">

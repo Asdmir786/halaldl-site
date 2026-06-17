@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { Check, Copy } from "lucide-react";
+import { trackCommandCopy } from "@/components/analytics/tracked-interactions";
 
 type CopyCommandProps = {
   command: string;
+  eventData?: Record<string, string>;
+  eventName?: string;
 };
 
-export function CopyCommand({ command }: CopyCommandProps) {
+export function CopyCommand({ command, eventData, eventName }: CopyCommandProps) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -20,6 +23,10 @@ export function CopyCommand({ command }: CopyCommandProps) {
   }, [copied]);
 
   async function handleCopy() {
+    if (eventName && eventData) {
+      trackCommandCopy(eventName, eventData);
+    }
+
     try {
       await navigator.clipboard.writeText(command);
       setCopied(true);
