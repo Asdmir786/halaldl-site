@@ -1,5 +1,7 @@
 import { getSiteUrl } from "@/lib/site";
 import { ensureAnalyticsSchema, getSql, isAnalyticsEnabled } from "@/lib/analytics-db";
+import { getGitHubReleases, getGitHubSnapshot } from "@/lib/github";
+import { getSearchConsoleData } from "@/lib/search-console";
 
 type OverviewMetrics = {
   totalVisits: number;
@@ -56,6 +58,26 @@ export type DashboardData = {
     label: string;
     pagePath: string | null;
   }>;
+  github: {
+    latestRelease: string;
+    latestPublishedAt: string;
+    releaseDownloads: Array<{ label: string; value: number }>;
+    totalAssetDownloads: number;
+  };
+  searchConsole: {
+    configured: boolean;
+    siteUrl: string | null;
+    overview: null | {
+      clicks: number;
+      impressions: number;
+      ctr: number;
+      averagePosition: number;
+    };
+    topQueries: NamedMetric[];
+    topPages: NamedMetric[];
+    topCountries: NamedMetric[];
+    topDevices: NamedMetric[];
+  };
 };
 
 const DOWNLOAD_ACTIONS = ["download_full", "download_lite", "open_github_release"] as const;
@@ -383,6 +405,30 @@ async function getRecentEvents(limit: number) {
   });
 }
 
+async function getGitHubDashboardData() {
+  const [snapshot, releases] = await Promise.all([getGitHubSnapshot(), getGitHubReleases()]);
+  const latestRelease = releases[0];
+  const releaseDownloads = (latestRelease?.assets ?? [])
+    .filter((asset) => asset.name !== "SHA256SUMS.txt")
+    .sort((left, right) => right.downloadCount - left.downloadCount)
+    .map((asset) => ({
+      label: asset.name,
+      value: asset.downloadCount,
+    }));
+
+  const totalAssetDownloads = releases.reduce(
+    (sum, release) => sum + release.assets.reduce((assetSum, asset) => assetSum + asset.downloadCount, 0),
+    0,
+  );
+
+  return {
+    latestRelease: snapshot.latestVersion,
+    latestPublishedAt: snapshot.latestReleaseDate,
+    releaseDownloads,
+    totalAssetDownloads,
+  };
+}
+
 async function getWeeklyTrend() {
   const sql = getSql();
   const rows = await sql`
@@ -475,12 +521,27 @@ export async function getDashboardData(): Promise<DashboardData> {
       downloadIntent: [],
       weeklyTrend: [],
       recentEvents: [],
+      github: {
+        latestRelease: "",
+        latestPublishedAt: "",
+        releaseDownloads: [],
+        totalAssetDownloads: 0,
+      },
+      searchConsole: {
+        configured: false,
+        siteUrl: null,
+        overview: null,
+        topQueries: [],
+        topPages: [],
+        topCountries: [],
+        topDevices: [],
+      },
     };
   }
 
   await ensureAnalyticsSchema();
 
-  const [summary, overview30, overview7, overviewPrev7, topPages, topSources, countryBreakdown, deviceBreakdown, browserBreakdown, keyPageVisits, keyCtaClicks, downloadIntent, weeklyTrend, recentEvents] =
+  const [summary, overview30, overview7, overviewPrev7, topPages, topSources, countryBreakdown, deviceBreakdown, browserBreakdown, keyPageVisits, keyCtaClicks, downloadIntent, weeklyTrend, recentEvents, github, searchConsole] =
     await Promise.all([
       getEventSummary(30),
       getOverviewMetrics(30),
@@ -496,6 +557,8 @@ export async function getDashboardData(): Promise<DashboardData> {
       getDownloadIntent(30),
       getWeeklyTrend(),
       getRecentEvents(12),
+      getGitHubDashboardData(),
+      getSearchConsoleData(),
     ]);
 
   const metrics = buildMetricCards(overview30, overview7, overviewPrev7);
@@ -517,5 +580,7 @@ export async function getDashboardData(): Promise<DashboardData> {
     downloadIntent,
     weeklyTrend,
     recentEvents,
+    github,
+    searchConsole,
   };
 }

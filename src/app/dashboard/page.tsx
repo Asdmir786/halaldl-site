@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import {
   Activity,
   BarChart3,
+  Download,
   Globe2,
   MousePointerClick,
   PanelsTopLeft,
+  Search,
   ShieldCheck,
   Sparkles,
   TrendingUp,
@@ -31,6 +33,10 @@ function formatDateTime(value: string | null) {
   }
 
   return new Date(value).toLocaleString("en-US");
+}
+
+function formatPercent(value: number) {
+  return `${value.toFixed(2)}%`;
 }
 
 function ChangePill({ change }: { change: number | null }) {
@@ -460,6 +466,114 @@ export default async function DashboardPage() {
                     </tbody>
                   </table>
                 </div>
+              </article>
+            </section>
+
+            <section className="mt-8 grid gap-5 lg:grid-cols-[1fr_1fr]">
+              <article className="rounded-[1.75rem] border border-white/10 bg-white/6 p-6 backdrop-blur-xl sm:p-7">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sky-100">
+                    <Download className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">
+                      GitHub releases
+                    </p>
+                    <h2 className="mt-1 font-display text-2xl font-semibold text-white">
+                      What old GitHub data can we show right now?
+                    </h2>
+                  </div>
+                </div>
+                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-white/10 bg-white/6 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">
+                      Latest release
+                    </p>
+                    <p className="mt-2 font-display text-2xl font-semibold text-white">
+                      {data.github.latestRelease || "Unknown"}
+                    </p>
+                    <p className="mt-2 text-sm text-slate-300">
+                      Published {data.github.latestPublishedAt ? formatDateTime(data.github.latestPublishedAt) : "Unknown"}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/6 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">
+                      Total asset downloads
+                    </p>
+                    <p className="mt-2 font-display text-2xl font-semibold text-white">
+                      {formatNumber(data.github.totalAssetDownloads)}
+                    </p>
+                    <p className="mt-2 text-sm text-slate-300">
+                      Current cumulative counts from GitHub releases
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-6">
+                  <MetricBarList
+                    items={data.github.releaseDownloads}
+                    emptyLabel="No GitHub release assets were available."
+                  />
+                </div>
+              </article>
+
+              <article className="rounded-[1.75rem] border border-white/10 bg-white/6 p-6 backdrop-blur-xl sm:p-7">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sky-100">
+                    <Search className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">
+                      Google Search Console
+                    </p>
+                    <h2 className="mt-1 font-display text-2xl font-semibold text-white">
+                      Organic discovery and search demand
+                    </h2>
+                  </div>
+                </div>
+                {!data.searchConsole.configured ? (
+                  <div className="mt-6 rounded-2xl border border-amber/30 bg-amber/10 p-4 text-sm leading-relaxed text-slate-200">
+                    Search Console ownership may be set up, but the dashboard still needs API credentials.
+                    Add `GSC_SITE_URL`, `GSC_CLIENT_EMAIL`, and `GSC_PRIVATE_KEY`, then add the service-account
+                    email as a user on the Search Console property.
+                  </div>
+                ) : (
+                  <>
+                    <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                      <div className="rounded-2xl border border-white/10 bg-white/6 p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">Clicks</p>
+                        <p className="mt-2 font-display text-2xl font-semibold text-white">
+                          {formatNumber(data.searchConsole.overview?.clicks ?? 0)}
+                        </p>
+                      </div>
+                      <div className="rounded-2xl border border-white/10 bg-white/6 p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">Impressions</p>
+                        <p className="mt-2 font-display text-2xl font-semibold text-white">
+                          {formatNumber(data.searchConsole.overview?.impressions ?? 0)}
+                        </p>
+                      </div>
+                      <div className="rounded-2xl border border-white/10 bg-white/6 p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">CTR</p>
+                        <p className="mt-2 font-display text-2xl font-semibold text-white">
+                          {formatPercent(data.searchConsole.overview?.ctr ?? 0)}
+                        </p>
+                      </div>
+                      <div className="rounded-2xl border border-white/10 bg-white/6 p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">Avg position</p>
+                        <p className="mt-2 font-display text-2xl font-semibold text-white">
+                          {(data.searchConsole.overview?.averagePosition ?? 0).toFixed(1)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-6 grid gap-5 lg:grid-cols-2">
+                      <MetricBarList items={data.searchConsole.topQueries} emptyLabel="No query data yet." />
+                      <MetricBarList items={data.searchConsole.topPages} emptyLabel="No landing-page data yet." />
+                    </div>
+                    <div className="mt-6 grid gap-5 lg:grid-cols-2">
+                      <MetricBarList items={data.searchConsole.topCountries} emptyLabel="No country data yet." />
+                      <MetricBarList items={data.searchConsole.topDevices} emptyLabel="No device data yet." />
+                    </div>
+                  </>
+                )}
               </article>
             </section>
           </>

@@ -149,6 +149,13 @@ No environment variables are strictly required for local development.
   - Google OAuth client ID for the private dashboard sign-in
 - `AUTH_GOOGLE_SECRET`
   - Google OAuth client secret for the private dashboard sign-in
+- `GSC_SITE_URL`
+  - Search Console property URL used by the dashboard
+  - example: `https://halaldl.vercel.app/`
+- `GSC_CLIENT_EMAIL`
+  - Google service account email for Search Console API access
+- `GSC_PRIVATE_KEY`
+  - Google service account private key for Search Console API access
 
 If no explicit site URL is set, the app falls back to `VERCEL_URL`, then `https://halaldl.vercel.app`.
 
@@ -173,6 +180,7 @@ Recommended deployment flow:
 7. For local testing, also add:
    `http://localhost:3000/api/auth/callback/google`
 8. Optionally set `GITHUB_TOKEN` if you want more GitHub API headroom.
+9. To enable Search Console in the dashboard, set `GSC_SITE_URL`, `GSC_CLIENT_EMAIL`, and `GSC_PRIVATE_KEY`, then add the service-account email as a user on the Search Console property.
 
 ## Analytics
 
@@ -223,6 +231,8 @@ Current tracked command values include:
 - It does require a persistent database such as Postgres
 - The dashboard login is intentionally minimal: Google OAuth plus a hardcoded one-email allowlist
 - Country data depends on the deployment platform forwarding geolocation headers in production
+- Search Console data is delayed and limited by Google's reporting windows and API quotas
+- GitHub release downloads are current cumulative counts, not retroactive daily history unless you snapshot them over time
 
 ### What this setup will not tell you
 

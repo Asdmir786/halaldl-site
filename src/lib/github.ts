@@ -14,6 +14,7 @@ type GitHubRepoResponse = {
 type GitHubReleaseAssetResponse = {
   name: string;
   browser_download_url: string;
+  download_count?: number;
   size: number;
   digest?: string | null;
 };
@@ -32,6 +33,7 @@ type GitHubReleaseResponse = {
 export type GitHubReleaseAsset = {
   name: string;
   browserDownloadUrl: string;
+  downloadCount: number;
   size: number;
   digest: string | null;
 };
@@ -124,6 +126,7 @@ function mapReleaseAsset(asset: GitHubReleaseAssetResponse): GitHubReleaseAsset 
   return {
     name: asset.name,
     browserDownloadUrl: asset.browser_download_url,
+    downloadCount: asset.download_count ?? 0,
     size: asset.size,
     digest: extractDigest(asset),
   };
@@ -194,18 +197,21 @@ function getFallbackRelease(): GitHubRelease {
       {
         name: `HalalDL-Full-${FALLBACK_SNAPSHOT.latestVersion}-setup.exe`,
         browserDownloadUrl: FALLBACK_SNAPSHOT.fullSetupUrl,
+        downloadCount: 0,
         size: FALLBACK_SNAPSHOT.fullSetupSize ?? 0,
         digest: null,
       },
       {
         name: `HalalDL-Lite-${FALLBACK_SNAPSHOT.latestVersion}-setup.exe`,
         browserDownloadUrl: FALLBACK_SNAPSHOT.liteSetupUrl,
+        downloadCount: 0,
         size: FALLBACK_SNAPSHOT.liteSetupSize ?? 0,
         digest: null,
       },
       {
         name: "SHA256SUMS.txt",
         browserDownloadUrl: FALLBACK_SNAPSHOT.checksumsUrl,
+        downloadCount: 0,
         size: 0,
         digest: FALLBACK_SNAPSHOT.checksumDigest,
       },
