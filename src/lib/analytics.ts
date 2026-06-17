@@ -16,6 +16,11 @@ type KeyMetricCard = {
   change: number | null;
 };
 
+type EventTypeMetric = {
+  label: string;
+  value: number;
+};
+
 type NamedMetric = {
   label: string;
   value: number;
@@ -32,6 +37,9 @@ type WeeklyTrendPoint = {
 export type DashboardData = {
   enabled: boolean;
   generatedAt: string;
+  totalEvents: number;
+  lastEventAt: string | null;
+  eventTypeBreakdown: EventTypeMetric[];
   metrics: KeyMetricCard[];
   topPages: NamedMetric[];
   topSources: NamedMetric[];
@@ -40,7 +48,14 @@ export type DashboardData = {
   browserBreakdown: NamedMetric[];
   keyPageVisits: NamedMetric[];
   keyCtaClicks: NamedMetric[];
+  downloadIntent: NamedMetric[];
   weeklyTrend: WeeklyTrendPoint[];
+  recentEvents: Array<{
+    createdAt: string;
+    eventType: string;
+    label: string;
+    pagePath: string | null;
+  }>;
 };
 
 const DOWNLOAD_ACTIONS = ["download_full", "download_lite", "open_github_release"] as const;
@@ -67,6 +82,18 @@ const KEY_CTA_LABELS: Record<string, string> = {
   go_to_download: "Go to download page",
   open_checksums: "Open SHA256SUMS",
   winget_install: "Copy WinGet install command",
+};
+const EVENT_TYPE_LABELS: Record<string, string> = {
+  page_view: "Page views",
+  cta_click: "CTA clicks",
+  command_copy: "Command copies",
+  section_view: "Section views",
+};
+const DOWNLOAD_INTENT_LABELS: Record<string, string> = {
+  download_full: "Download Full EXE",
+  download_lite: "Download Lite EXE",
+  open_github_release: "Open GitHub Releases",
+  winget_install: "Copy WinGet command",
 };
 
 function asNumber(value: unknown) {
@@ -182,6 +209,43 @@ async function getTopSources(days: number) {
   }));
 }
 
+async function getEventSummary(days: number) {
+  const sql = getSql();
+  const [totalRow, typeRows, lastEventRows] = await Promise.all([
+    sql`
+      select count(*)::int as total
+      from analytics_events
+      where created_at >= now() - (${days} || ' days')::interval
+    `,
+    sql`
+      select event_type, count(*)::int as value
+      from analytics_events
+      where created_at >= now() - (${days} || ' days')::interval
+      group by event_type
+    `,
+    sql`
+      select created_at
+      from analytics_events
+      order by created_at desc
+      limit 1
+    `,
+  ]);
+
+  const typeCounts = new Map(
+    typeRows.map((row) => [row.event_type as string, asNumber(row.value)]),
+  );
+  const eventTypeBreakdown = Object.entries(EVENT_TYPE_LABELS).map(([key, label]) => ({
+    label,
+    value: typeCounts.get(key) ?? 0,
+  }));
+
+  return {
+    totalEvents: asNumber(totalRow[0]?.total),
+    lastEventAt: (lastEventRows[0]?.created_at as string | undefined) ?? null,
+    eventTypeBreakdown,
+  };
+}
+
 async function getBreakdown(column: "country" | "device_type" | "browser", days: number) {
   const sql = getSql();
   const identifier = sql.unsafe(column);
@@ -244,10 +308,79 @@ async function getKeyCtaClicks(days: number) {
     order by value desc, key asc
   `;
 
-  return rows.map((row) => ({
-    label: KEY_CTA_LABELS[row.key as string] ?? (row.key as string),
-    value: asNumber(row.value),
+  const counts = new Map(rows.map((row) => [row.key as string, asNumber(row.value)]));
+
+  return Object.entries(KEY_CTA_LABELS).map(([key, label]) => ({
+    label,
+    value: counts.get(key) ?? 0,
   }));
+}
+
+async function getDownloadIntent(days: number) {
+  const sql = getSql();
+  const keys = Object.keys(DOWNLOAD_INTENT_LABELS);
+  const rows = await sql`
+    with scoped as (
+      select cta as key
+      from analytics_events
+      where event_type = 'cta_click'
+        and created_at >= now() - (${days} || ' days')::interval
+        and cta = any(${sql.array(keys.filter((key) => key !== "winget_install"))})
+      union all
+      select command as key
+      from analytics_events
+      where event_type = 'command_copy'
+        and created_at >= now() - (${days} || ' days')::interval
+        and command = 'winget_install'
+    )
+    select key, count(*)::int as value
+    from scoped
+    where key is not null
+    group by key
+  `;
+
+  const counts = new Map(rows.map((row) => [row.key as string, asNumber(row.value)]));
+  return Object.entries(DOWNLOAD_INTENT_LABELS).map(([key, label]) => ({
+    label,
+    value: counts.get(key) ?? 0,
+  }));
+}
+
+async function getRecentEvents(limit: number) {
+  const sql = getSql();
+  const rows = await sql`
+    select created_at, event_type, event_name, page_path, cta, command, section
+    from analytics_events
+    order by created_at desc
+    limit ${limit}
+  `;
+
+  return rows.map((row) => {
+    const eventType = row.event_type as string;
+    const key =
+      (row.cta as string | null) ??
+      (row.command as string | null) ??
+      (row.section as string | null) ??
+      (row.event_name as string);
+
+    let label = key;
+    if (row.cta && KEY_CTA_LABELS[key]) {
+      label = KEY_CTA_LABELS[key];
+    } else if (row.command && KEY_CTA_LABELS[key]) {
+      label = KEY_CTA_LABELS[key];
+    } else if (row.section) {
+      label = key === "install_options" ? "Install section viewed" : "Download section viewed";
+    } else if (eventType === "page_view") {
+      label = KEY_PAGE_LABELS[(row.page_path as string) ?? ""] ?? ((row.page_path as string) || "Page view");
+    }
+
+    return {
+      createdAt: new Date(row.created_at as string).toISOString(),
+      eventType,
+      label,
+      pagePath: (row.page_path as string | null) ?? null,
+    };
+  });
 }
 
 async function getWeeklyTrend() {
@@ -328,6 +461,9 @@ export async function getDashboardData(): Promise<DashboardData> {
     return {
       enabled: false,
       generatedAt: new Date().toISOString(),
+      totalEvents: 0,
+      lastEventAt: null,
+      eventTypeBreakdown: [],
       metrics: [],
       topPages: [],
       topSources: [],
@@ -336,14 +472,17 @@ export async function getDashboardData(): Promise<DashboardData> {
       browserBreakdown: [],
       keyPageVisits: [],
       keyCtaClicks: [],
+      downloadIntent: [],
       weeklyTrend: [],
+      recentEvents: [],
     };
   }
 
   await ensureAnalyticsSchema();
 
-  const [overview30, overview7, overviewPrev7, topPages, topSources, countryBreakdown, deviceBreakdown, browserBreakdown, keyPageVisits, keyCtaClicks, weeklyTrend] =
+  const [summary, overview30, overview7, overviewPrev7, topPages, topSources, countryBreakdown, deviceBreakdown, browserBreakdown, keyPageVisits, keyCtaClicks, downloadIntent, weeklyTrend, recentEvents] =
     await Promise.all([
+      getEventSummary(30),
       getOverviewMetrics(30),
       getOverviewMetricsRange(0, 7),
       getOverviewMetricsRange(7, 14),
@@ -354,7 +493,9 @@ export async function getDashboardData(): Promise<DashboardData> {
       getBreakdown("browser", 30),
       getKeyPageVisits(30),
       getKeyCtaClicks(30),
+      getDownloadIntent(30),
       getWeeklyTrend(),
+      getRecentEvents(12),
     ]);
 
   const metrics = buildMetricCards(overview30, overview7, overviewPrev7);
@@ -362,6 +503,9 @@ export async function getDashboardData(): Promise<DashboardData> {
   return {
     enabled: true,
     generatedAt: new Date().toISOString(),
+    totalEvents: summary.totalEvents,
+    lastEventAt: summary.lastEventAt,
+    eventTypeBreakdown: summary.eventTypeBreakdown,
     metrics,
     topPages,
     topSources,
@@ -370,6 +514,8 @@ export async function getDashboardData(): Promise<DashboardData> {
     browserBreakdown,
     keyPageVisits,
     keyCtaClicks,
+    downloadIntent,
     weeklyTrend,
+    recentEvents,
   };
 }
