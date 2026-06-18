@@ -157,6 +157,12 @@ No environment variables are strictly required for local development.
 - `GSC_PRIVATE_KEY`
   - Google service account private key for Search Console API access
 
+Search Console note:
+
+- The Google project behind the service account must also have `searchconsole.googleapis.com` enabled
+- The service account must be added as a user on the exact Search Console property URL
+- The dashboard now surfaces these failures directly instead of silently showing zeroes
+
 If no explicit site URL is set, the app falls back to `VERCEL_URL`, then `https://halaldl.vercel.app`.
 
 ## Deployment
@@ -232,6 +238,7 @@ Current tracked command values include:
 - The dashboard login is intentionally minimal: Google OAuth plus a hardcoded one-email allowlist
 - Country data depends on the deployment platform forwarding geolocation headers in production
 - Search Console data is delayed and limited by Google's reporting windows and API quotas
+- If your Search Console env values were pasted with surrounding quotes, the app now strips them automatically
 - GitHub release downloads are current cumulative counts, not retroactive daily history unless you snapshot them over time
 
 ### What this setup will not tell you

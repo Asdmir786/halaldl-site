@@ -21,6 +21,8 @@ type SearchConsoleResponse = {
 
 export type SearchConsoleData = {
   configured: boolean;
+  connected: boolean;
+  error: string | null;
   siteUrl: string | null;
   topCountries: Array<{ label: string; value: number }>;
   topDevices: Array<{ label: string; value: number }>;
@@ -29,10 +31,31 @@ export type SearchConsoleData = {
   overview: SearchConsoleOverview | null;
 };
 
+function sanitizeEnvValue(value: string | undefined | null) {
+  if (!value) {
+    return null;
+  }
+
+  const trimmed = value.trim();
+  const unwrapped =
+    trimmed.length >= 2 &&
+    ((trimmed.startsWith("\"") && trimmed.endsWith("\"")) ||
+      (trimmed.startsWith("'") && trimmed.endsWith("'")))
+      ? trimmed.slice(1, -1)
+      : trimmed;
+
+  return unwrapped.trim() || null;
+}
+
+function normalizePrivateKey(value: string | undefined | null) {
+  const sanitized = sanitizeEnvValue(value);
+  return sanitized?.replace(/\\n/g, "\n") ?? null;
+}
+
 function getSearchConsoleConfig() {
-  const siteUrl = process.env.GSC_SITE_URL?.trim() ?? process.env.NEXT_PUBLIC_SITE_URL?.trim() ?? null;
-  const clientEmail = process.env.GSC_CLIENT_EMAIL?.trim() ?? null;
-  const privateKey = process.env.GSC_PRIVATE_KEY?.replace(/\\n/g, "\n") ?? null;
+  const siteUrl = sanitizeEnvValue(process.env.GSC_SITE_URL) ?? sanitizeEnvValue(process.env.NEXT_PUBLIC_SITE_URL);
+  const clientEmail = sanitizeEnvValue(process.env.GSC_CLIENT_EMAIL);
+  const privateKey = normalizePrivateKey(process.env.GSC_PRIVATE_KEY);
 
   return {
     siteUrl,
@@ -80,12 +103,54 @@ function toNamedMetric(rows: SearchConsoleRow[]) {
   }));
 }
 
+function toSearchConsoleError(error: unknown) {
+  if (typeof error === "object" && error !== null) {
+    const maybeError = error as {
+      code?: string | number;
+      message?: string;
+      status?: number;
+      response?: { data?: { error?: { message?: string } } };
+      errors?: Array<{ message?: string }>;
+    };
+
+    const nestedMessage =
+      maybeError.response?.data?.error?.message ??
+      maybeError.errors?.[0]?.message ??
+      maybeError.message ??
+      null;
+
+    if (maybeError.code === "ERR_OSSL_UNSUPPORTED") {
+      return "The Search Console private key format is invalid. Remove wrapping quotes and keep literal \\n line breaks in the env value.";
+    }
+
+    if (maybeError.status === 403 || maybeError.status === 401) {
+      if (nestedMessage?.includes("Search Console API has not been used") || nestedMessage?.includes("disabled")) {
+        return "The Google Search Console API is still disabled for the Google project behind this service account. Enable searchconsole.googleapis.com, wait a few minutes, then redeploy.";
+      }
+
+      return "The service account can authenticate, but it does not have access to the exact Search Console property yet.";
+    }
+
+    if (maybeError.status === 400) {
+      return "The Search Console property URL looks invalid. Use the exact property URL, including the trailing slash for URL-prefix properties.";
+    }
+
+    if (nestedMessage) {
+      return nestedMessage;
+    }
+  }
+
+  return "Search Console could not be queried yet.";
+}
+
 export async function getSearchConsoleData(): Promise<SearchConsoleData> {
   const { siteUrl } = getSearchConsoleConfig();
 
   if (!isSearchConsoleConfigured()) {
     return {
       configured: false,
+      connected: false,
+      error: "Missing one or more Search Console environment variables.",
       siteUrl,
       topCountries: [],
       topDevices: [],
@@ -108,6 +173,8 @@ export async function getSearchConsoleData(): Promise<SearchConsoleData> {
 
     return {
       configured: true,
+      connected: true,
+      error: null,
       siteUrl,
       overview: overviewRow
         ? {
@@ -127,9 +194,11 @@ export async function getSearchConsoleData(): Promise<SearchConsoleData> {
       topCountries: toNamedMetric(countryRows),
       topDevices: toNamedMetric(deviceRows),
     };
-  } catch {
+  } catch (error) {
     return {
-      configured: false,
+      configured: true,
+      connected: false,
+      error: toSearchConsoleError(error),
       siteUrl,
       topCountries: [],
       topDevices: [],

@@ -66,6 +66,8 @@ export type DashboardData = {
   };
   searchConsole: {
     configured: boolean;
+    connected: boolean;
+    error: string | null;
     siteUrl: string | null;
     overview: null | {
       clicks: number;
@@ -529,6 +531,8 @@ export async function getDashboardData(): Promise<DashboardData> {
       },
       searchConsole: {
         configured: false,
+        connected: false,
+        error: null,
         siteUrl: null,
         overview: null,
         topQueries: [],

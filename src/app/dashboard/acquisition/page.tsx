@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
 import { Globe2, Search, TrendingUp } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import {
+  DashboardPanel,
+  DiagnosticsCallout,
+  MetricBarList,
+  SectionHeading,
+  SummaryCard,
+  formatNumber,
+  formatPercent,
+} from "@/components/dashboard/dashboard-ui";
 import { getDashboardData } from "@/lib/analytics";
 
 export const metadata: Metadata = {
@@ -10,44 +19,6 @@ export const metadata: Metadata = {
     follow: false,
   },
 };
-
-function formatNumber(value: number) {
-  return new Intl.NumberFormat("en-US").format(value);
-}
-
-function formatPercent(value: number) {
-  return `${value.toFixed(2)}%`;
-}
-
-function MetricBarList({
-  items,
-  emptyLabel,
-}: {
-  items: Array<{ label: string; value: number }>;
-  emptyLabel: string;
-}) {
-  const maxValue = Math.max(...items.map((item) => item.value), 0);
-  if (items.length === 0) return <p className="text-sm text-slate-300">{emptyLabel}</p>;
-
-  return (
-    <div className="grid gap-3">
-      {items.map((item) => {
-        const width = maxValue > 0 ? `${Math.max((item.value / maxValue) * 100, item.value > 0 ? 8 : 0)}%` : "0%";
-        return (
-          <div key={item.label} className="rounded-2xl border border-white/10 bg-white/6 p-4">
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-sm text-slate-300">{item.label}</span>
-              <span className="text-sm font-semibold text-white">{formatNumber(item.value)}</span>
-            </div>
-            <div className="mt-3 h-2 rounded-full bg-white/10">
-              <div className="h-2 rounded-full bg-sky-300" style={{ width }} />
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 export default async function DashboardAcquisitionPage() {
   const data = await getDashboardData();
@@ -59,43 +30,94 @@ export default async function DashboardAcquisitionPage() {
       title="HalalDL acquisition dashboard"
       description="A dedicated view for traffic sources, organic search demand, and which discovery channels are producing the strongest site interest."
     >
-      <section className="mt-8 grid gap-5 lg:grid-cols-3">
-        <article className="rounded-[1.75rem] border border-white/10 bg-white/6 p-6 backdrop-blur-xl sm:p-7">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">Traffic sources</p>
-          <h2 className="mt-3 font-display text-2xl font-semibold text-white">Which sources are sending people here?</h2>
+      <section className="mt-6 grid gap-4 xl:grid-cols-4">
+        <SummaryCard
+          label="Top source"
+          value={data.topSources[0]?.label ?? "No source yet"}
+          detail={`${formatNumber(data.topSources[0]?.value ?? 0)} visits from the current strongest source.`}
+        />
+        <SummaryCard
+          label="Top country"
+          value={data.countryBreakdown[0]?.label ?? "No country yet"}
+          detail={`${formatNumber(data.countryBreakdown[0]?.value ?? 0)} visits from the current strongest geography.`}
+          accent="mint"
+        />
+        <SummaryCard
+          label="Top device"
+          value={data.deviceBreakdown[0]?.label ?? "No device yet"}
+          detail={`${formatNumber(data.deviceBreakdown[0]?.value ?? 0)} visits from the current leading device type.`}
+        />
+        <SummaryCard
+          label="Search Console"
+          value={
+            data.searchConsole.connected
+              ? `${formatNumber(data.searchConsole.overview?.clicks ?? 0)} clicks`
+              : data.searchConsole.configured
+                ? "Needs access"
+                : "Not configured"
+          }
+          detail={
+            data.searchConsole.connected
+              ? "Organic discovery is now feeding into this dashboard."
+              : "This block shows whether Google search demand is truly wired through."
+          }
+          accent="amber"
+        />
+      </section>
+
+      <section className="mt-6 grid gap-4 xl:grid-cols-[0.9fr_1.1fr_0.9fr]">
+        <DashboardPanel>
+          <SectionHeading eyebrow="Traffic sources" title="Which sources are sending people here?" />
           <div className="mt-6">
             <MetricBarList items={data.topSources} emptyLabel="No referrer data yet." />
           </div>
-        </article>
-        <article className="rounded-[1.75rem] border border-white/10 bg-white/6 p-6 backdrop-blur-xl sm:p-7">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">Country</p>
-          <div className="mt-5">
-            <MetricBarList items={data.countryBreakdown} emptyLabel="No country data yet." />
+        </DashboardPanel>
+        <DashboardPanel>
+          <SectionHeading eyebrow="Landing attention" title="Which pages are discovery sources feeding?" />
+          <div className="mt-6">
+            <MetricBarList items={data.topPages} emptyLabel="No landing-page data yet." tone="mint" />
           </div>
-        </article>
-        <article className="rounded-[1.75rem] border border-white/10 bg-white/6 p-6 backdrop-blur-xl sm:p-7">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">Device</p>
-          <div className="mt-5">
-            <MetricBarList items={data.deviceBreakdown} emptyLabel="No device data yet." />
+        </DashboardPanel>
+        <DashboardPanel>
+          <SectionHeading eyebrow="Audience shape" title="Where and how are people arriving?" />
+          <div className="mt-6 grid gap-4">
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Country</p>
+              <MetricBarList items={data.countryBreakdown} emptyLabel="No country data yet." />
+            </div>
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Device</p>
+              <MetricBarList items={data.deviceBreakdown} emptyLabel="No device data yet." />
+            </div>
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Browser</p>
+              <MetricBarList items={data.browserBreakdown} emptyLabel="No browser data yet." />
+            </div>
           </div>
-        </article>
+        </DashboardPanel>
       </section>
 
-      <section className="mt-8 grid gap-5 lg:grid-cols-[1fr_1fr]">
-        <article className="rounded-[1.75rem] border border-white/10 bg-white/6 p-6 backdrop-blur-xl sm:p-7">
+      <section className="mt-6 grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+        <DashboardPanel>
           <div className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sky-100">
               <Search className="h-5 w-5" />
             </span>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">Google Search Console</p>
-              <h2 className="mt-1 font-display text-2xl font-semibold text-white">Organic discovery</h2>
-            </div>
+            <SectionHeading eyebrow="Google Search Console" title="Organic discovery" />
           </div>
-          {!data.searchConsole.configured ? (
-            <div className="mt-6 rounded-2xl border border-amber/30 bg-amber/10 p-4 text-sm leading-relaxed text-slate-200">
-              Search Console credentials are still missing or permission is incomplete. Add `GSC_SITE_URL`, `GSC_CLIENT_EMAIL`,
-              and `GSC_PRIVATE_KEY`, then add the service-account email as a Search Console user.
+          {!data.searchConsole.configured || !data.searchConsole.connected ? (
+            <div className="mt-6">
+              <DiagnosticsCallout
+                title={!data.searchConsole.configured ? "Search Console is not configured yet." : "Search Console is configured, but not connected yet."}
+                body={
+                  data.searchConsole.error ??
+                  "Add GSC_SITE_URL, GSC_CLIENT_EMAIL, and GSC_PRIVATE_KEY, then add the service-account email as a user on the exact Search Console property."
+                }
+                tone="amber"
+              />
+              {data.searchConsole.siteUrl ? (
+                <p className="mt-4 text-sm text-slate-300">Expected property URL: <span className="font-medium text-white">{data.searchConsole.siteUrl}</span></p>
+              ) : null}
             </div>
           ) : (
             <>
@@ -111,17 +133,14 @@ export default async function DashboardAcquisitionPage() {
               </div>
             </>
           )}
-        </article>
+        </DashboardPanel>
 
-        <article className="rounded-[1.75rem] border border-white/10 bg-white/6 p-6 backdrop-blur-xl sm:p-7">
+        <DashboardPanel>
           <div className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sky-100">
               <Globe2 className="h-5 w-5" />
             </span>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">Readout</p>
-              <h2 className="mt-1 font-display text-2xl font-semibold text-white">What this tells you</h2>
-            </div>
+            <SectionHeading eyebrow="Readout" title="What this tells you" />
           </div>
           <div className="mt-6 space-y-4 text-sm leading-relaxed text-slate-300">
             <p>Search Console answers whether people are finding HalalDL through Google, what queries they use, and which pages are attracting impressions and clicks.</p>
@@ -131,7 +150,7 @@ export default async function DashboardAcquisitionPage() {
               <p className="mt-2 text-sm text-slate-300">Rising Search Console clicks plus rising download-intent clicks is your strongest simple growth signal.</p>
             </div>
           </div>
-        </article>
+        </DashboardPanel>
       </section>
     </DashboardShell>
   );
