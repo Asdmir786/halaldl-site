@@ -17,17 +17,21 @@ import { getSocialImage } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { formatMegabytes } from "@/components/home/home-shared";
 
+const FULL_VS_LITE_META_TITLE = "HalalDL Full vs Lite";
+const FULL_VS_LITE_META_DESCRIPTION =
+  "Compare HalalDL Full and Lite builds to choose between optional managed tools and a bring-your-own-toolchain setup.";
+
 export const metadata: Metadata = {
-  title: "HalalDL Full vs Lite",
-  description:
-    "Compare HalalDL Full vs Lite for Windows. See which build most people should use, what setup boundary changes, and when Lite actually makes sense.",
+  title: {
+    absolute: FULL_VS_LITE_META_TITLE,
+  },
+  description: FULL_VS_LITE_META_DESCRIPTION,
   alternates: {
     canonical: "/compare/full-vs-lite",
   },
   openGraph: {
-    title: "HalalDL Full vs Lite | HalalDL",
-    description:
-      "Compare HalalDL Full vs Lite for Windows and choose the right install path for your setup style.",
+    title: FULL_VS_LITE_META_TITLE,
+    description: FULL_VS_LITE_META_DESCRIPTION,
     url: "/compare/full-vs-lite",
     type: "article",
     siteName: "HalalDL",
@@ -35,9 +39,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "HalalDL Full vs Lite | HalalDL",
-    description:
-      "Compare HalalDL Full vs Lite for Windows and choose the right install path for your setup style.",
+    title: FULL_VS_LITE_META_TITLE,
+    description: FULL_VS_LITE_META_DESCRIPTION,
     images: ["/social/halaldl-social-preview.png"],
   },
 };

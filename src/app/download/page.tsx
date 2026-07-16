@@ -20,20 +20,24 @@ import { getSiteUrl, getSocialImage, SITE_LINKS } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { formatMegabytes, shortenDigest } from "@/components/home/home-shared";
 
+const DOWNLOAD_META_TITLE = "Download HalalDL for Windows";
+const DOWNLOAD_META_DESCRIPTION =
+  "Download HalalDL for Windows 10 and 11. The Full installer is recommended, with Lite, Portable, MSI, and WinGet options also available.";
+
 export async function generateMetadata(): Promise<Metadata> {
   const github = await getGitHubSnapshot();
 
   return {
-    title: "Download HalalDL for Windows",
-    description:
-      "Download HalalDL for Windows 10 and 11. Compare Full, Lite, and WinGet paths, verify SHA256, and use GitHub Releases as the direct source for the latest build.",
+    title: {
+      absolute: DOWNLOAD_META_TITLE,
+    },
+    description: DOWNLOAD_META_DESCRIPTION,
     alternates: {
       canonical: "/download",
     },
     openGraph: {
-      title: "Download HalalDL for Windows | HalalDL",
-      description:
-        "Download HalalDL for Windows 10 and 11 with Full, Lite, and WinGet paths plus SHA256 verification.",
+      title: DOWNLOAD_META_TITLE,
+      description: DOWNLOAD_META_DESCRIPTION,
       url: "/download",
       type: "website",
       siteName: "HalalDL",
@@ -41,9 +45,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: "Download HalalDL for Windows | HalalDL",
-      description:
-        "Download HalalDL for Windows 10 and 11 with Full, Lite, and WinGet paths plus SHA256 verification.",
+      title: DOWNLOAD_META_TITLE,
+      description: DOWNLOAD_META_DESCRIPTION,
       images: ["/social/halaldl-social-preview.png"],
     },
     other: {
@@ -60,11 +63,11 @@ export default async function DownloadPage() {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: "HalalDL",
-    applicationCategory: "UtilitiesApplication",
+    applicationCategory: "Windows media downloader",
+    applicationSubCategory: "yt-dlp GUI for Windows",
     operatingSystem: "Windows 10, Windows 11",
     softwareVersion: github.latestVersion,
-    description:
-      "Windows-first, local-first desktop GUI for yt-dlp with Full and Lite installers, visible raw logs, and a SHA256 verification path.",
+    description: DOWNLOAD_META_DESCRIPTION,
     downloadUrl: `${siteUrl.origin}/download`,
     installUrl: `${siteUrl.origin}/download`,
     releaseNotes: github.releaseNotes,

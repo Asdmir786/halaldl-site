@@ -57,8 +57,8 @@ export function HomeCtaFooter({ github }: { github: GitHubSnapshot }) {
               <span className="font-display text-base font-semibold text-ink">HalalDL</span>
             </div>
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">
-              Windows-first, local-first desktop GUI for yt-dlp. Open source, GitHub Releases
-              distributed, and built around visible workflow state instead of hidden shell logic.
+              Local-first Windows media downloader powered by yt-dlp. Open source, account-free,
+              and built around transparent local workflows.
             </p>
             <p className="mt-3 text-sm text-ink-muted">
               © 2026 HalalDL. MIT licensed. Latest release {github.latestVersion}.

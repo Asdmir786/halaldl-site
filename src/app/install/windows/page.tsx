@@ -18,17 +18,21 @@ import { getSocialImage, SITE_LINKS } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { formatMegabytes } from "@/components/home/home-shared";
 
+const INSTALL_META_TITLE = "Install HalalDL on Windows 10 and 11";
+const INSTALL_META_DESCRIPTION =
+  "Install HalalDL using the recommended Full installer, WinGet, Lite, MSI, or Portable packages, with SHA256 verification guidance.";
+
 export const metadata: Metadata = {
-  title: "How to Install HalalDL on Windows 10 and 11",
-  description:
-    "Install HalalDL on Windows 10 and 11 with the right Full, Lite, or WinGet path. Includes SHA256, SmartScreen, and first-run guidance.",
+  title: {
+    absolute: INSTALL_META_TITLE,
+  },
+  description: INSTALL_META_DESCRIPTION,
   alternates: {
     canonical: "/install/windows",
   },
   openGraph: {
-    title: "How to Install HalalDL on Windows | HalalDL",
-    description:
-      "Choose the right HalalDL install path for Windows 10 and 11 with Full, Lite, or WinGet.",
+    title: INSTALL_META_TITLE,
+    description: INSTALL_META_DESCRIPTION,
     url: "/install/windows",
     type: "article",
     siteName: "HalalDL",
@@ -36,9 +40,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "How to Install HalalDL on Windows | HalalDL",
-    description:
-      "Choose the right HalalDL install path for Windows 10 and 11 with Full, Lite, or WinGet.",
+    title: INSTALL_META_TITLE,
+    description: INSTALL_META_DESCRIPTION,
     images: ["/social/halaldl-social-preview.png"],
   },
 };
@@ -68,9 +71,8 @@ export default async function InstallWindowsPage() {
   const howToSchema = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: "How to install HalalDL on Windows",
-    description:
-      "Install HalalDL on Windows 10 and 11 using Full, Lite, or WinGet with SHA256 and SmartScreen guidance.",
+    name: INSTALL_META_TITLE,
+    description: INSTALL_META_DESCRIPTION,
     step: installSteps.map((step, index) => ({
       "@type": "HowToStep",
       position: index + 1,

@@ -15,7 +15,7 @@ export function WorkflowSection() {
             eyebrow="Workflow"
             title="Keep yt-dlp's power."
             accent="Drop the shell routine."
-            body="The goal is not to cosplay a terminal inside a card. The flow should feel guided enough for normal use, while keeping the underlying engine legible when you want to inspect it."
+            body="HalalDL keeps everyday downloads guided and understandable while leaving the underlying yt-dlp output visible whenever you need to inspect or troubleshoot it."
           />
           <a
             href="#install"

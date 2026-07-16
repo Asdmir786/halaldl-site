@@ -1,7 +1,7 @@
 import { LandingPage } from "@/components/home/landing-page";
 import { getGitHubSnapshot } from "@/lib/github";
 import { FAQ_ITEMS, getSiteUrl, SITE_LINKS } from "@/lib/site";
-import { getSoftwareSourceCodeSchema, serializeJsonLd } from "@/lib/seo";
+import { getSoftwareSourceCodeSchema, serializeJsonLd, SITE_DESCRIPTION } from "@/lib/seo";
 
 export default async function Home() {
   const github = await getGitHubSnapshot();
@@ -11,13 +11,13 @@ export default async function Home() {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: "HalalDL",
-    applicationCategory: "UtilitiesApplication",
+    applicationCategory: "Windows media downloader",
+    applicationSubCategory: "yt-dlp GUI for Windows",
     operatingSystem: "Windows 10, Windows 11",
     softwareVersion: github.latestVersion,
     url: siteUrl.origin,
-    headline: "Windows-first yt-dlp GUI for local-first downloads",
-    description:
-      "HalalDL is an open-source Windows desktop GUI for yt-dlp with presets, visible raw logs, Full and Lite installers, and no telemetry.",
+    headline: "Download media without the command line.",
+    description: SITE_DESCRIPTION,
     offers: {
       "@type": "Offer",
       price: "0",

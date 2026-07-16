@@ -16,17 +16,21 @@ import { getSocialImage, SITE_LINKS } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { shortenDigest } from "@/components/home/home-shared";
 
+const TRUST_META_TITLE = "Trust and verification — HalalDL";
+const TRUST_META_DESCRIPTION =
+  "Learn how HalalDL uses public source code, GitHub Releases, SHA256 checksums, and local-first operation to provide a verifiable installation path.";
+
 export const metadata: Metadata = {
-  title: "How to Verify HalalDL SHA256 Checksums on Windows",
-  description:
-    "Verify HalalDL SHA256 on Windows before first run. Compare GitHub Release assets against SHA256SUMS.txt and handle SmartScreen correctly.",
+  title: {
+    absolute: TRUST_META_TITLE,
+  },
+  description: TRUST_META_DESCRIPTION,
   alternates: {
     canonical: "/trust/verify-checksum",
   },
   openGraph: {
-    title: "How to Verify HalalDL SHA256 Checksums | HalalDL",
-    description:
-      "Verify HalalDL installers on Windows with SHA256SUMS.txt before first run.",
+    title: TRUST_META_TITLE,
+    description: TRUST_META_DESCRIPTION,
     url: "/trust/verify-checksum",
     type: "article",
     siteName: "HalalDL",
@@ -34,9 +38,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "How to Verify HalalDL SHA256 Checksums | HalalDL",
-    description:
-      "Verify HalalDL installers on Windows with SHA256SUMS.txt before first run.",
+    title: TRUST_META_TITLE,
+    description: TRUST_META_DESCRIPTION,
     images: ["/social/halaldl-social-preview.png"],
   },
 };
@@ -92,8 +95,7 @@ export default async function VerifyChecksumPage() {
     "@context": "https://schema.org",
     "@type": "HowTo",
     name: "How to verify HalalDL SHA256 checksums on Windows",
-    description:
-      "Compare the HalalDL installer hash against SHA256SUMS.txt on Windows before first run.",
+    description: TRUST_META_DESCRIPTION,
     step: verificationSteps.map((step, index) => ({
       "@type": "HowToStep",
       position: index + 1,

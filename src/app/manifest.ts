@@ -1,13 +1,14 @@
 import type { MetadataRoute } from "next";
+import { SITE_DESCRIPTION } from "@/lib/seo";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "HalalDL",
     short_name: "HalalDL",
-    description:
-      "Windows-first, local-first desktop GUI for yt-dlp with presets, visible raw logs, and practical install options.",
+    description: SITE_DESCRIPTION,
     start_url: "/",
     display: "standalone",
+    categories: ["multimedia", "utilities"],
     background_color: "#f8fafc",
     theme_color: "#080e17",
     icons: [

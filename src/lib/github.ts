@@ -79,7 +79,7 @@ const FALLBACK_SNAPSHOT: GitHubSnapshot = {
   source: "fallback",
   repoUrl: SITE_LINKS.repoUrl,
   repoDescription:
-    "A lightweight, modern Windows desktop GUI for yt-dlp with presets, raw logs, and optional tool bundling.",
+    "A local-first Windows media downloader powered by yt-dlp, with presets, visible logs, and optional tool management.",
   stars: 3,
   openIssues: 0,
   licenseName: "MIT License",

@@ -9,17 +9,21 @@ import { getSocialImage } from "@/lib/site";
 import { getChangelogEntries } from "@/lib/changelog";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 
+const CHANGELOG_META_TITLE = "HalalDL changelog";
+const CHANGELOG_META_DESCRIPTION =
+  "Review HalalDL releases, fixes, improvements, and packaging changes.";
+
 export const metadata: Metadata = {
-  title: "Changelog",
-  description:
-    "What changed in HalalDL, with release summaries, proof, and a practical release checklist.",
+  title: {
+    absolute: CHANGELOG_META_TITLE,
+  },
+  description: CHANGELOG_META_DESCRIPTION,
   alternates: {
     canonical: "/changelog",
   },
   openGraph: {
-    title: "Changelog | HalalDL",
-    description:
-      "What changed in HalalDL, with release summaries, proof, and a practical release checklist.",
+    title: CHANGELOG_META_TITLE,
+    description: CHANGELOG_META_DESCRIPTION,
     url: "/changelog",
     type: "website",
     siteName: "HalalDL",
@@ -27,9 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Changelog | HalalDL",
-    description:
-      "What changed in HalalDL, with release summaries, proof, and a practical release checklist.",
+    title: CHANGELOG_META_TITLE,
+    description: CHANGELOG_META_DESCRIPTION,
     images: ["/social/halaldl-social-preview.png"],
   },
 };

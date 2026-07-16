@@ -5,7 +5,16 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { PageViewTracker } from "@/components/analytics/tracked-interactions";
 import { getSiteUrl, SITE_LINKS } from "@/lib/site";
-import { getSiteStructuredData, serializeJsonLd, SITE_DESCRIPTION, SITE_NAME } from "@/lib/seo";
+import {
+  HOMEPAGE_OG_DESCRIPTION,
+  HOMEPAGE_OG_TITLE,
+  HOMEPAGE_TITLE,
+  HOMEPAGE_TWITTER_DESCRIPTION,
+  HOMEPAGE_TWITTER_TITLE,
+  getSiteStructuredData,
+  serializeJsonLd,
+  SITE_DESCRIPTION,
+} from "@/lib/seo";
 import { getThemeScript } from "@/lib/theme";
 
 const bodyFont = Inter({
@@ -24,15 +33,16 @@ const displayFont = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
   title: {
-    default: `${SITE_NAME} | Windows-first yt-dlp GUI for local-first downloads`,
+    default: HOMEPAGE_TITLE,
     template: "%s | HalalDL",
   },
   description: SITE_DESCRIPTION,
   keywords: [
     "HalalDL",
     "Windows yt-dlp GUI",
-    "local-first desktop downloader",
-    "open source downloader for Windows",
+    "yt-dlp GUI for Windows",
+    "Windows media downloader",
+    "local-first media downloader",
     "yt-dlp Windows app",
   ],
   applicationName: "HalalDL",
@@ -42,9 +52,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "/",
-    title: "HalalDL | Windows-first yt-dlp GUI for local-first downloads",
-    description:
-      "Local-first desktop downloads with presets, visible raw logs, and practical install choices.",
+    title: HOMEPAGE_OG_TITLE,
+    description: HOMEPAGE_OG_DESCRIPTION,
     siteName: "HalalDL",
     images: [
       {
@@ -57,9 +66,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "HalalDL | Windows-first yt-dlp GUI",
-    description:
-      "Local-first desktop downloads with presets, visible raw logs, and practical install choices.",
+    title: HOMEPAGE_TWITTER_TITLE,
+    description: HOMEPAGE_TWITTER_DESCRIPTION,
     images: ["/social/halaldl-social-preview.png"],
   },
   icons: {

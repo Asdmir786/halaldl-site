@@ -42,18 +42,18 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
         <div className="hero-copy-enter max-w-xl lg:max-w-none lg:pr-4">
           <div className="eyebrow">
             <Sparkles className="h-3.5 w-3.5" />
-            Open-source Windows downloader
+            Open-source Windows media downloader
           </div>
 
           <h1 className="mt-6 font-display text-[2.45rem] font-semibold leading-[1.02] tracking-normal text-ink sm:text-[3.35rem] lg:text-[4rem] xl:text-[4.35rem]">
-            The yt-dlp interface
+            Download media without
             <br className="hidden sm:block" />
-            <span className="block text-ink-soft sm:inline">Windows deserves.</span>
+            <span className="block text-ink-soft sm:inline">the command line.</span>
           </h1>
 
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg">
-            Compact quick downloads, preset naming, saved tray behavior, clearer finished cards,
-            raw logs, and SHA256 checks before first run.
+            HalalDL brings yt-dlp into a clear, local-first Windows app with reusable presets,
+            visible logs, and optional tool management.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
