@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Download, Github } from "lucide-react";
 import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
+import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SITE_LINKS } from "@/lib/site";
 
@@ -26,7 +26,7 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
     <header className="header-bar sticky top-3 z-40 rounded-2xl px-4 py-2.5 sm:px-5">
       <div className="flex items-center justify-between gap-3">
         <Link className="flex items-center gap-2.5" href="/">
-          <Image src="/brand/icon.png" alt="HalalDL" width={26} height={26} className="rounded" />
+          <BrandLogo size={26} />
           <span className="font-display text-[0.9375rem] font-semibold tracking-tight text-ink">
             HalalDL
           </span>

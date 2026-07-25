@@ -100,7 +100,7 @@ export function SummaryCard({
       ? "from-mint/16 to-transparent text-mint-strong"
       : accent === "amber"
         ? "from-amber/16 to-transparent text-amber-strong"
-        : "from-sky/16 to-transparent text-sky-100";
+        : "from-sky/16 to-transparent text-sky-strong";
 
   return (
     <DashboardPanel className="overflow-hidden">
@@ -124,7 +124,7 @@ export function MetricBarList({
   tone?: "sky" | "mint";
 }) {
   const maxValue = Math.max(...items.map((item) => item.value), 0);
-  const fillClass = tone === "mint" ? "bg-mint-strong/90" : "bg-sky-300";
+  const fillClass = tone === "mint" ? "bg-mint-strong/90" : "bg-sky-strong";
 
   if (items.length === 0) {
     return <p className="text-sm leading-relaxed text-slate-300">{emptyLabel}</p>;
@@ -188,7 +188,7 @@ export function WeeklyBars({
               </div>
             </div>
             <div className="mt-3 h-2 rounded-full bg-white/10">
-              <div className="h-2 rounded-full bg-sky-300" style={{ width }} />
+              <div className="h-2 rounded-full bg-sky-strong" style={{ width }} />
             </div>
           </div>
         );
@@ -250,7 +250,7 @@ export function DiagnosticsCallout({
   const toneClasses =
     tone === "amber"
       ? "border-amber/35 bg-amber/12 text-slate-100"
-      : "border-sky-400/20 bg-sky-400/8 text-white";
+      : "border-sky-strong/25 bg-sky-strong/10 text-white";
 
   return (
     <div className={`rounded-[1.5rem] border p-5 ${toneClasses}`}>

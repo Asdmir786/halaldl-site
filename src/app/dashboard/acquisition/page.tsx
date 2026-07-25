@@ -100,7 +100,7 @@ export default async function DashboardAcquisitionPage() {
       <section className="mt-6 grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
         <DashboardPanel>
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sky-100">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-mint-strong">
               <Search className="h-5 w-5" />
             </span>
             <SectionHeading eyebrow="Google Search Console" title="Organic discovery" />
@@ -137,7 +137,7 @@ export default async function DashboardAcquisitionPage() {
 
         <DashboardPanel>
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sky-100">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-mint-strong">
               <Globe2 className="h-5 w-5" />
             </span>
             <SectionHeading eyebrow="Readout" title="What this tells you" />
@@ -146,7 +146,7 @@ export default async function DashboardAcquisitionPage() {
             <p>Search Console answers whether people are finding HalalDL through Google, what queries they use, and which pages are attracting impressions and clicks.</p>
             <p>The site analytics layer answers what those visitors do after they land, especially whether they move into download intent or bounce early.</p>
             <div className="rounded-2xl border border-white/10 bg-white/6 p-4">
-              <div className="flex items-center gap-2 text-sky-100"><TrendingUp className="h-4 w-4" /><span className="text-sm font-semibold">Best combined read</span></div>
+              <div className="flex items-center gap-2 text-mint-strong"><TrendingUp className="h-4 w-4" /><span className="text-sm font-semibold">Best combined read</span></div>
               <p className="mt-2 text-sm text-slate-300">Rising Search Console clicks plus rising download-intent clicks is your strongest simple growth signal.</p>
             </div>
           </div>

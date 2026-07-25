@@ -120,16 +120,20 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
                 onClick={() => setActiveId(story.id)}
                 className={`group relative min-h-[14rem] rounded-[1.5rem] border p-5 text-left transition-all duration-200 sm:p-6 ${
                   isActive
-                    ? "border-line-strong bg-paper-elevated shadow-lg ring-1 ring-sky-strong/20"
+                    ? "border-line-strong bg-paper-elevated shadow-lg ring-1 ring-mint-strong/25"
                     : "border-line bg-paper-strong/50 hover:border-line-strong hover:bg-paper-strong"
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="active-indicator"
-                    className="absolute left-0 top-4 bottom-4 w-0.5 rounded-full bg-sky-strong"
+                    className="absolute left-0 top-4 bottom-4 w-0.5 rounded-full bg-mint-strong"
                     initial={false}
-                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                    transition={
+                      shouldReduceMotion
+                        ? { duration: 0 }
+                        : { type: "spring", stiffness: 500, damping: 35 }
+                    }
                   />
                 )}
 

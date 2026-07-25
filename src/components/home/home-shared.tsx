@@ -119,7 +119,7 @@ type TrustChipProps = {
 
 export function TrustChip({ icon: Icon, label }: TrustChipProps) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-paper-strong/70 px-3 py-1.5 text-xs font-medium text-ink-soft shadow-[0_10px_24px_rgba(12,25,41,0.05)]">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-paper-strong/70 px-3 py-1.5 text-xs font-medium text-ink-soft shadow-[0_10px_24px_rgba(8,14,23,0.05)]">
       <Icon className="h-3.5 w-3.5" />
       {label}
     </span>

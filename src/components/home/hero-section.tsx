@@ -61,7 +61,7 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
               href="/download"
               eventName="cta_click"
               eventData={{ cta: "go_to_download", page: "home" }}
-              className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-ink px-6 py-3.5 text-[0.95rem] font-semibold text-paper shadow-[0_18px_36px_rgba(12,25,41,0.16)] transition-all hover:-translate-y-0.5 hover:shadow-[0_24px_46px_rgba(12,25,41,0.2)]"
+              className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-ink px-6 py-3.5 text-[0.95rem] font-semibold text-paper shadow-[0_18px_36px_rgba(8,14,23,0.16)] transition-all hover:-translate-y-0.5 hover:shadow-[0_24px_46px_rgba(8,14,23,0.2)]"
             >
               <Download className="h-4 w-4" />
               Download {github.latestVersion}
@@ -103,7 +103,7 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
           </div>
 
           <div className="mt-4 grid gap-3 sm:grid-cols-[auto_minmax(0,1fr)]">
-            <div className="surface-elevated rounded-2xl px-4 py-3 shadow-[0_18px_38px_rgba(12,25,41,0.12)] sm:min-w-[9.5rem]">
+            <div className="surface-elevated rounded-2xl px-4 py-3 shadow-[0_18px_38px_rgba(8,14,23,0.12)] sm:min-w-[9.5rem]">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
                 Latest release
               </p>
@@ -111,7 +111,7 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
               <p className="whitespace-nowrap text-sm text-ink-soft">{github.latestReleaseLabel}</p>
             </div>
 
-            <div className="surface-elevated rounded-2xl px-4 py-3 shadow-[0_18px_40px_rgba(12,25,41,0.14)]">
+            <div className="surface-elevated rounded-2xl px-4 py-3 shadow-[0_18px_40px_rgba(8,14,23,0.14)]">
               <div className="flex items-start gap-3">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-mint">
                   <BadgeCheck className="h-4.5 w-4.5 text-mint-strong" />

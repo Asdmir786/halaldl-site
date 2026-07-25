@@ -4,6 +4,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { PageViewTracker } from "@/components/analytics/tracked-interactions";
+import { ThemeProvider } from "@/components/theme-provider";
 import { getSiteUrl, SITE_LINKS } from "@/lib/site";
 import {
   HOMEPAGE_OG_DESCRIPTION,
@@ -15,7 +16,7 @@ import {
   serializeJsonLd,
   SITE_DESCRIPTION,
 } from "@/lib/seo";
-import { getThemeScript } from "@/lib/theme";
+import { getThemeScript, THEME_COLOR_DARK, THEME_COLOR_LIGHT } from "@/lib/theme";
 
 const bodyFont = Inter({
   variable: "--font-body",
@@ -73,9 +74,25 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
-      { url: "/brand/icon.png", type: "image/png" },
+      { url: "/brand/icon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/brand/icon-512.png", type: "image/png", sizes: "512x512" },
+      {
+        url: "/brand/icon-light.png",
+        type: "image/png",
+        sizes: "512x512",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/brand/icon-dark.png",
+        type: "image/png",
+        sizes: "512x512",
+        media: "(prefers-color-scheme: dark)",
+      },
+      { url: "/brand/icon.png", type: "image/png", sizes: "512x512" },
     ],
-    apple: "/brand/icon.png",
+    apple: [
+      { url: "/brand/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
     shortcut: "/favicon.ico",
   },
   manifest: "/manifest.webmanifest",
@@ -86,8 +103,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
-    { media: "(prefers-color-scheme: dark)", color: "#080e17" },
+    { media: "(prefers-color-scheme: light)", color: THEME_COLOR_LIGHT },
+    { media: "(prefers-color-scheme: dark)", color: THEME_COLOR_DARK },
   ],
 };
 
@@ -116,7 +133,7 @@ export default function RootLayout({
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
         <PageViewTracker />
         <SpeedInsights />
         <div className="sr-only">

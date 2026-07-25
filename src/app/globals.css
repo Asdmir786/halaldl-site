@@ -4,36 +4,36 @@
 :root[data-theme="light"] {
   color-scheme: light;
   
-  /* Core palette - refined blue-slate tones */
-  --paper: #f8fafc;
+  /* Core palette — Soft Light / Deep Navy / Steel */
+  --paper: #f5f7fb;
   --paper-strong: #ffffff;
   --paper-elevated: #ffffff;
-  --ink: #0c1929;
-  --ink-soft: #4a5e78;
-  --ink-muted: #7c8fa6;
+  --ink: #080e17;
+  --ink-soft: #2c3e55;
+  --ink-muted: #5b7fa8;
   
   /* Structure */
-  --steel: #e2e9f1;
-  --steel-strong: #c7d4e1;
-  --line: rgba(12, 25, 41, 0.06);
-  --line-strong: rgba(12, 25, 41, 0.12);
-  --line-accent: rgba(12, 25, 41, 0.04);
+  --steel: #e4ebf4;
+  --steel-strong: #c5d2e2;
+  --line: rgba(8, 14, 23, 0.06);
+  --line-strong: rgba(8, 14, 23, 0.12);
+  --line-accent: rgba(8, 14, 23, 0.04);
   
-  /* Accents - more restrained, less saturated */
-  --sky: #e8f1fd;
-  --sky-strong: #5b9cf5;
-  --mint: #e4f5ef;
-  --mint-strong: #34a77b;
+  /* Accents — Steel primary, Accessible Mint for small text */
+  --sky: #e8eef6;
+  --sky-strong: #5b7fa8;
+  --mint: #e5f6f3;
+  --mint-strong: #0b7f72;
   --coral: #fde8e4;
   --coral-strong: #e85a42;
   --amber: #fef3e0;
   --amber-strong: #d4860a;
   
   /* Page atmosphere */
-  --page-top: #f8fafc;
-  --page-bottom: #f1f5f9;
-  --page-radial-a: rgba(91, 156, 245, 0.08);
-  --page-radial-b: rgba(52, 167, 123, 0.05);
+  --page-top: #f5f7fb;
+  --page-bottom: #ebf0f7;
+  --page-radial-a: rgba(44, 62, 85, 0.07);
+  --page-radial-b: rgba(11, 127, 114, 0.05);
   
   /* Surfaces */
   --surface-glass: rgba(255, 255, 255, 0.72);
@@ -44,57 +44,57 @@
   
   /* Borders */
   --border-glass: rgba(255, 255, 255, 0.6);
-  --border-subtle: rgba(12, 25, 41, 0.06);
-  --border-default: rgba(12, 25, 41, 0.1);
-  --border-strong: rgba(12, 25, 41, 0.16);
+  --border-subtle: rgba(8, 14, 23, 0.06);
+  --border-default: rgba(8, 14, 23, 0.1);
+  --border-strong: rgba(8, 14, 23, 0.16);
   
-  /* Shadows - softer, more refined */
-  --shadow-sm: 0 1px 2px rgba(12, 25, 41, 0.04);
-  --shadow-md: 0 4px 12px rgba(12, 25, 41, 0.06), 0 1px 2px rgba(12, 25, 41, 0.04);
-  --shadow-lg: 0 12px 32px rgba(12, 25, 41, 0.08), 0 4px 8px rgba(12, 25, 41, 0.04);
-  --shadow-xl: 0 24px 56px rgba(12, 25, 41, 0.1), 0 8px 16px rgba(12, 25, 41, 0.04);
-  --shadow-glow: 0 0 0 1px rgba(91, 156, 245, 0.12), 0 8px 24px rgba(91, 156, 245, 0.08);
-  --shadow-inset: inset 0 1px 2px rgba(12, 25, 41, 0.04);
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(8, 14, 23, 0.04);
+  --shadow-md: 0 4px 12px rgba(8, 14, 23, 0.06), 0 1px 2px rgba(8, 14, 23, 0.04);
+  --shadow-lg: 0 12px 32px rgba(8, 14, 23, 0.08), 0 4px 8px rgba(8, 14, 23, 0.04);
+  --shadow-xl: 0 24px 56px rgba(8, 14, 23, 0.1), 0 8px 16px rgba(8, 14, 23, 0.04);
+  --shadow-glow: 0 0 0 1px rgba(11, 127, 114, 0.18), 0 8px 24px rgba(11, 127, 114, 0.1);
+  --shadow-inset: inset 0 1px 2px rgba(8, 14, 23, 0.04);
   
   /* Screenshot frame */
-  --frame-bg: linear-gradient(180deg, #f4f7fa 0%, #e9eef4 100%);
-  --frame-border: rgba(12, 25, 41, 0.08);
-  --frame-shadow: 0 20px 50px rgba(12, 25, 41, 0.12), 0 8px 20px rgba(12, 25, 41, 0.06);
+  --frame-bg: linear-gradient(180deg, #f5f7fb 0%, #e4ebf4 100%);
+  --frame-border: rgba(8, 14, 23, 0.08);
+  --frame-shadow: 0 20px 50px rgba(8, 14, 23, 0.12), 0 8px 20px rgba(8, 14, 23, 0.06);
   
-  /* Interactive */
-  --focus-ring: rgba(91, 156, 245, 0.4);
-  --hover-overlay: rgba(12, 25, 41, 0.02);
+  /* Interactive — mint for focus/active highlights */
+  --focus-ring: rgba(11, 127, 114, 0.45);
+  --hover-overlay: rgba(8, 14, 23, 0.02);
   
   /* Misc */
   --eyebrow-bg: rgba(255, 255, 255, 0.82);
-  --eyebrow-border: rgba(12, 25, 41, 0.08);
+  --eyebrow-border: rgba(8, 14, 23, 0.08);
   --skip-bg: rgba(255, 255, 255, 0.95);
-  --hero-glow: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(91, 156, 245, 0.15), transparent 70%);
+  --hero-glow: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(91, 127, 168, 0.14), transparent 70%);
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
   
-  /* Core palette */
+  /* Core palette — Deep Navy / Steel / Soft Light text */
   --paper: #080e17;
   --paper-strong: #0c1422;
-  --paper-elevated: #111a2a;
-  --ink: #e8eef6;
-  --ink-soft: #94a3b8;
-  --ink-muted: #64748b;
+  --paper-elevated: #121c2c;
+  --ink: #f5f7fb;
+  --ink-soft: #a8bdd4;
+  --ink-muted: #5b7fa8;
   
   /* Structure */
-  --steel: #1e293b;
-  --steel-strong: #334155;
-  --line: rgba(226, 232, 240, 0.06);
-  --line-strong: rgba(226, 232, 240, 0.12);
-  --line-accent: rgba(226, 232, 240, 0.03);
+  --steel: #1a2434;
+  --steel-strong: #2c3e55;
+  --line: rgba(245, 247, 251, 0.06);
+  --line-strong: rgba(245, 247, 251, 0.12);
+  --line-accent: rgba(245, 247, 251, 0.03);
   
-  /* Accents */
-  --sky: rgba(91, 156, 245, 0.15);
-  --sky-strong: #6ba6f8;
-  --mint: rgba(52, 167, 123, 0.15);
-  --mint-strong: #4ade9a;
+  /* Accents — Steel primary, Bright Mint highlights */
+  --sky: rgba(91, 127, 168, 0.16);
+  --sky-strong: #5b7fa8;
+  --mint: rgba(38, 224, 198, 0.14);
+  --mint-strong: #26e0c6;
   --coral: rgba(232, 90, 66, 0.15);
   --coral-strong: #f87171;
   --amber: rgba(212, 134, 10, 0.15);
@@ -103,14 +103,14 @@
   /* Page atmosphere */
   --page-top: #080e17;
   --page-bottom: #060a10;
-  --page-radial-a: rgba(91, 156, 245, 0.08);
-  --page-radial-b: rgba(52, 167, 123, 0.04);
+  --page-radial-a: rgba(91, 127, 168, 0.1);
+  --page-radial-b: rgba(38, 224, 198, 0.05);
   
   /* Surfaces */
   --surface-glass: rgba(12, 20, 34, 0.72);
-  --surface-glass-strong: rgba(17, 26, 42, 0.85);
-  --surface-elevated: rgba(17, 26, 42, 0.92);
-  --surface-card: rgba(15, 23, 38, 0.88);
+  --surface-glass-strong: rgba(18, 28, 44, 0.85);
+  --surface-elevated: rgba(18, 28, 44, 0.92);
+  --surface-card: rgba(14, 22, 36, 0.88);
   --surface-card-hover: rgba(20, 30, 48, 0.92);
   
   /* Borders */
@@ -124,23 +124,23 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.2);
   --shadow-xl: 0 24px 56px rgba(0, 0, 0, 0.5), 0 8px 16px rgba(0, 0, 0, 0.25);
-  --shadow-glow: 0 0 0 1px rgba(107, 166, 248, 0.2), 0 8px 24px rgba(107, 166, 248, 0.1);
+  --shadow-glow: 0 0 0 1px rgba(91, 127, 168, 0.28), 0 8px 24px rgba(38, 224, 198, 0.08);
   --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.2);
   
   /* Screenshot frame */
-  --frame-bg: linear-gradient(180deg, #111a2a 0%, #0c1422 100%);
+  --frame-bg: linear-gradient(180deg, #121c2c 0%, #0c1422 100%);
   --frame-border: rgba(255, 255, 255, 0.08);
   --frame-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 8px 20px rgba(0, 0, 0, 0.3);
   
   /* Interactive */
-  --focus-ring: rgba(107, 166, 248, 0.5);
+  --focus-ring: rgba(38, 224, 198, 0.45);
   --hover-overlay: rgba(255, 255, 255, 0.02);
   
   /* Misc */
-  --eyebrow-bg: rgba(17, 26, 42, 0.85);
+  --eyebrow-bg: rgba(18, 28, 44, 0.85);
   --eyebrow-border: rgba(255, 255, 255, 0.08);
   --skip-bg: rgba(12, 20, 34, 0.98);
-  --hero-glow: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(107, 166, 248, 0.12), transparent 70%);
+  --hero-glow: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(91, 127, 168, 0.14), transparent 70%);
 }
 
 @theme inline {
@@ -157,6 +157,8 @@
   --color-line-accent: var(--line-accent);
   --color-sky: var(--sky);
   --color-sky-strong: var(--sky-strong);
+  --color-sky-100: color-mix(in srgb, var(--sky-strong) 55%, white);
+  --color-sky-300: var(--sky-strong);
   --color-mint: var(--mint);
   --color-mint-strong: var(--mint-strong);
   --color-coral: var(--coral);
@@ -205,7 +207,7 @@ summary:focus-visible {
 }
 
 ::selection {
-  background: rgba(91, 156, 245, 0.2);
+  background: color-mix(in srgb, var(--mint-strong) 28%, transparent);
 }
 
 /* Skip link */
@@ -317,7 +319,11 @@ summary:focus-visible {
 }
 
 .hero-stage-shell {
-  box-shadow: 0 24px 56px rgba(12, 25, 41, 0.12), 0 10px 24px rgba(12, 25, 41, 0.06);
+  box-shadow: 0 24px 56px rgba(8, 14, 23, 0.12), 0 10px 24px rgba(8, 14, 23, 0.06);
+}
+
+.brand-logo .theme-image {
+  border-radius: inherit;
 }
 
 .hero-screenshot-inner {
@@ -357,6 +363,7 @@ summary:focus-visible {
 .theme-image {
   position: absolute;
   inset: 0;
+  transition: opacity 180ms ease-out;
 }
 
 :root[data-theme="light"] .theme-image-dark,
@@ -407,8 +414,8 @@ summary:focus-visible {
   height: 0.85rem;
   width: 0.85rem;
   border-radius: 999px;
-  background: var(--sky-strong);
-  box-shadow: 0 0 0 6px color-mix(in srgb, var(--sky) 90%, transparent);
+  background: var(--mint-strong);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--mint) 90%, transparent);
 }
 
 @media (max-width: 1023px) {
@@ -505,7 +512,7 @@ summary:focus-visible {
 .install-card-primary {
   position: relative;
   background: var(--surface-elevated);
-  border: 1px solid var(--sky-strong);
+  border: 1px solid var(--mint-strong);
   box-shadow: var(--shadow-glow);
 }
 
@@ -514,7 +521,7 @@ summary:focus-visible {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(180deg, var(--sky), transparent 60%);
+  background: linear-gradient(180deg, var(--mint), transparent 60%);
   opacity: 0.5;
   pointer-events: none;
 }
@@ -577,6 +584,10 @@ summary:focus-visible {
   .hero-stage-enter,
   .hero-band-enter {
     animation: none;
+  }
+
+  .theme-image {
+    transition: none !important;
   }
 
   *,

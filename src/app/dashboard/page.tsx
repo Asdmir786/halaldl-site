@@ -60,7 +60,7 @@ export default async function DashboardPage() {
                 <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">
                   {card.label}
                 </p>
-                <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-sky-100">
+                <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-mint-strong">
                   <Icon className="h-4.5 w-4.5" />
                 </span>
               </div>
@@ -184,7 +184,7 @@ export default async function DashboardPage() {
           <section className="mt-6 grid gap-4 xl:grid-cols-2">
             <DashboardPanel>
               <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sky-100">
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-mint-strong">
                   <MousePointerClick className="h-5 w-5" />
                 </span>
                 <SectionHeading
@@ -256,7 +256,7 @@ export default async function DashboardPage() {
                 </div>
               </div>
               <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-slate-300">
-                <ArrowRight className="h-4 w-4 text-sky-100" />
+                <ArrowRight className="h-4 w-4 text-mint-strong" />
                 Use the Acquisition view for source quality and the Releases view for package demand.
               </div>
             </DashboardPanel>

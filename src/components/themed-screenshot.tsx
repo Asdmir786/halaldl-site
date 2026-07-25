@@ -33,11 +33,14 @@ export function ThemedScreenshot({
         return () => {};
       }
 
-      const handleThemeChange = () => callback();
-      window.addEventListener(THEME_EVENT, handleThemeChange);
+      const media = window.matchMedia("(prefers-color-scheme: dark)");
+      const handleChange = () => callback();
+      window.addEventListener(THEME_EVENT, handleChange);
+      media.addEventListener("change", handleChange);
 
       return () => {
-        window.removeEventListener(THEME_EVENT, handleThemeChange);
+        window.removeEventListener(THEME_EVENT, handleChange);
+        media.removeEventListener("change", handleChange);
       };
     },
     getThemeSnapshotFromDocument,

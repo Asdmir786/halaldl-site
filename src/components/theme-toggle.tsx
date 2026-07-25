@@ -1,15 +1,16 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { Moon, Sun } from "lucide-react";
+import { Monitor, Moon, Sun } from "lucide-react";
+import { applyThemePreference } from "@/components/theme-provider";
 import {
-  DEFAULT_THEME,
-  getThemeSnapshotFromDocument,
-  STORAGE_KEY,
-  THEME_COOKIE,
+  DEFAULT_THEME_PREFERENCE,
+  getThemePreferenceSnapshotFromDocument,
   THEME_EVENT,
-  type Theme,
+  type ThemePreference,
 } from "@/lib/theme";
+
+const PREFERENCE_ORDER: ThemePreference[] = ["system", "light", "dark"];
 
 function subscribe(callback: () => void) {
   if (typeof window === "undefined") {
@@ -28,30 +29,39 @@ function subscribe(callback: () => void) {
   };
 }
 
-function applyTheme(theme: Theme) {
-  document.documentElement.dataset.theme = theme;
-  document.documentElement.style.colorScheme = theme;
-  window.localStorage.setItem(STORAGE_KEY, theme);
-  document.cookie = `${THEME_COOKIE}=${theme}; Path=/; Max-Age=31536000; SameSite=Lax`;
-  window.dispatchEvent(new CustomEvent(THEME_EVENT));
+function nextPreference(current: ThemePreference): ThemePreference {
+  const index = PREFERENCE_ORDER.indexOf(current);
+  return PREFERENCE_ORDER[(index + 1) % PREFERENCE_ORDER.length];
+}
+
+function preferenceLabel(preference: ThemePreference) {
+  if (preference === "system") return "System";
+  if (preference === "dark") return "Dark";
+  return "Light";
 }
 
 export function ThemeToggle() {
-  const theme = useSyncExternalStore(subscribe, getThemeSnapshotFromDocument, () => DEFAULT_THEME);
-  const nextTheme = theme === "dark" ? "light" : "dark";
+  const preference = useSyncExternalStore(
+    subscribe,
+    getThemePreferenceSnapshotFromDocument,
+    () => DEFAULT_THEME_PREFERENCE,
+  );
+  const next = nextPreference(preference);
 
   return (
     <button
       type="button"
-      onClick={() => applyTheme(nextTheme)}
+      onClick={() => applyThemePreference(next)}
       className="theme-toggle flex h-9 w-9 items-center justify-center rounded-lg text-ink-soft transition-colors hover:text-ink"
-      aria-label={`Switch to ${nextTheme} mode`}
-      title={`Switch to ${nextTheme} mode`}
+      aria-label={`Theme: ${preferenceLabel(preference)}. Switch to ${preferenceLabel(next)}`}
+      title={`Theme: ${preferenceLabel(preference)} (click for ${preferenceLabel(next)})`}
     >
-      {theme === "dark" ? (
+      {preference === "dark" ? (
         <Sun className="h-[1.125rem] w-[1.125rem]" />
-      ) : (
+      ) : preference === "light" ? (
         <Moon className="h-[1.125rem] w-[1.125rem]" />
+      ) : (
+        <Monitor className="h-[1.125rem] w-[1.125rem]" />
       )}
     </button>
   );

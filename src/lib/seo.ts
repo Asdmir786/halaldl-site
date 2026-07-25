@@ -95,7 +95,13 @@ export function getSiteStructuredData() {
       "@id": publisherId,
       name: SITE_NAME,
       url: siteUrl.origin,
-      logo: absoluteUrl("/brand/icon.png"),
+      logo: {
+        "@type": "ImageObject",
+        url: absoluteUrl("/brand/icon.png"),
+        width: 512,
+        height: 512,
+      },
+      image: absoluteUrl("/brand/icon.png"),
       sameAs: [SITE_LINKS.repoUrl],
     },
   ];

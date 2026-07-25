@@ -26,14 +26,14 @@ export function DashboardShell({
   return (
     <main
       id="main-content"
-      className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(90,157,255,0.16),transparent_28%),radial-gradient(circle_at_top_right,rgba(52,167,123,0.09),transparent_22%),linear-gradient(180deg,#07101c_0%,#0b1422_48%,#111a2c_100%)] text-paper"
+      className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(91,127,168,0.16),transparent_28%),radial-gradient(circle_at_top_right,rgba(38,224,198,0.09),transparent_22%),linear-gradient(180deg,#080e17_0%,#0c1422_48%,#121c2c_100%)] text-paper"
     >
       <div className="mx-auto max-w-[1500px] px-4 pb-16 pt-4 sm:px-6 lg:px-8">
         <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
           <aside className="lg:sticky lg:top-4 lg:self-start">
             <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(15,23,38,0.92),rgba(10,17,29,0.92))] p-5 shadow-[0_24px_90px_rgba(0,0,0,0.38)] backdrop-blur-xl">
               <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-300/14 text-sky-100">
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-mint-strong/14 text-mint-strong">
                   <BarChart3 className="h-5 w-5" />
                 </span>
                 <div>
@@ -60,11 +60,11 @@ export function DashboardShell({
                       href={item.href}
                       className={`group flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-semibold transition-all ${
                         active
-                          ? "border-sky-300/35 bg-sky-300/16 text-white shadow-[0_0_0_1px_rgba(125,211,252,0.08)]"
+                          ? "border-mint-strong/35 bg-mint-strong/16 text-white shadow-[0_0_0_1px_rgba(38,224,198,0.14)]"
                           : "border-white/8 bg-white/5 text-slate-300 hover:border-white/12 hover:bg-white/8 hover:text-white"
                       }`}
                     >
-                      <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${active ? "bg-sky-300/16 text-sky-100" : "bg-white/6 text-slate-400 group-hover:text-white"}`}>
+                      <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${active ? "bg-mint-strong/16 text-mint-strong" : "bg-white/6 text-slate-400 group-hover:text-white"}`}>
                         <Icon className="h-4 w-4" />
                       </span>
                       <span>{item.label}</span>
@@ -75,7 +75,7 @@ export function DashboardShell({
 
               <div className="mt-6 rounded-[1.4rem] border border-white/8 bg-white/5 p-4">
                 <div className="flex items-center gap-2 text-slate-300">
-                  <Compass className="h-4 w-4 text-sky-100" />
+                  <Compass className="h-4 w-4 text-mint-strong" />
                   <span className="text-sm font-semibold">Window</span>
                 </div>
                 <p className="mt-2 text-sm text-slate-400">Last 30 days</p>
@@ -105,7 +105,7 @@ export function DashboardShell({
 
           <div className="min-w-0">
             <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(145deg,rgba(18,28,45,0.95),rgba(11,18,30,0.94))] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl sm:p-8">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/6 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-sky-100/85">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/6 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-mint-strong/90">
                 <BarChart3 className="h-3.5 w-3.5" />
                 Internal analytics
               </div>

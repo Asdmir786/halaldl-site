@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
+import { BrandLogo } from "@/components/brand-logo";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import type { GitHubSnapshot } from "@/lib/github";
 import { SITE_LINKS } from "@/lib/site";
@@ -53,7 +53,7 @@ export function HomeCtaFooter({ github }: { github: GitHubSnapshot }) {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] lg:items-start">
           <div className="rounded-[1.75rem] border border-line bg-paper-strong/75 p-6 sm:p-7">
             <div className="flex items-center gap-2.5">
-              <Image src="/brand/icon.png" alt="HalalDL" width={24} height={24} className="rounded" />
+              <BrandLogo size={24} />
               <span className="font-display text-base font-semibold text-ink">HalalDL</span>
             </div>
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">

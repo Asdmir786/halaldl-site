@@ -62,7 +62,7 @@ export default async function DashboardReleasesPage() {
       <section className="mt-6 grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
         <DashboardPanel>
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sky-100"><FolderDown className="h-5 w-5" /></span>
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-mint-strong"><FolderDown className="h-5 w-5" /></span>
             <SectionHeading eyebrow="GitHub asset downloads" title="Public release asset counts from GitHub" />
           </div>
           <div className="mt-6">
@@ -71,7 +71,7 @@ export default async function DashboardReleasesPage() {
         </DashboardPanel>
         <DashboardPanel>
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sky-100"><Download className="h-5 w-5" /></span>
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-mint-strong"><Download className="h-5 w-5" /></span>
             <SectionHeading eyebrow="Website-side demand" title="What the site is saying people want" />
           </div>
           <div className="mt-6">
@@ -86,7 +86,7 @@ export default async function DashboardReleasesPage() {
       <section className="mt-6 grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
         <DashboardPanel>
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sky-100"><PackageOpen className="h-5 w-5" /></span>
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-mint-strong"><PackageOpen className="h-5 w-5" /></span>
             <SectionHeading eyebrow="Release summary" title="What release state are you looking at?" />
           </div>
           <div className="mt-6 grid gap-3">
