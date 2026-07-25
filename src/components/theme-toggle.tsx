@@ -2,15 +2,19 @@
 
 import { useSyncExternalStore } from "react";
 import { Monitor, Moon, Sun } from "lucide-react";
-import { applyThemePreference } from "@/components/theme-provider";
+import { motion, useReducedMotion } from "motion/react";
+import { requestThemePreference } from "@/components/theme-provider";
 import {
   DEFAULT_THEME_PREFERENCE,
   getThemePreferenceSnapshotFromDocument,
   THEME_EVENT,
-  type ThemePreference,
 } from "@/lib/theme";
 
-const PREFERENCE_ORDER: ThemePreference[] = ["system", "light", "dark"];
+const THEME_OPTIONS = [
+  { value: "system" as const, label: "System", icon: Monitor },
+  { value: "light" as const, label: "Light", icon: Sun },
+  { value: "dark" as const, label: "Dark", icon: Moon },
+];
 
 function subscribe(callback: () => void) {
   if (typeof window === "undefined") {
@@ -29,40 +33,58 @@ function subscribe(callback: () => void) {
   };
 }
 
-function nextPreference(current: ThemePreference): ThemePreference {
-  const index = PREFERENCE_ORDER.indexOf(current);
-  return PREFERENCE_ORDER[(index + 1) % PREFERENCE_ORDER.length];
-}
-
-function preferenceLabel(preference: ThemePreference) {
-  if (preference === "system") return "System";
-  if (preference === "dark") return "Dark";
-  return "Light";
-}
-
+/**
+ * Three-way theme control (System / Light / Dark), adapted from the
+ * 21st.dev Toggle Theme pattern: radiogroup + Motion layoutId pill.
+ */
 export function ThemeToggle() {
   const preference = useSyncExternalStore(
     subscribe,
     getThemePreferenceSnapshotFromDocument,
     () => DEFAULT_THEME_PREFERENCE,
   );
-  const next = nextPreference(preference);
+  const shouldReduceMotion = useReducedMotion();
 
   return (
-    <button
-      type="button"
-      onClick={() => applyThemePreference(next)}
-      className="theme-toggle flex h-9 w-9 items-center justify-center rounded-lg text-ink-soft transition-colors hover:text-ink"
-      aria-label={`Theme: ${preferenceLabel(preference)}. Switch to ${preferenceLabel(next)}`}
-      title={`Theme: ${preferenceLabel(preference)} (click for ${preferenceLabel(next)})`}
+    <div
+      role="radiogroup"
+      aria-label="Color theme"
+      className="theme-switcher inline-flex items-center overflow-hidden rounded-full border border-line bg-paper-strong/80 p-0.5 shadow-sm"
     >
-      {preference === "dark" ? (
-        <Sun className="h-[1.125rem] w-[1.125rem]" />
-      ) : preference === "light" ? (
-        <Moon className="h-[1.125rem] w-[1.125rem]" />
-      ) : (
-        <Monitor className="h-[1.125rem] w-[1.125rem]" />
-      )}
-    </button>
+      {THEME_OPTIONS.map((option) => {
+        const Icon = option.icon;
+        const isActive = preference === option.value;
+
+        return (
+          <button
+            key={option.value}
+            type="button"
+            role="radio"
+            aria-checked={isActive}
+            aria-label={`${option.label} theme`}
+            title={option.label}
+            onClick={(event) => {
+              requestThemePreference(option.value, event.currentTarget);
+            }}
+            className={`relative flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
+              isActive ? "text-ink" : "text-ink-muted hover:text-ink-soft"
+            }`}
+          >
+            {isActive ? (
+              <motion.span
+                layoutId="theme-switcher-pill"
+                className="absolute inset-0 rounded-full bg-mint ring-1 ring-mint-strong/30"
+                transition={
+                  shouldReduceMotion
+                    ? { duration: 0 }
+                    : { type: "spring", stiffness: 420, damping: 32, mass: 0.6 }
+                }
+              />
+            ) : null}
+            <Icon className="relative z-10 h-3.5 w-3.5" aria-hidden="true" />
+          </button>
+        );
+      })}
+    </div>
   );
 }

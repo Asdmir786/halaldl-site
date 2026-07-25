@@ -1,15 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
+import { applyThemePreference } from "@/lib/theme-transition";
 import {
-  getSystemTheme,
   getThemeColor,
   resolveThemePreference,
   STORAGE_KEY,
-  THEME_COOKIE,
-  THEME_EVENT,
   type Theme,
-  type ThemePreference,
 } from "@/lib/theme";
 
 function syncThemeColor(theme: Theme) {
@@ -26,17 +23,7 @@ function syncThemeColor(theme: Theme) {
   meta.setAttribute("content", color);
 }
 
-export function applyThemePreference(preference: ThemePreference) {
-  const resolved = preference === "system" ? getSystemTheme() : preference;
-
-  document.documentElement.dataset.themePreference = preference;
-  document.documentElement.dataset.theme = resolved;
-  document.documentElement.style.colorScheme = resolved;
-  window.localStorage.setItem(STORAGE_KEY, preference);
-  document.cookie = `${THEME_COOKIE}=${preference}; Path=/; Max-Age=31536000; SameSite=Lax`;
-  syncThemeColor(resolved);
-  window.dispatchEvent(new CustomEvent(THEME_EVENT));
-}
+export { applyThemePreference, requestThemePreference } from "@/lib/theme-transition";
 
 /** Keeps system preference live and theme-color meta in sync with the resolved theme. */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
@@ -46,11 +33,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const handleMediaChange = () => {
       const preference = resolveThemePreference(window.localStorage.getItem(STORAGE_KEY));
       if (preference === "system") {
+        // OS changes should follow immediately without a staged click animation.
         applyThemePreference("system");
       }
     };
 
-    // Ensure theme-color meta exists after hydration.
     const resolved =
       document.documentElement.dataset.theme === "dark" ? "dark" : "light";
     syncThemeColor(resolved);

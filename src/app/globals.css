@@ -143,6 +143,86 @@
   --hero-glow: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(91, 127, 168, 0.14), transparent 70%);
 }
 
+/* Foreground lead — text/ink flips before the full theme wipe */
+:root[data-theme="light"][data-theme-fg="dark"] {
+  --ink: #f5f7fb;
+  --ink-soft: #a8bdd4;
+  --ink-muted: #5b7fa8;
+  --mint-strong: #26e0c6;
+  --sky-strong: #7a9bc4;
+  --coral-strong: #f87171;
+  --amber-strong: #fbbf24;
+  --line: rgba(245, 247, 251, 0.14);
+  --line-strong: rgba(245, 247, 251, 0.22);
+}
+
+:root[data-theme="dark"][data-theme-fg="light"] {
+  --ink: #080e17;
+  --ink-soft: #2c3e55;
+  --ink-muted: #5b7fa8;
+  --mint-strong: #0b7f72;
+  --sky-strong: #5b7fa8;
+  --coral-strong: #e85a42;
+  --amber-strong: #d4860a;
+  --line: rgba(8, 14, 23, 0.1);
+  --line-strong: rgba(8, 14, 23, 0.16);
+}
+
+/* Staged motion while a theme transition is running */
+html.theme-transitioning {
+  --theme-fg-blur: 0px;
+}
+
+html.theme-transitioning body,
+html.theme-transitioning :where(
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  a,
+  span,
+  button,
+  li,
+  label,
+  td,
+  th,
+  summary,
+  strong,
+  em,
+  small,
+  code,
+  pre,
+  nav,
+  footer,
+  header
+) {
+  transition:
+    color 200ms ease,
+    border-color 200ms ease,
+    fill 200ms ease,
+    stroke 200ms ease,
+    filter 200ms ease;
+  filter: blur(var(--theme-fg-blur, 0px));
+}
+
+/* View Transition circle + blur base (animation driven in JS) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
 @theme inline {
   --color-paper: var(--paper);
   --color-paper-strong: var(--paper-strong);
@@ -495,7 +575,11 @@ summary:focus-visible {
   color: var(--ink-soft);
 }
 
-/* Theme toggle */
+/* Theme switcher — three-way segmented control */
+.theme-switcher {
+  backdrop-filter: blur(12px) saturate(140%);
+}
+
 .theme-toggle {
   border: 1px solid var(--border-default);
   background: var(--surface-card);
@@ -588,6 +672,36 @@ summary:focus-visible {
 
   .theme-image {
     transition: none !important;
+  }
+
+  html.theme-transitioning body,
+  html.theme-transitioning :where(
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    a,
+    span,
+    button,
+    li,
+    label,
+    td,
+    th,
+    summary,
+    strong,
+    em,
+    small,
+    code,
+    pre,
+    nav,
+    footer,
+    header
+  ) {
+    transition: none !important;
+    filter: none !important;
   }
 
   *,
