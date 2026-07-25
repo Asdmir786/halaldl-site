@@ -17,6 +17,7 @@ import { getGitHubSnapshot } from "@/lib/github";
 import { getSocialImage, SITE_LINKS } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { formatMegabytes } from "@/components/home/home-shared";
+import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
 
 const INSTALL_META_TITLE = "Install HalalDL on Windows 10 and 11";
 const INSTALL_META_DESCRIPTION =
@@ -166,8 +167,10 @@ export default async function InstallWindowsPage() {
               </h1>
               <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
                 The cleanest path is simple: most people should use Full, download from GitHub
-                Releases, verify SHA256 if they want an extra check, then run the
-                installer.
+                Releases, verify SHA256 if they want an extra check, then run the installer. Use
+                Lite only if you manage yt-dlp and FFmpeg yourself. Use Portable when you need a
+                no-install folder. Use WinGet for convenience — not as the fastest path to the
+                newest release assets.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3 text-sm text-ink-soft">
@@ -199,6 +202,14 @@ export default async function InstallWindowsPage() {
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Compare Full vs Lite
+                </TrackedLink>
+                <TrackedLink
+                  href="/guides"
+                  eventName="cta_click"
+                  eventData={{ cta: "open_guides", page: "install_windows" }}
+                  className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
+                >
+                  Browse all guides
                 </TrackedLink>
               </div>
             </div>
@@ -241,6 +252,51 @@ export default async function InstallWindowsPage() {
               </div>
             </aside>
           </ScrollReveal>
+
+          <section className="pt-16 sm:pt-20">
+            <div className="section-divider mb-12" />
+            <ScrollReveal>
+              <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">
+                Decision tree: which install path?
+              </h2>
+              <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {[
+                  {
+                    title: "Full setup EXE",
+                    body: "Default for most people. Smoother first-run path with more managed tooling.",
+                  },
+                  {
+                    title: "Lite setup EXE",
+                    body: "You already manage yt-dlp, ffmpeg, aria2, and related tools yourself.",
+                  },
+                  {
+                    title: "Portable ZIP",
+                    body: "No traditional install. Keep app data and managed tools in one folder.",
+                  },
+                  {
+                    title: "MSI",
+                    body: "Prefer MSI for package/manual deployment workflows.",
+                  },
+                  {
+                    title: "WinGet",
+                    body: "Convenient updates — check GitHub Releases when you need the newest build today.",
+                  },
+                  {
+                    title: "Still unsure?",
+                    body: "Start with Full from GitHub Releases, then verify SHA256 before first run.",
+                  },
+                ].map((item) => (
+                  <article
+                    key={item.title}
+                    className="rounded-[1.5rem] border border-line bg-paper/70 p-5"
+                  >
+                    <h3 className="font-display text-lg font-semibold text-ink">{item.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-ink-soft">{item.body}</p>
+                  </article>
+                ))}
+              </div>
+            </ScrollReveal>
+          </section>
 
           <section className="pt-16 sm:pt-20">
             <div className="section-divider mb-12" />
@@ -402,6 +458,8 @@ export default async function InstallWindowsPage() {
               </article>
             </ScrollReveal>
           </section>
+
+          <ProductRelatedGuides slug="install-halaldl-windows" />
         </div>
       </main>
     </>

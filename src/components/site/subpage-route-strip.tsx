@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 type SubpageRouteStripProps = {
-  currentPage: "download" | "compare" | "install" | "trust";
+  currentPage: "download" | "compare" | "install" | "trust" | "guides";
 };
 
 const items = [
@@ -9,6 +9,7 @@ const items = [
   { id: "compare", label: "Full vs Lite", href: "/compare/full-vs-lite" },
   { id: "install", label: "Install on Windows", href: "/install/windows" },
   { id: "trust", label: "Verify SHA256", href: "/trust/verify-checksum" },
+  { id: "guides", label: "Guides", href: "/guides" },
 ] as const;
 
 export function SubpageRouteStrip({ currentPage }: SubpageRouteStripProps) {

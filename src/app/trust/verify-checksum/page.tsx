@@ -15,6 +15,7 @@ import { getGitHubSnapshot } from "@/lib/github";
 import { getSocialImage, SITE_LINKS } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { shortenDigest } from "@/components/home/home-shared";
+import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
 
 const TRUST_META_TITLE = "Trust and verification — HalalDL";
 const TRUST_META_DESCRIPTION =
@@ -188,9 +189,10 @@ export default async function VerifyChecksumPage() {
                 How to verify HalalDL SHA256 checksums on Windows.
               </h1>
                <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
-                 This page is the exact verification step. Download from GitHub Releases, open the
-                 SHA256SUMS file from the same release, compute the local hash, and only continue
-                 when both values match.
+                 This page is the exact verification step. Download only from GitHub Releases — not
+                 random mirrors — open the SHA256SUMS file from the same release, compute the local
+                 hash in PowerShell, and only continue when both values match. Treat SmartScreen on
+                 unsigned OSS installers as a verification prompt, not a reason to skip trust checks.
                </p>
 
               <div className="mt-6 flex flex-wrap gap-3 text-sm text-ink-soft">
@@ -270,6 +272,36 @@ export default async function VerifyChecksumPage() {
                   </div>
                 </article>
               ))}
+            </ScrollReveal>
+          </section>
+
+          <section className="pt-16 sm:pt-20">
+            <div className="section-divider mb-12" />
+            <ScrollReveal className="rounded-[1.85rem] border border-line bg-paper/70 p-6 sm:p-7">
+              <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">
+                SmartScreen on unsigned OSS installers
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-ink-soft sm:text-base">
+                Current HalalDL installers are not code-signed yet. Windows may warn because the
+                file is uncommon — not because checksum verification failed. The safe order is:
+                confirm GitHub Releases as the source, verify SHA256, then decide whether to
+                continue with More info → Run anyway.
+              </p>
+              <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+                {[
+                  "Never download HalalDL from a random mirror or “free tools” site",
+                  "Keep the installer and SHA256SUMS.txt from the same release",
+                  "If the hash mismatches, delete the file and start over",
+                  "SmartScreen is not a substitute for checksum verification",
+                ].map((item) => (
+                  <li
+                    key={item}
+                    className="rounded-2xl border border-line bg-paper/80 px-4 py-3 text-sm text-ink-soft"
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </ScrollReveal>
           </section>
 
@@ -379,6 +411,8 @@ export default async function VerifyChecksumPage() {
               </div>
             </ScrollReveal>
           </section>
+
+          <ProductRelatedGuides slug="verify-sha256-smartscreen" />
         </div>
       </main>
     </>

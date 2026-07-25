@@ -1,6 +1,8 @@
 import { BadgeCheck, CalendarClock, Download, Github, ShieldCheck, Sparkles } from "lucide-react";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
 import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
+import { AnimeReveal } from "@/components/ui/anime-reveal";
+import { HeroAtmosphere } from "@/components/home/hero-atmosphere";
 import type { GitHubSnapshot } from "@/lib/github";
 import { SITE_LINKS } from "@/lib/site";
 import { trustSignals } from "@/components/home/home-data";
@@ -37,53 +39,56 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
   return (
     <section className="relative flex flex-col pt-8 sm:pt-12 lg:min-h-[calc(100vh-7rem)] lg:justify-center lg:pt-20">
       <div className="hero-glow" aria-hidden="true" />
+      <HeroAtmosphere />
 
-      <div className="grid gap-8 sm:gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-center lg:gap-12 xl:gap-16">
+      <div className="hero-content grid gap-8 sm:gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-center lg:gap-12 xl:gap-16">
         <div className="hero-copy-enter max-w-xl lg:max-w-none lg:pr-4">
-          <div className="eyebrow">
-            <Sparkles className="h-3.5 w-3.5" />
-            Open-source Windows media downloader
-          </div>
+          <AnimeReveal delayStep={90} y={14} blur={5}>
+            <div className="eyebrow">
+              <Sparkles className="h-3.5 w-3.5" />
+              Open-source Windows media downloader
+            </div>
 
-          <h1 className="mt-6 font-display text-[2.45rem] font-semibold leading-[1.02] tracking-normal text-ink sm:text-[3.35rem] lg:text-[4rem] xl:text-[4.35rem]">
-            Download media without
-            <br className="hidden sm:block" />
-            <span className="block text-ink-soft sm:inline">the command line.</span>
-          </h1>
+            <h1 className="mt-6 font-display text-[2.45rem] font-semibold leading-[1.02] tracking-normal text-ink sm:text-[3.35rem] lg:text-[4rem] xl:text-[4.35rem]">
+              Download media without
+              <br className="hidden sm:block" />
+              <span className="block text-ink-soft sm:inline">the command line.</span>
+            </h1>
 
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg">
-            HalalDL brings yt-dlp into a clear, local-first Windows app with reusable presets,
-            visible logs, and optional tool management.
-          </p>
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg">
+              HalalDL brings yt-dlp into a clear, local-first Windows app with reusable presets,
+              visible logs, and optional tool management.
+            </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <TrackedLink
-              href="/download"
-              eventName="cta_click"
-              eventData={{ cta: "go_to_download", page: "home" }}
-              className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-ink px-6 py-3.5 text-[0.95rem] font-semibold text-paper shadow-[0_18px_36px_rgba(8,14,23,0.16)] transition-all hover:-translate-y-0.5 hover:shadow-[0_24px_46px_rgba(8,14,23,0.2)]"
-            >
-              <Download className="h-4 w-4" />
-              Download {github.latestVersion}
-            </TrackedLink>
-            <TrackedAnchor
-              href={SITE_LINKS.repoUrl}
-              target="_blank"
-              rel="noreferrer"
-              eventName="cta_click"
-              eventData={{ cta: "view_github_repo", page: "home" }}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-line-strong bg-paper-strong px-5 py-3.5 text-[0.95rem] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-ink/20 hover:bg-paper-elevated"
-            >
-              <Github className="h-4 w-4" />
-              View Source
-            </TrackedAnchor>
-          </div>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <TrackedLink
+                href="/download"
+                eventName="cta_click"
+                eventData={{ cta: "go_to_download", page: "home" }}
+                className="glass-cta inline-flex items-center justify-center gap-2.5 rounded-2xl px-6 py-3.5 text-[0.95rem] font-semibold transition-all hover:-translate-y-0.5"
+              >
+                <Download className="h-4 w-4" />
+                Download {github.latestVersion}
+              </TrackedLink>
+              <TrackedAnchor
+                href={SITE_LINKS.repoUrl}
+                target="_blank"
+                rel="noreferrer"
+                eventName="cta_click"
+                eventData={{ cta: "view_github_repo", page: "home" }}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-line-strong bg-paper-strong px-5 py-3.5 text-[0.95rem] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-ink/20 hover:bg-paper-elevated"
+              >
+                <Github className="h-4 w-4" />
+                View Source
+              </TrackedAnchor>
+            </div>
 
-          <div className="mt-8 flex flex-wrap gap-2.5">
-            {trustSignals.map((signal) => (
-              <TrustChip key={signal.label} {...signal} />
-            ))}
-          </div>
+            <div className="mt-8 flex flex-wrap gap-2.5">
+              {trustSignals.map((signal) => (
+                <TrustChip key={signal.label} {...signal} />
+              ))}
+            </div>
+          </AnimeReveal>
         </div>
 
         <div className="hero-stage-enter relative lg:pl-2">

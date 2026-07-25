@@ -16,6 +16,7 @@ import { getGitHubSnapshot } from "@/lib/github";
 import { getSocialImage } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { formatMegabytes } from "@/components/home/home-shared";
+import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
 
 const FULL_VS_LITE_META_TITLE = "HalalDL Full vs Lite";
 const FULL_VS_LITE_META_DESCRIPTION =
@@ -302,6 +303,39 @@ export default async function FullVsLitePage() {
 
           <section className="pt-16 sm:pt-20">
             <div className="section-divider mb-12" />
+            <ScrollReveal className="rounded-[1.85rem] border border-line bg-paper/70 p-6 sm:p-7">
+              <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">
+                The size myth
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-ink-soft sm:text-base">
+                Full and Lite installer sizes can look similar because both are Windows desktop
+                installers for the same app. The practical difference is responsibility: Full is
+                meant to manage more of the local tool setup; Lite expects you to bring yt-dlp,
+                FFmpeg, aria2, and related tools yourself.
+              </p>
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl border border-line bg-paper/80 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
+                    Choose Full when
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                    You want the smoother first-run path and less manual toolchain handling.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-line bg-paper/80 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
+                    Choose Lite when
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                    You already manage the engine and converters and want that boundary explicit.
+                  </p>
+                </div>
+              </div>
+            </ScrollReveal>
+          </section>
+
+          <section className="pt-16 sm:pt-20">
+            <div className="section-divider mb-12" />
 
             <ScrollReveal className="rounded-[1.85rem] border border-line bg-paper/70 p-6 sm:p-7">
               <div className="max-w-2xl">
@@ -454,6 +488,8 @@ export default async function FullVsLitePage() {
               </div>
             </ScrollReveal>
           </section>
+
+          <ProductRelatedGuides slug="full-vs-lite" />
         </div>
       </main>
     </>

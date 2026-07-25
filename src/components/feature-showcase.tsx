@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Check } from "lucide-react";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
+import { ParallaxNumber } from "@/components/ui/parallax-number";
 import type { FeatureStory } from "@/lib/site";
 
 type FeatureShowcaseProps = {
@@ -73,7 +74,7 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
         </div>
 
         <motion.div
-          className="mt-4 grid gap-4 rounded-[1.4rem] border border-line bg-paper/70 p-4 lg:grid-cols-[minmax(0,0.64fr)_minmax(0,0.36fr)] lg:items-start"
+          className="mt-4 grid gap-4 rounded-[1.4rem] border border-line bg-paper/70 p-4 xl:grid-cols-[minmax(0,0.64fr)_minmax(0,0.36fr)] xl:items-start"
           initial={false}
           animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
         >
@@ -103,9 +104,10 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
         </motion.div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 lg:gap-5">
         {stories.map((story, index) => {
           const isActive = story.id === activeStory.id;
+          const numeral = String(index + 1).padStart(2, "0");
 
           return (
             <ScrollReveal
@@ -118,12 +120,14 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
                 type="button"
                 data-feature-card={story.id}
                 onClick={() => setActiveId(story.id)}
-                className={`group relative min-h-[14rem] rounded-[1.5rem] border p-5 text-left transition-all duration-200 sm:p-6 ${
+                className={`feature-card group relative min-h-[14rem] overflow-hidden rounded-[1.5rem] border p-5 text-left transition-all duration-200 sm:p-6 lg:p-7 ${
                   isActive
-                    ? "border-line-strong bg-paper-elevated shadow-lg ring-1 ring-mint-strong/25"
-                    : "border-line bg-paper-strong/50 hover:border-line-strong hover:bg-paper-strong"
+                    ? "border-line-strong shadow-lg ring-1 ring-mint-strong/25"
+                    : "border-line hover:border-line-strong"
                 }`}
               >
+                <ParallaxNumber value={numeral} className="feature-card-numeral" range={28} />
+
                 {isActive && (
                   <motion.div
                     layoutId="active-indicator"
@@ -137,7 +141,7 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
                   />
                 )}
 
-                <div className="flex items-start justify-between gap-4">
+                <div className="relative z-10 flex items-start justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <span
                       className={`inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-semibold ${
@@ -152,16 +156,16 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
                     </span>
                   </div>
                   <span className="font-display text-xs font-semibold text-ink-muted tabular-nums">
-                    {String(index + 1).padStart(2, "0")}
+                    {numeral}
                   </span>
                 </div>
 
-                <h3 className="mt-4 font-display text-lg font-semibold tracking-tight text-ink sm:text-xl">
+                <h3 className="relative z-10 mt-4 font-display text-lg font-semibold tracking-tight text-ink sm:text-xl lg:text-[1.35rem]">
                   {story.title}
                 </h3>
 
                 <p
-                  className={`mt-2 text-sm leading-relaxed transition-colors ${
+                  className={`relative z-10 mt-2 text-sm leading-relaxed transition-colors ${
                     isActive ? "text-ink-soft" : "text-ink-muted"
                   }`}
                 >

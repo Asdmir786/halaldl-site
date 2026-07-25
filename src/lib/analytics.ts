@@ -88,6 +88,7 @@ const KEY_PAGE_LABELS: Record<string, string> = {
   "/": "Homepage",
   "/download": "Download",
   "/changelog": "Changelog",
+  "/guides": "Guides",
   "/install/windows": "Install guide",
   "/trust/verify-checksum": "Verify checksum",
   "/compare/full-vs-lite": "Full vs Lite",
@@ -105,6 +106,7 @@ const KEY_CTA_LABELS: Record<string, string> = {
   view_github_repo: "Open GitHub repo",
   go_to_download: "Go to download page",
   open_checksums: "Open SHA256SUMS",
+  open_guides: "Open guides",
   winget_install: "Copy WinGet install command",
 };
 const EVENT_TYPE_LABELS: Record<string, string> = {

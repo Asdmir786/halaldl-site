@@ -95,6 +95,9 @@ export function HomeCtaFooter({ github }: { github: GitHubSnapshot }) {
                 >
                   Verify SHA256
                 </Link>
+                <Link href="/guides" className="text-ink-soft transition-colors hover:text-ink">
+                  Guides
+                </Link>
                 <a href="#features" className="text-ink-soft transition-colors hover:text-ink">
                   Features
                 </a>

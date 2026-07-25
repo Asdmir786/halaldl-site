@@ -189,7 +189,7 @@ export default async function DownloadPage() {
                   rel="noreferrer"
                   eventName="cta_click"
                   eventData={{ cta: "download_full", page: "download" }}
-                  className="inline-flex items-center gap-2 rounded-2xl bg-ink px-5 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
+                  className="glass-cta inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5"
                 >
                   Download Full
                   <ArrowUpRight className="h-4 w-4" />
@@ -220,6 +220,14 @@ export default async function DownloadPage() {
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Compare Full vs Lite
+                </TrackedLink>
+                <TrackedLink
+                  href="/guides"
+                  eventName="cta_click"
+                  eventData={{ cta: "open_guides", page: "download" }}
+                  className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
+                >
+                  New here? Read guides
                 </TrackedLink>
               </div>
 
@@ -336,7 +344,7 @@ export default async function DownloadPage() {
                     rel="noreferrer"
                     eventName="cta_click"
                     eventData={{ cta: "download_full", page: "download" }}
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
+                    className="glass-cta inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5"
                   >
                     Download Full
                     <ArrowUpRight className="h-4 w-4" />

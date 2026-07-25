@@ -2,14 +2,15 @@ import { ChevronRight } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { valueProps, workflowSteps } from "@/components/home/home-data";
 import { SectionIntro, SectionShell } from "@/components/home/home-shared";
+import { ParallaxNumber } from "@/components/ui/parallax-number";
 
 export function WorkflowSection() {
   return (
     <SectionShell>
       <div className="section-divider mb-16" />
 
-      <div className="grid gap-12 lg:grid-cols-[minmax(17rem,0.74fr)_minmax(0,1.26fr)] lg:items-start lg:gap-16 xl:gap-20">
-        <div data-workflow-copy className="lg:sticky lg:top-28 lg:max-w-md lg:pb-10">
+      <div className="grid gap-12 lg:grid-cols-[minmax(15rem,0.62fr)_minmax(0,1.38fr)] lg:items-start lg:gap-10 xl:grid-cols-[minmax(17rem,0.74fr)_minmax(0,1.26fr)] xl:gap-20">
+        <div data-workflow-copy className="lg:sticky lg:top-28 lg:max-w-sm lg:pb-10 xl:max-w-md">
           <SectionIntro
             id="features"
             eyebrow="Workflow"
@@ -35,23 +36,22 @@ export function WorkflowSection() {
               amount={0.28}
               margin="0px 0px 4% 0px"
             >
-              <article className="workflow-card rounded-[1.6rem] p-6 sm:p-7">
-                <div className="flex items-start gap-4">
-                  <div>
-                    <div className="inline-flex items-center gap-2 rounded-full border border-line bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                      <span className="font-display text-ink-soft">{step.num}</span>
-                      <span>{step.label}</span>
-                    </div>
-                    <h3 className="mt-4 max-w-2xl font-display text-xl font-semibold tracking-tight text-ink sm:text-[1.6rem]">
-                      {step.title}
-                    </h3>
+              <article className="workflow-card relative rounded-[1.6rem] p-6 sm:p-7 lg:p-8">
+                <ParallaxNumber value={step.num} className="workflow-card-numeral" />
+                <div className="relative z-10">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-line bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
+                    <span className="font-display text-mint-strong">{step.num}</span>
+                    <span>{step.label}</span>
                   </div>
-                </div>
-                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft sm:text-base">
-                  {step.body}
-                </p>
-                <div className="mt-5 rounded-2xl border border-line bg-paper/70 px-4 py-3 text-sm text-ink-soft">
-                  {step.detail}
+                  <h3 className="mt-4 max-w-2xl font-display text-xl font-semibold tracking-tight text-ink sm:text-[1.6rem] lg:text-[1.75rem]">
+                    {step.title}
+                  </h3>
+                  <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft sm:text-base">
+                    {step.body}
+                  </p>
+                  <div className="mt-5 rounded-2xl border border-line bg-paper/70 px-4 py-3 text-sm text-ink-soft">
+                    {step.detail}
+                  </div>
                 </div>
               </article>
             </ScrollReveal>
@@ -59,14 +59,14 @@ export function WorkflowSection() {
         </div>
       </div>
 
-      <div className="mt-12 grid items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-12 grid items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
         {valueProps.map((prop, index) => (
           <ScrollReveal key={prop.title} className="h-full" delay={index * 0.04} amount={0.42}>
-            <article className="surface-card flex h-full min-h-[12.25rem] flex-col rounded-2xl p-5">
+            <article className="surface-card flex h-full min-h-[12.25rem] flex-col rounded-2xl p-5 lg:p-6">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky">
                 <prop.icon className="h-5 w-5 text-sky-strong" />
               </div>
-              <h3 className="mt-4 font-display text-base font-semibold text-ink">{prop.title}</h3>
+              <h3 className="mt-4 font-display text-base font-semibold text-ink lg:text-lg">{prop.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">{prop.body}</p>
             </article>
           </ScrollReveal>

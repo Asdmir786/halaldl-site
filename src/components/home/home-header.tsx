@@ -6,7 +6,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { SITE_LINKS } from "@/lib/site";
 
 type SiteHeaderProps = {
-  currentPage?: "home" | "download" | "changelog" | "compare" | "none";
+  currentPage?: "home" | "download" | "changelog" | "compare" | "guides" | "none";
 };
 
 export function HomeHeader() {
@@ -51,6 +51,12 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
           >
             Full vs Lite
           </Link>
+          <Link
+            href="/guides"
+            className={`${navLinkClass} ${currentPage === "guides" ? "bg-line text-ink" : ""}`.trim()}
+          >
+            Guides
+          </Link>
           {navItems.map((item) => (
             <a
               key={item}
@@ -81,7 +87,7 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
             eventName="cta_click"
             eventData={{ cta: "go_to_download", page: currentPage }}
             className={`inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-semibold transition-all hover:opacity-90 sm:px-4 ${
-              currentPage === "download" ? "bg-paper text-ink" : "bg-ink text-paper"
+              currentPage === "download" ? "bg-paper text-ink" : "glass-cta"
             }`}
           >
             <Download className="h-4 w-4" />
@@ -111,6 +117,12 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
           className={`${mobileNavLinkClass} ${currentPage === "compare" ? "bg-paper text-ink" : ""}`.trim()}
         >
           Full vs Lite
+        </Link>
+        <Link
+          href="/guides"
+          className={`${mobileNavLinkClass} ${currentPage === "guides" ? "bg-paper text-ink" : ""}`.trim()}
+        >
+          Guides
         </Link>
         {navItems.map((item) => (
           <a
