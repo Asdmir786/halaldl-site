@@ -1,19 +1,25 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { Download, Github } from "lucide-react";
 import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
 import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SITE_LINKS } from "@/lib/site";
+import { resolveThemePreference, THEME_COOKIE } from "@/lib/theme";
 
 type SiteHeaderProps = {
   currentPage?: "home" | "download" | "changelog" | "compare" | "guides" | "none";
 };
 
-export function HomeHeader() {
+export async function HomeHeader() {
   return <SiteHeader currentPage="home" />;
 }
 
-export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
+export async function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
+  const cookieStore = await cookies();
+  const initialThemePreference = resolveThemePreference(
+    cookieStore.get(THEME_COOKIE)?.value,
+  );
   const navItems = ["Features", "Install", "Trust", "FAQ"] as const;
   const homeSectionHref = (item: (typeof navItems)[number]) =>
     currentPage === "home" ? `#${item.toLowerCase()}` : `/#${item.toLowerCase()}`;
@@ -69,7 +75,7 @@ export function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle />
+          <ThemeToggle initialPreference={initialThemePreference} />
           <TrackedAnchor
             href={SITE_LINKS.repoUrl}
             target="_blank"

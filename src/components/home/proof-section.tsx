@@ -9,9 +9,9 @@ export function ProofSection() {
 
       <SectionIntro
         eyebrow="Product Proof"
-        title="Daily polish lands where people touch the app."
-        accent="The stage stays stable."
-        body="Preset filename templates, compact quick downloads, saved behavior settings, clearer finished cards, latest-result spotlight, and raw logs all stay easy to compare in light or dark mode."
+        title="Trust, feedback, and speed land where you touch the app."
+        accent="The stage follows along."
+        body="Install trust, one-click diagnostics, support prompts that wait for real usage, faster startup, and raw logs — each with its own shot, in light or dark mode."
         className="max-w-2xl"
       />
 

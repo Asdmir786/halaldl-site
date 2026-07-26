@@ -245,11 +245,11 @@ export const FEATURE_STORIES: FeatureStory[] = [
     stat: "Visible output beats vague progress",
     media: {
       kind: "image",
-      lightSrc: "/screenshots/light/halaldl-logs.png",
-      darkSrc: "/screenshots/halaldl-logs.png",
-      alt: "HalalDL logs screen",
+      lightSrc: "/releases/0.5.1/promo/raw-logs-light.png",
+      darkSrc: "/releases/0.5.1/promo/raw-logs-dark.png",
+      alt: "HalalDL Logs screen with visible yt-dlp console output",
       width: 1600,
-      height: 1000,
+      height: 900,
     },
   },
 ];

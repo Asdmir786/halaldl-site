@@ -8,6 +8,7 @@ import {
   DEFAULT_THEME_PREFERENCE,
   getThemePreferenceSnapshotFromDocument,
   THEME_EVENT,
+  type ThemePreference,
 } from "@/lib/theme";
 
 const THEME_OPTIONS = [
@@ -33,15 +34,22 @@ function subscribe(callback: () => void) {
   };
 }
 
+type ThemeToggleProps = {
+  /** Cookie/server preference so SSR matches the beforeInteractive theme script. */
+  initialPreference?: ThemePreference;
+};
+
 /**
  * Three-way theme control (System / Light / Dark), adapted from the
  * 21st.dev Toggle Theme pattern: radiogroup + Motion layoutId pill.
  */
-export function ThemeToggle() {
+export function ThemeToggle({
+  initialPreference = DEFAULT_THEME_PREFERENCE,
+}: ThemeToggleProps) {
   const preference = useSyncExternalStore(
     subscribe,
     getThemePreferenceSnapshotFromDocument,
-    () => DEFAULT_THEME_PREFERENCE,
+    () => initialPreference,
   );
   const shouldReduceMotion = useReducedMotion();
 
