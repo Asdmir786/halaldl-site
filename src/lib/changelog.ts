@@ -34,6 +34,12 @@ export type ReleaseChecklistGroup = {
 };
 
 const RELEASE_MEDIA_BY_VERSION: Record<string, ChangelogMedia> = {
+  "v0.5.1": {
+    type: "image",
+    lightSrc: "/releases/0.5.1/promo/hero-light.png",
+    darkSrc: "/releases/0.5.1/promo/hero-dark.png",
+    alt: "HalalDL 0.5.1 Trust And Feedback release hero",
+  },
   "v0.4.1": {
     type: "image",
     lightSrc: "/releases/0.4.1/promo/hero-light.png",

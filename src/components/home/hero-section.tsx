@@ -95,9 +95,9 @@ export function HeroSection({ github }: { github: GitHubSnapshot }) {
           <div className="screenshot-frame hero-stage-shell p-3 sm:p-4">
             <div className="screenshot-inner hero-screenshot-inner">
               <ThemedScreenshot
-                lightSrc="/releases/0.4.1/promo/hero-light.png"
-                darkSrc="/releases/0.4.1/promo/hero-dark.png"
-                alt="HalalDL 0.4.1 hero art showing preset filenames, compact quick downloads, and settings polish"
+                lightSrc="/releases/0.5.1/promo/hero-light.png"
+                darkSrc="/releases/0.5.1/promo/hero-dark.png"
+                alt="HalalDL 0.5.1 hero art showing Install Trust, Copy Diagnostics, and support prompts"
                 sizes="(min-width: 1280px) 680px, (min-width: 1024px) 52vw, 100vw"
                 priority
                 renderMode="active"

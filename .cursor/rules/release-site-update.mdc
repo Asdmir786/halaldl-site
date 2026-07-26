@@ -1,0 +1,15 @@
+---
+description: Sync this marketing site when a new HalalDL desktop release ships (version, assets, homepage, guides).
+alwaysApply: false
+---
+
+# HalalDL release → site update
+
+When the user says HalalDL has a new version, a GitHub Release shipped, or asks to refresh the site for the latest release:
+
+1. Read and follow `docs/release-site-update.md` end-to-end.
+2. Fetch the **current** latest release from GitHub (`Asdmir786/HalalDL`) — do not assume a remembered version.
+3. Classify patch vs story release before editing.
+4. Pull promo assets from `../HalalDL/docs/assets/releases/<version>/` when they exist.
+5. Do not rewrite historical guides or delete older `public/releases/` trees.
+6. Summarize what you updated vs intentionally skipped.

@@ -83,27 +83,27 @@ const FALLBACK_SNAPSHOT: GitHubSnapshot = {
   stars: 3,
   openIssues: 0,
   licenseName: "MIT License",
-  lastPushedAt: "2026-04-12T14:17:37Z",
-  lastPushedLabel: formatDate("2026-04-12T14:17:37Z"),
-  latestVersion: "v0.4.1",
-  latestReleaseName: "v0.4.1 - The Precision Polish Update",
-  latestReleaseUrl: "https://github.com/Asdmir786/HalalDL/releases/tag/v0.4.1",
-  latestReleaseDate: "2026-04-12T14:31:16Z",
-  latestReleaseLabel: formatDate("2026-04-12T14:31:16Z"),
+  lastPushedAt: "2026-07-25T19:44:31Z",
+  lastPushedLabel: formatDate("2026-07-25T19:44:31Z"),
+  latestVersion: "v0.5.1",
+  latestReleaseName: "v0.5.1 - The Trust And Feedback Update",
+  latestReleaseUrl: "https://github.com/Asdmir786/HalalDL/releases/tag/v0.5.1",
+  latestReleaseDate: "2026-07-25T20:07:16Z",
+  latestReleaseLabel: formatDate("2026-07-25T20:07:16Z"),
   firstPublicVersion: "v0.1.0",
   firstPublicReleaseDate: "2026-01-10T18:09:25Z",
   firstPublicReleaseLabel: formatDate("2026-01-10T18:09:25Z"),
   releaseNotes:
-    "Latest checked release snapshot from April 12, 2026. Preset filename templates, compact quick downloads, saved behavior settings, clearer finished-result cards, and latest-result spotlight polish.",
+    "Latest checked release snapshot from July 25, 2026. Install Trust card, Copy Diagnostics, gentle support prompts after real usage, faster on-demand tool checks, and the official Steel Blue + Mint brand.",
   fullSetupUrl:
-    "https://github.com/Asdmir786/HalalDL/releases/download/v0.4.1/HalalDL-Full-v0.4.1-win10%2B11-x64-setup.exe",
-  fullSetupSize: 4494743,
+    "https://github.com/Asdmir786/HalalDL/releases/download/v0.5.1/HalalDL-Full-v0.5.1-win10%2B11-x64-setup.exe",
+  fullSetupSize: 6097536,
   liteSetupUrl:
-    "https://github.com/Asdmir786/HalalDL/releases/download/v0.4.1/HalalDL-Lite-v0.4.1-win10%2B11-x64-setup.exe",
-  liteSetupSize: 4494202,
+    "https://github.com/Asdmir786/HalalDL/releases/download/v0.5.1/HalalDL-Lite-v0.5.1-win10%2B11-x64-setup.exe",
+  liteSetupSize: 6096699,
   checksumsUrl:
-    "https://github.com/Asdmir786/HalalDL/releases/download/v0.4.1/SHA256SUMS.txt",
-  checksumDigest: "sha256:a7e0719745a54b52a9aed314e98af4f8c334114ef2544691b943eca8c3f73abe",
+    "https://github.com/Asdmir786/HalalDL/releases/download/v0.5.1/SHA256SUMS.txt",
+  checksumDigest: "sha256:b8e440eaf9006790d6623ca62afc3f87868359010044eacec623fb56ebcb0575",
 };
 
 function formatDate(input: string) {

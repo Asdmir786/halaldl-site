@@ -1,5 +1,4 @@
 import {
-  Download,
   Eye,
   FileCheck,
   LaptopMinimal,
@@ -19,46 +18,46 @@ export const trustSignals = [
 export const workflowSteps = [
   {
     num: "01",
-    label: "Start faster",
-    title: "Use the compact quick panel without losing the next action.",
-    body: "The 0.4.1 quick panel trims repeated metadata so the download button stays easier to reach on smaller layouts, while the URL, preset, save location, and start mode still remain understandable.",
-    detail: "Compact summary, reachable action, and keyboard-friendly repeat downloads.",
+    label: "Verify trust",
+    title: "Know where the installer came from before you run it.",
+    body: "The Install Trust card in About explains that official downloads come from GitHub Releases, that releases are still unsigned, and how to verify with SHA256SUMS.txt.",
+    detail: "Copy Diagnostics gathers version, mode, tools, and startup timings for clearer bug reports.",
   },
   {
     num: "02",
-    label: "Name it once",
-    title: "Carry filename templates inside the preset instead of repeating them per job.",
-    body: "Custom presets can now include their own filename template. HalalDL also keeps extension handling safe when a template leaves out the extension token.",
-    detail: "Preset choices cover format, subtitles, and filename intent together.",
+    label: "Start faster",
+    title: "Skip upfront tool probes so the app opens ready to paste a URL.",
+    body: "0.5.1 runs managed tool checks on demand instead of probing everything at startup. Settings → Performance shows the timings when you want them.",
+    detail: "ASAP URL autofill keeps unique clipboard links ready without fighting the input.",
   },
   {
     num: "03",
-    label: "Trust the finish",
-    title: "Saved settings, clearer result cards, and latest-result spotlight make the end state easier to read.",
-    body: "Behavior settings now persist as they change. Finished cards can show total output size and duration, and notification-routed results get a finite glow instead of permanent noise.",
-    detail: "The app is quieter where it should be and louder only where attention matters.",
+    label: "Ask when it matters",
+    title: "Gentle Star and Feedback prompts after real usage — not on first launch.",
+    body: "After three completed downloads, Settings/About and History can offer Star, Feedback, or Not now. No modal wall, no first-run nag.",
+    detail: "The official Steel Blue + Mint brand makes the app look like itself the moment it opens.",
   },
 ];
 
 export const valueProps = [
   {
-    icon: Download,
-    title: "Tray-friendly quick flow",
-    body: "Repeat downloads get faster without collapsing into a black-box shortcut.",
+    icon: ShieldCheck,
+    title: "Install Trust card",
+    body: "About explains unsigned releases, GitHub as the source, and checksum verification.",
   },
   {
     icon: TerminalSquare,
-    title: "Visible raw logs",
-    body: "When extractors break, the app still tells you what actually happened.",
+    title: "Copy Diagnostics",
+    body: "One click copies version, tools, history counts, and startup timings for support.",
   },
   {
     icon: Sparkles,
-    title: "Preset filename templates",
-    body: "Custom presets can carry naming rules and keep extensions safe automatically.",
+    title: "Support without nagging",
+    body: "Star and Feedback appear after real downloads — dismiss anytime with Not now.",
   },
   {
     icon: Wrench,
-    title: "Settings that persist",
-    body: "Tray click behavior and related settings now save as soon as they change.",
+    title: "Faster startup",
+    body: "On-demand tool checks and Performance timings keep everyday opens snappy.",
   },
 ];

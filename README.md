@@ -21,7 +21,7 @@ The site is built around the current public HalalDL product story:
 - Upstream README: [HalalDL README](https://github.com/Asdmir786/HalalDL#readme)
 - Support: [SUPPORT.md](https://github.com/Asdmir786/HalalDL/blob/main/SUPPORT.md)
 
-Live product details were checked against GitHub on April 12, 2026. At that point, the latest public release was `v0.4.1`, published on April 12, 2026, and the repo described HalalDL as a Windows-first, local-first desktop GUI for `yt-dlp` with presets, raw logs, optional tool bundling, compact quick downloads, preset filename templates, settings persistence fixes, and clearer finished-result cards.
+Live product details were checked against GitHub on July 25, 2026. At that point, the latest public release was `v0.5.1`, published on July 25, 2026, and the repo described HalalDL as a Windows-first, local-first desktop GUI for `yt-dlp` with presets, raw logs, optional tool bundling, Install Trust and Copy Diagnostics, gentle support prompts after real usage, faster on-demand tool checks, and the official Steel Blue + Mint brand.
 
 ## Site Goals
 
@@ -265,5 +265,7 @@ The site copy is intentionally practical. It should stay aligned with the upstre
 - GitHub Releases as canonical source
 - Full vs Lite as explicit install choices
 - checksums and SmartScreen explained plainly
+
+When a new HalalDL desktop release ships, follow **[docs/release-site-update.md](docs/release-site-update.md)** for what to update, what to leave alone, and why (live GitHub data vs fallback snapshot vs marketing assets/copy).
 
 If the product repo changes its positioning, install story, or release structure, update this site accordingly.

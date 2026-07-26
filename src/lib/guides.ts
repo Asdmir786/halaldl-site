@@ -8,6 +8,7 @@ import { whyRawLogsMatterArticle } from "@/lib/guides/content/why-raw-logs-matte
 import { ffmpegYtDlpWindowsArticle } from "@/lib/guides/content/ffmpeg-yt-dlp-windows";
 import { wingetVsGithubReleasesArticle } from "@/lib/guides/content/winget-vs-github-releases";
 import { halaldl041Article } from "@/lib/guides/content/halaldl-0-4-1";
+import { halaldl051Article } from "@/lib/guides/content/halaldl-0-5-1";
 import { portableHalaldlArticle } from "@/lib/guides/content/portable-halaldl";
 import { quickPanelWorkflowArticle } from "@/lib/guides/content/quick-panel-workflow";
 import { localFirstWindowsDownloaderArticle } from "@/lib/guides/content/local-first-windows-downloader";
@@ -124,7 +125,7 @@ export const GUIDES: GuideMeta[] = [
     updatedAt: GUIDE_DATE,
     canonicalPath: "/guides/why-raw-logs-matter",
     hostedInGuides: true,
-    relatedSlugs: ["yt-dlp-cli-vs-gui", "troubleshooting-windows", "halaldl-0-4-1"],
+    relatedSlugs: ["yt-dlp-cli-vs-gui", "troubleshooting-windows", "halaldl-0-5-1"],
     cta: { label: "Download HalalDL", href: "/download", eventCta: "go_to_download" },
     eyebrow: "Trust",
   },
@@ -154,9 +155,24 @@ export const GUIDES: GuideMeta[] = [
     updatedAt: GUIDE_DATE,
     canonicalPath: "/guides/winget-vs-github-releases",
     hostedInGuides: true,
-    relatedSlugs: ["install-halaldl-windows", "verify-sha256-smartscreen", "halaldl-0-4-1"],
+    relatedSlugs: ["install-halaldl-windows", "verify-sha256-smartscreen", "halaldl-0-5-1"],
     cta: { label: "Open download page", href: "/download", eventCta: "go_to_download" },
     eyebrow: "Releases",
+  },
+  {
+    slug: "halaldl-0-5-1",
+    title: "What changed in HalalDL 0.5.1 (and why)",
+    description:
+      "A deeper look at HalalDL 0.5.1: Install Trust, Copy Diagnostics, support prompts after real usage, faster startup, and Steel Blue + Mint brand.",
+    primaryKeyword: "HalalDL 0.5.1",
+    tier: 2,
+    publishedAt: GUIDE_DATE,
+    updatedAt: GUIDE_DATE,
+    canonicalPath: "/guides/halaldl-0-5-1",
+    hostedInGuides: true,
+    relatedSlugs: ["verify-sha256-smartscreen", "why-raw-logs-matter", "halaldl-0-4-1"],
+    cta: { label: "Download latest", href: "/download", eventCta: "go_to_download" },
+    eyebrow: "Release notes",
   },
   {
     slug: "halaldl-0-4-1",
@@ -169,7 +185,7 @@ export const GUIDES: GuideMeta[] = [
     updatedAt: GUIDE_DATE,
     canonicalPath: "/guides/halaldl-0-4-1",
     hostedInGuides: true,
-    relatedSlugs: ["filename-templates-gui", "quick-panel-workflow", "why-raw-logs-matter"],
+    relatedSlugs: ["halaldl-0-5-1", "filename-templates-gui", "quick-panel-workflow"],
     cta: { label: "Download latest", href: "/download", eventCta: "go_to_download" },
     eyebrow: "Release notes",
   },
@@ -317,6 +333,7 @@ const ARTICLES: Record<string, GuideArticle> = {
   "why-raw-logs-matter": whyRawLogsMatterArticle,
   "ffmpeg-yt-dlp-windows": ffmpegYtDlpWindowsArticle,
   "winget-vs-github-releases": wingetVsGithubReleasesArticle,
+  "halaldl-0-5-1": halaldl051Article,
   "halaldl-0-4-1": halaldl041Article,
   "portable-halaldl": portableHalaldlArticle,
   "quick-panel-workflow": quickPanelWorkflowArticle,

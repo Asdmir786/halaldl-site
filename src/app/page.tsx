@@ -30,9 +30,9 @@ export default async function Home() {
     releaseNotes: github.releaseNotes,
     sameAs: [SITE_LINKS.repoUrl, SITE_LINKS.supportUrl, SITE_LINKS.issuesUrl],
     screenshot: [
-      new URL("/releases/0.4.1/promo/hero-light.png", siteUrl).toString(),
-      new URL("/releases/0.4.1/promo/preset-filenames-light.png", siteUrl).toString(),
-      new URL("/releases/0.4.1/promo/download-details-light.png", siteUrl).toString(),
+      new URL("/releases/0.5.1/promo/hero-light.png", siteUrl).toString(),
+      new URL("/releases/0.5.1/promo/trust-diagnostics-light.png", siteUrl).toString(),
+      new URL("/releases/0.5.1/promo/faster-startup-light.png", siteUrl).toString(),
     ],
   };
 
