@@ -1,5 +1,6 @@
-import { ExternalLink, Github, ShieldCheck } from "lucide-react";
-import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
+import Link from "next/link";
+import { ExternalLink, ShieldCheck } from "lucide-react";
+import { GitHubIcon } from "@/components/icons/github-icon";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { SectionIntro, SectionShell, shortenDigest } from "@/components/home/home-shared";
 import type { GitHubSnapshot } from "@/lib/github";
@@ -64,36 +65,30 @@ export function TrustSection({ github }: { github: GitHubSnapshot }) {
               </div>
 
               <div className="mt-6 flex flex-wrap gap-3">
-                <TrackedLink
+                <Link
                   href="/trust/verify-checksum"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_verify_guide", page: "home" }}
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink transition-colors hover:text-ink-soft"
                 >
                   Windows verification guide
-                </TrackedLink>
-                <TrackedAnchor
+                </Link>
+                <a
                   href={github.checksumsUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_checksums", page: "home" }}
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink transition-colors hover:text-ink-soft"
                 >
                   View SHA256SUMS.txt
                   <ExternalLink className="h-3.5 w-3.5" />
-                </TrackedAnchor>
-                <TrackedAnchor
+                </a>
+                <a
                   href={SITE_LINKS.supportUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_support_docs", page: "home" }}
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-soft transition-colors hover:text-ink"
                 >
                   Support docs
                   <ExternalLink className="h-3.5 w-3.5" />
-                </TrackedAnchor>
+                </a>
               </div>
             </article>
           </ScrollReveal>
@@ -102,7 +97,7 @@ export function TrustSection({ github }: { github: GitHubSnapshot }) {
             <article className="surface-card-static h-full rounded-[1.75rem] p-6 sm:p-7">
               <div className="flex items-start gap-3">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-mint">
-                  <Github className="h-5 w-5 text-mint-strong" />
+                  <GitHubIcon className="h-5 w-5 text-mint-strong" />
                 </div>
                 <div>
                   <h3 className="font-display text-xl font-semibold text-ink">Public repo facts</h3>
@@ -126,28 +121,24 @@ export function TrustSection({ github }: { github: GitHubSnapshot }) {
               </dl>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                <TrackedAnchor
+                <a
                   href={SITE_LINKS.repoUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "view_github_repo", page: "home" }}
                   className="inline-flex items-center justify-between rounded-2xl border border-line bg-paper/60 px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
                 >
                   Inspect source
                   <ExternalLink className="h-4 w-4" />
-                </TrackedAnchor>
-                <TrackedAnchor
+                </a>
+                <a
                   href={SITE_LINKS.issuesUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_support_issues", page: "home" }}
                   className="inline-flex items-center justify-between rounded-2xl border border-line bg-paper/60 px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
                 >
                   Open issues
                   <ExternalLink className="h-4 w-4" />
-                </TrackedAnchor>
+                </a>
               </div>
             </article>
           </ScrollReveal>

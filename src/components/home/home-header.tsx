@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
-import { Download, Github } from "lucide-react";
-import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
+import { Download } from "lucide-react";
+import { GitHubIcon } from "@/components/icons/github-icon";
 import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SITE_LINKS } from "@/lib/site";
@@ -29,7 +29,7 @@ export async function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
     "shrink-0 rounded-full border border-line bg-paper-strong/70 px-3 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:bg-paper hover:text-ink";
 
   return (
-    <header className="header-bar sticky top-3 z-40 rounded-2xl px-4 py-2.5 sm:px-5">
+    <header className="header-bar rounded-2xl px-4 py-2.5 sm:px-5">
       <div className="flex items-center justify-between gap-3">
         <Link className="flex items-center gap-2.5" href="/">
           <BrandLogo size={26} />
@@ -76,29 +76,25 @@ export async function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
 
         <div className="flex items-center gap-2">
           <ThemeToggle initialPreference={initialThemePreference} />
-          <TrackedAnchor
+          <a
             href={SITE_LINKS.repoUrl}
             target="_blank"
             rel="noreferrer"
-            eventName="cta_click"
-            eventData={{ cta: "view_github_repo", page: currentPage }}
             className={`hidden items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:bg-line hover:text-ink lg:flex`}
           >
-            <Github className="h-4 w-4" />
+            <GitHubIcon className="h-4 w-4" />
             GitHub
-          </TrackedAnchor>
-          <TrackedLink
+          </a>
+          <Link
             href="/download"
             aria-label="Download latest release"
-            eventName="cta_click"
-            eventData={{ cta: "go_to_download", page: currentPage }}
             className={`inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-semibold transition-all hover:opacity-90 sm:px-4 ${
               currentPage === "download" ? "bg-paper text-ink" : "glass-cta"
             }`}
           >
             <Download className="h-4 w-4" />
             <span>Download</span>
-          </TrackedLink>
+          </Link>
         </div>
       </div>
 

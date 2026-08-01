@@ -102,9 +102,8 @@ export default async function GuideArticlePage({ params }: GuidePageProps) {
         tocItems={tocItems}
         relatedGuides={relatedGuides}
         cta={guide.cta}
-        page={`guides/${guide.slug}`}
       >
-        <GuideBlocks blocks={article.blocks} page={`guides/${guide.slug}`} />
+        <GuideBlocks blocks={article.blocks} />
         {article.faqs && article.faqs.length > 0 ? (
           <div className="mt-10">
             <h2
@@ -114,10 +113,7 @@ export default async function GuideArticlePage({ params }: GuidePageProps) {
               FAQ
             </h2>
             <div className="mt-5">
-              <GuideBlocks
-                blocks={[{ type: "faq", items: article.faqs }]}
-                page={`guides/${guide.slug}`}
-              />
+              <GuideBlocks blocks={[{ type: "faq", items: article.faqs }]} />
             </div>
           </div>
         ) : null}

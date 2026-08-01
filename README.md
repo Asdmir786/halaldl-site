@@ -140,28 +140,6 @@ No environment variables are strictly required for local development.
   - server-side fallback if `NEXT_PUBLIC_SITE_URL` is not set
 - `GITHUB_TOKEN`
   - optional GitHub token for higher API rate limits when fetching live repo and release data
-- `DATABASE_URL`
-  - required for the private in-site analytics dashboard
-  - use a small Postgres database connected through Vercel Marketplace
-- `AUTH_SECRET`
-  - required by Auth.js for encrypted session handling
-- `AUTH_GOOGLE_ID`
-  - Google OAuth client ID for the private dashboard sign-in
-- `AUTH_GOOGLE_SECRET`
-  - Google OAuth client secret for the private dashboard sign-in
-- `GSC_SITE_URL`
-  - Search Console property URL used by the dashboard
-  - example: `https://halaldl.vercel.app/`
-- `GSC_CLIENT_EMAIL`
-  - Google service account email for Search Console API access
-- `GSC_PRIVATE_KEY`
-  - Google service account private key for Search Console API access
-
-Search Console note:
-
-- The Google project behind the service account must also have `searchconsole.googleapis.com` enabled
-- The service account must be added as a user on the exact Search Console property URL
-- The dashboard now surfaces these failures directly instead of silently showing zeroes
 
 If no explicit site URL is set, the app falls back to `VERCEL_URL`, then `https://halaldl.vercel.app`.
 
@@ -179,82 +157,7 @@ Recommended deployment flow:
 1. Push the repo.
 2. Import it into Vercel.
 3. Set `NEXT_PUBLIC_SITE_URL` to the final production domain.
-4. Connect a small Postgres database and add `DATABASE_URL`.
-5. Set `AUTH_SECRET`, `AUTH_GOOGLE_ID`, and `AUTH_GOOGLE_SECRET`.
-6. In Google Cloud Console, add the authorized redirect URI:
-   `https://YOUR_DOMAIN/api/auth/callback/google`
-7. For local testing, also add:
-   `http://localhost:3000/api/auth/callback/google`
-8. Optionally set `GITHUB_TOKEN` if you want more GitHub API headroom.
-9. To enable Search Console in the dashboard, set `GSC_SITE_URL`, `GSC_CLIENT_EMAIL`, and `GSC_PRIVATE_KEY`, then add the service-account email as a user on the Search Console property.
-
-## Analytics
-
-The site now includes a private in-site analytics dashboard at `/dashboard`.
-
-### What is tracked
-
-- Page views
-- Anonymous visitor IDs and rolling visit/session IDs
-- CTA click events under `cta_click`
-- WinGet copy actions under `command_copy`
-- Download/install section visibility under `section_view`
-- Referrer host, country, device type, browser, and OS summaries
-
-Current tracked CTA values include:
-
-- `download_full`
-- `download_lite`
-- `open_github_release`
-- `open_changelog`
-- `open_install_guide`
-- `open_verify_guide`
-- `open_support_docs`
-- `open_support_issues`
-- `open_checksums`
-- `view_github_repo`
-- `compare_full_vs_lite`
-- `go_to_download`
-
-Current tracked section values include:
-
-- `install_options` on the home page
-- `download_options` on the download page
-
-Current tracked command values include:
-
-- `winget_install`
-
-### Where to view it
-
-- Open `/dashboard` in the deployed site
-- Sign in with `asmir.alams.com@gmail.com`
-- The dashboard shows last-30-day summaries plus week-over-week change cards
-
-### Limits and setup notes
-
-- This setup does not require a Vercel Analytics paid plan because tracking is stored in your own database
-- It does require a persistent database such as Postgres
-- The dashboard login is intentionally minimal: Google OAuth plus a hardcoded one-email allowlist
-- Country data depends on the deployment platform forwarding geolocation headers in production
-- Search Console data is delayed and limited by Google's reporting windows and API quotas
-- If your Search Console env values were pasted with surrounding quotes, the app now strips them automatically
-- GitHub release downloads are current cumulative counts, not retroactive daily history unless you snapshot them over time
-
-### What this setup will not tell you
-
-- It does not identify individual users
-- It does not tell you whether a GitHub download completed after the click
-- It does not provide multi-step user funnels across external systems
-- It does not track behavior inside the desktop app itself
-- It does not reconstruct perfect people-based journeys across devices or browsers
-
-### How to extend later
-
-- Add more `cta_click` values for new important buttons
-- Add more `section_view` values for major content blocks
-- Add extra dashboard panels by querying the `analytics_events` table
-- Keep event payloads small so the setup stays easy to maintain
+4. Optionally set `GITHUB_TOKEN` if you want more GitHub API headroom.
 
 ## Content Notes
 

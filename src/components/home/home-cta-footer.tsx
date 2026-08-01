@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
 import { BrandLogo } from "@/components/brand-logo";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import type { GitHubSnapshot } from "@/lib/github";
@@ -25,25 +24,21 @@ export function HomeCtaFooter({ github }: { github: GitHubSnapshot }) {
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-              <TrackedLink
+              <Link
                 href="/download"
-                eventName="cta_click"
-                eventData={{ cta: "go_to_download", page: "home" }}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-ink px-6 py-3.5 text-[0.95rem] font-semibold text-paper transition-all hover:-translate-y-0.5"
               >
                 Download latest
                 <ArrowRight className="h-4 w-4" />
-              </TrackedLink>
-              <TrackedAnchor
+              </Link>
+              <a
                 href={SITE_LINKS.repoUrl}
                 target="_blank"
                 rel="noreferrer"
-                eventName="cta_click"
-                eventData={{ cta: "view_github_repo", page: "home" }}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-line-strong px-5 py-3.5 text-[0.95rem] font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-ink/20"
               >
                 View on GitHub
-              </TrackedAnchor>
+              </a>
             </div>
           </div>
         </div>
@@ -114,46 +109,38 @@ export function HomeCtaFooter({ github }: { github: GitHubSnapshot }) {
                 Project
               </p>
               <div className="mt-3 flex flex-col gap-2 text-sm">
-                <TrackedAnchor
+                <a
                   href={SITE_LINKS.latestReleaseUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_github_release", page: "home" }}
                   className="text-ink-soft transition-colors hover:text-ink"
                 >
                   Releases
-                </TrackedAnchor>
-                <TrackedAnchor
+                </a>
+                <a
                   href={SITE_LINKS.issuesUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_support_issues", page: "home" }}
                   className="text-ink-soft transition-colors hover:text-ink"
                 >
                   Issues
-                </TrackedAnchor>
-                <TrackedAnchor
+                </a>
+                <a
                   href={SITE_LINKS.supportUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_support_docs", page: "home" }}
                   className="text-ink-soft transition-colors hover:text-ink"
                 >
                   Support
-                </TrackedAnchor>
-                <TrackedAnchor
+                </a>
+                <a
                   href={SITE_LINKS.repoUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "view_github_repo", page: "home" }}
                   className="text-ink-soft transition-colors hover:text-ink"
                 >
                   GitHub
-                </TrackedAnchor>
+                </a>
               </div>
             </div>
           </div>

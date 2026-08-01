@@ -17,6 +17,8 @@ import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { shortenDigest } from "@/components/home/home-shared";
 import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
 import { MarketingShell } from "@/components/site/marketing-shell";
+import { ScrollBeats } from "@/components/experience/scroll-beats";
+import { SectionPin } from "@/components/experience/section-pin";
 
 const TRUST_META_TITLE = "Trust and verification — HalalDL";
 const TRUST_META_DESCRIPTION =
@@ -161,11 +163,15 @@ export default async function VerifyChecksumPage() {
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
           <SiteHeader currentPage="none" />
           <MarketingShell>
-          <SubpageRouteStrip currentPage="trust" />
+          <ScrollBeats>
+          <div data-scroll-beat="">
+            <SubpageRouteStrip currentPage="trust" />
+          </div>
 
           <nav
             aria-label="Breadcrumb"
             className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
+            data-scroll-beat=""
           >
             <Link href="/" className="transition-colors hover:text-ink">
               Home
@@ -174,7 +180,10 @@ export default async function VerifyChecksumPage() {
             <span className="font-medium text-ink">Verify SHA256</span>
           </nav>
 
-          <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
+          <div
+            className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start"
+            data-scroll-beat=""
+          >
             <div className="max-w-2xl">
               <div className="eyebrow">
                 <ShieldCheck className="h-3.5 w-3.5" />
@@ -250,9 +259,10 @@ export default async function VerifyChecksumPage() {
             </aside>
           </div>
 
-          <section className="pt-16 sm:pt-20">
+          <section className="pt-16 sm:pt-20" data-scroll-beat="">
             <div className="section-divider mb-12" />
 
+            <SectionPin end="+=40%" pin={false}>
             <ScrollReveal className="grid gap-4 lg:grid-cols-2">
               {verificationSteps.map((step, index) => (
                 <article key={step.title} className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
@@ -268,9 +278,10 @@ export default async function VerifyChecksumPage() {
                 </article>
               ))}
             </ScrollReveal>
+            </SectionPin>
           </section>
 
-          <section className="pt-16 sm:pt-20">
+          <section className="pt-16 sm:pt-20" data-scroll-beat="">
             <div className="section-divider mb-12" />
             <ScrollReveal className="rounded-[1.85rem] border border-line bg-paper/70 p-6 sm:p-7">
               <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">
@@ -300,7 +311,7 @@ export default async function VerifyChecksumPage() {
             </ScrollReveal>
           </section>
 
-          <section className="pt-16 sm:pt-20">
+          <section className="pt-16 sm:pt-20" data-scroll-beat="">
             <div className="section-divider mb-12" />
 
             <ScrollReveal className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
@@ -372,8 +383,10 @@ export default async function VerifyChecksumPage() {
           <section className="pt-16 sm:pt-20">
             <div className="section-divider mb-10" />
 
-            <ScrollReveal className="flex flex-wrap items-center justify-between gap-4 rounded-[1.75rem] border border-line bg-paper/70 p-6 sm:p-7">
-              <div className="max-w-2xl">
+            <ScrollReveal
+              className="flex flex-wrap items-center justify-between gap-4 rounded-[1.75rem] border border-line bg-paper/70 p-6 sm:p-7"
+            >
+              <div className="max-w-2xl" data-scroll-beat="">
                 <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
                   Next move
                 </p>
@@ -407,7 +420,10 @@ export default async function VerifyChecksumPage() {
             </ScrollReveal>
           </section>
 
-          <ProductRelatedGuides slug="verify-sha256-smartscreen" />
+          <div data-scroll-beat="">
+            <ProductRelatedGuides slug="verify-sha256-smartscreen" />
+          </div>
+          </ScrollBeats>
           </MarketingShell>
         </div>
       </main>

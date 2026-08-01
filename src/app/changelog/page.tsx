@@ -3,9 +3,10 @@ import Link from "next/link";
 import { ArrowUpRight, CheckCircle2, FileStack, Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/home/home-header";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
-import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { MarketingShell } from "@/components/site/marketing-shell";
+import { ScrollBeats } from "@/components/experience/scroll-beats";
+import { SectionPin } from "@/components/experience/section-pin";
 import { getSocialImage } from "@/lib/site";
 import { getChangelogEntries } from "@/lib/changelog";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
@@ -58,9 +59,11 @@ export default async function ChangelogPage() {
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
           <SiteHeader currentPage="changelog" />
           <MarketingShell>
+          <ScrollBeats>
           <nav
             aria-label="Breadcrumb"
             className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
+            data-scroll-beat=""
           >
             <Link href="/" className="transition-colors hover:text-ink">
               Home
@@ -69,7 +72,7 @@ export default async function ChangelogPage() {
             <span className="font-medium text-ink">Changelog</span>
           </nav>
 
-          <div className="max-w-3xl mt-6">
+          <div className="max-w-3xl mt-6" data-scroll-beat="">
             <div className="eyebrow">
               <FileStack className="h-3.5 w-3.5" />
               Changelog
@@ -84,9 +87,10 @@ export default async function ChangelogPage() {
             </p>
           </div>
 
-          <section className="pt-14 sm:pt-16">
+          <section className="pt-14 sm:pt-16" data-scroll-beat="">
             <div className="section-divider mb-12" />
 
+            <SectionPin end="+=55%" pin={false} scrub={0.6}>
             <ScrollReveal className="grid gap-4 md:grid-cols-3">
               <article className="surface-card-static rounded-2xl p-5">
                 <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
@@ -116,9 +120,11 @@ export default async function ChangelogPage() {
                 </p>
               </article>
             </ScrollReveal>
+            </SectionPin>
 
             <div className="section-divider my-12" />
 
+            <div data-scroll-beat="">
             <ScrollReveal className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start">
               <article className="surface-elevated overflow-hidden rounded-2xl p-6 sm:p-8">
                 <div className="flex flex-wrap items-center gap-3">
@@ -141,25 +147,21 @@ export default async function ChangelogPage() {
                 </p>
 
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <TrackedAnchor
+                  <a
                     href={featured.releaseUrl}
                     target="_blank"
                     rel="noreferrer"
-                    eventName="cta_click"
-                    eventData={{ cta: "open_github_release", page: "changelog" }}
                     className="inline-flex items-center gap-2 rounded-lg bg-ink px-4 py-2.5 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                   >
                     View GitHub release
                     <ArrowUpRight className="h-4 w-4" />
-                  </TrackedAnchor>
-                  <TrackedLink
+                  </a>
+                  <Link
                     href="/download"
-                    eventName="cta_click"
-                    eventData={{ cta: "go_to_download", page: "changelog" }}
                     className="inline-flex items-center gap-2 rounded-lg border border-line-strong bg-paper px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                   >
                     Download latest
-                  </TrackedLink>
+                  </Link>
                 </div>
 
                 {featured.media?.type === "image" && (
@@ -201,9 +203,10 @@ export default async function ChangelogPage() {
                 </ul>
               </aside>
             </ScrollReveal>
+            </div>
           </section>
 
-          <section className="pt-16 sm:pt-20">
+          <section className="pt-16 sm:pt-20" data-scroll-beat="">
             <div className="section-divider mb-12" />
 
             <ScrollReveal className="flex items-center justify-between gap-4">
@@ -228,17 +231,15 @@ export default async function ChangelogPage() {
                           {entry.summary}
                         </p>
                       </div>
-                      <TrackedAnchor
+                      <a
                         href={entry.releaseUrl}
                         target="_blank"
                         rel="noreferrer"
-                        eventName="cta_click"
-                        eventData={{ cta: "open_github_release", page: "changelog" }}
                         className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink hover:text-ink-soft"
                       >
                         GitHub Release
                         <ArrowUpRight className="h-4 w-4" />
-                      </TrackedAnchor>
+                      </a>
                     </div>
 
                     <div className="mt-6 grid gap-5 md:grid-cols-3">
@@ -297,6 +298,7 @@ export default async function ChangelogPage() {
               ))}
             </div>
           </section>
+          </ScrollBeats>
           </MarketingShell>
         </div>
       </main>

@@ -9,7 +9,6 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { SiteHeader } from "@/components/home/home-header";
-import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { getGitHubSnapshot } from "@/lib/github";
@@ -18,6 +17,7 @@ import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { formatMegabytes } from "@/components/home/home-shared";
 import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
 import { MarketingShell } from "@/components/site/marketing-shell";
+import { ScrollBeats, StickyCompare } from "@/components/experience/scroll-beats";
 
 const FULL_VS_LITE_META_TITLE = "HalalDL Full vs Lite";
 const FULL_VS_LITE_META_DESCRIPTION =
@@ -136,11 +136,15 @@ export default async function FullVsLitePage() {
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
           <SiteHeader currentPage="compare" />
           <MarketingShell>
-          <SubpageRouteStrip currentPage="compare" />
+          <ScrollBeats>
+          <div data-scroll-beat="">
+            <SubpageRouteStrip currentPage="compare" />
+          </div>
 
           <nav
             aria-label="Breadcrumb"
             className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
+            data-scroll-beat=""
           >
             <Link href="/" className="transition-colors hover:text-ink">
               Home
@@ -149,7 +153,10 @@ export default async function FullVsLitePage() {
             <span className="font-medium text-ink">Full vs Lite</span>
           </nav>
 
-          <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
+          <div
+            className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start"
+            data-scroll-beat=""
+          >
             <div className="max-w-2xl">
               <div className="eyebrow">
                 <Layers3 className="h-3.5 w-3.5" />
@@ -165,25 +172,21 @@ export default async function FullVsLitePage() {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <TrackedLink
+                <Link
                   href="/download"
-                  eventName="cta_click"
-                  eventData={{ cta: "go_to_download", page: "compare_full_vs_lite" }}
                   className="inline-flex items-center gap-2 rounded-2xl bg-ink px-5 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                 >
                   Go to download page
                   <ArrowRight className="h-4 w-4" />
-                </TrackedLink>
-                <TrackedAnchor
+                </Link>
+                <a
                   href={github.fullSetupUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "download_full", page: "compare_full_vs_lite" }}
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Download Full
-                </TrackedAnchor>
+                </a>
               </div>
             </div>
 
@@ -214,9 +217,10 @@ export default async function FullVsLitePage() {
             </aside>
           </div>
 
-          <section className="pt-16 sm:pt-20">
+          <section className="pt-16 sm:pt-20" data-scroll-beat="">
             <div className="section-divider mb-12" />
 
+            <StickyCompare>
             <ScrollReveal className="grid gap-5 lg:grid-cols-2">
               <article className="install-card-primary rounded-[1.9rem] p-6 sm:p-7">
                 <div className="inline-flex items-center gap-1.5 rounded-full bg-mint px-3 py-1 text-xs font-semibold text-mint-strong">
@@ -243,17 +247,15 @@ export default async function FullVsLitePage() {
                   ))}
                 </ul>
 
-                <TrackedAnchor
+                <a
                   href={github.fullSetupUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "download_full", page: "compare_full_vs_lite" }}
                   className="mt-6 inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                 >
                   Download Full
                   <ArrowRight className="h-4 w-4" />
-                </TrackedAnchor>
+                </a>
               </article>
 
               <article className="install-card-secondary rounded-[1.9rem] p-6 sm:p-7">
@@ -281,22 +283,21 @@ export default async function FullVsLitePage() {
                   ))}
                 </ul>
 
-                <TrackedAnchor
+                <a
                   href={github.liteSetupUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "download_lite", page: "compare_full_vs_lite" }}
                   className="mt-6 inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
                 >
                   Download Lite
                   <ArrowRight className="h-4 w-4" />
-                </TrackedAnchor>
+                </a>
               </article>
             </ScrollReveal>
+            </StickyCompare>
           </section>
 
-          <section className="pt-16 sm:pt-20">
+          <section className="pt-16 sm:pt-20" data-scroll-beat="">
             <div className="section-divider mb-12" />
             <ScrollReveal className="rounded-[1.85rem] border border-line bg-paper/70 p-6 sm:p-7">
               <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">
@@ -464,27 +465,26 @@ export default async function FullVsLitePage() {
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <TrackedLink
+                <Link
                   href="/download"
-                  eventName="cta_click"
-                  eventData={{ cta: "go_to_download", page: "compare_full_vs_lite" }}
                   className="inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                 >
                   Go to download page
-                </TrackedLink>
-                <TrackedLink
+                </Link>
+                <Link
                   href="/"
-                  eventName="cta_click"
-                  eventData={{ cta: "return_home", page: "compare_full_vs_lite" }}
                   className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Back to home
-                </TrackedLink>
+                </Link>
               </div>
             </ScrollReveal>
           </section>
 
-          <ProductRelatedGuides slug="full-vs-lite" />
+          <div data-scroll-beat="">
+            <ProductRelatedGuides slug="full-vs-lite" />
+          </div>
+          </ScrollBeats>
           </MarketingShell>
         </div>
       </main>

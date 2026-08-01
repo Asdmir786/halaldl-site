@@ -71,6 +71,8 @@ export type GitHubSnapshot = {
   fullSetupSize: number | null;
   liteSetupUrl: string;
   liteSetupSize: number | null;
+  portableZipUrl: string;
+  portableZipSize: number | null;
   checksumsUrl: string;
   checksumDigest: string | null;
 };
@@ -101,6 +103,9 @@ const FALLBACK_SNAPSHOT: GitHubSnapshot = {
   liteSetupUrl:
     "https://github.com/Asdmir786/HalalDL/releases/download/v0.5.1/HalalDL-Lite-v0.5.1-win10%2B11-x64-setup.exe",
   liteSetupSize: 6096699,
+  portableZipUrl:
+    "https://github.com/Asdmir786/HalalDL/releases/download/v0.5.1/HalalDL-Portable-v0.5.1-win10%2B11-x64.zip",
+  portableZipSize: 143488125,
   checksumsUrl:
     "https://github.com/Asdmir786/HalalDL/releases/download/v0.5.1/SHA256SUMS.txt",
   checksumDigest: "sha256:b8e440eaf9006790d6623ca62afc3f87868359010044eacec623fb56ebcb0575",
@@ -251,6 +256,9 @@ export async function getGitHubSnapshot(): Promise<GitHubSnapshot> {
     const liteSetup = release.assets.find(
       (asset) => asset.name.includes("Lite") && asset.name.endsWith("-setup.exe"),
     );
+    const portableZip = release.assets.find(
+      (asset) => asset.name.includes("Portable") && asset.name.endsWith(".zip"),
+    );
     const checksums = release.assets.find((asset) => asset.name === "SHA256SUMS.txt");
 
     return {
@@ -278,6 +286,8 @@ export async function getGitHubSnapshot(): Promise<GitHubSnapshot> {
       fullSetupSize: fullSetup?.size ?? null,
       liteSetupUrl: liteSetup?.browser_download_url ?? FALLBACK_SNAPSHOT.liteSetupUrl,
       liteSetupSize: liteSetup?.size ?? null,
+      portableZipUrl: portableZip?.browser_download_url ?? FALLBACK_SNAPSHOT.portableZipUrl,
+      portableZipSize: portableZip?.size ?? null,
       checksumsUrl: checksums?.browser_download_url ?? FALLBACK_SNAPSHOT.checksumsUrl,
       checksumDigest: extractDigest(checksums),
     };

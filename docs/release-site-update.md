@@ -212,7 +212,7 @@ Update the “Live product details were checked against GitHub on …” paragra
 | Older `public/releases/<prev>/` trees | Historical changelog / docs still reference them |
 | Older release guides’ factual content | They document that release, not the latest |
 | Download page structure / WinGet command / trust verify flow | Product distribution model rarely changes per release |
-| Analytics event names / CTA keys | Changing them breaks dashboard continuity |
+| Analytics event names / CTA keys | N/A — site no longer ships in-app analytics |
 | Brand tokens / theme system “just because” the app rebranded | Only update if the **site** design intentionally follows; app promo art can change first |
 | Forcing a new guide for every patch | Noise; use the decision tree |
 

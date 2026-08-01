@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { SiteHeader } from "@/components/home/home-header";
 import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
-import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { getGitHubSnapshot } from "@/lib/github";
@@ -19,6 +18,8 @@ import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { formatMegabytes } from "@/components/home/home-shared";
 import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
 import { MarketingShell } from "@/components/site/marketing-shell";
+import { ScrollBeats } from "@/components/experience/scroll-beats";
+import { SectionPin } from "@/components/experience/section-pin";
 
 const INSTALL_META_TITLE = "Download HalalDL for Windows — Install & Verify";
 const INSTALL_META_DESCRIPTION =
@@ -138,11 +139,15 @@ export default async function InstallWindowsPage() {
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
           <SiteHeader currentPage="none" />
           <MarketingShell>
-          <SubpageRouteStrip currentPage="install" />
+          <ScrollBeats>
+          <div data-scroll-beat="">
+            <SubpageRouteStrip currentPage="install" />
+          </div>
 
           <nav
             aria-label="Breadcrumb"
             className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
+            data-scroll-beat=""
           >
             <Link href="/" className="transition-colors hover:text-ink">
               Home
@@ -151,7 +156,10 @@ export default async function InstallWindowsPage() {
             <span className="font-medium text-ink">Install on Windows</span>
           </nav>
 
-          <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
+          <div
+            className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start"
+            data-scroll-beat=""
+          >
             <div className="max-w-2xl">
               <div className="eyebrow">
                 <Download className="h-3.5 w-3.5" />
@@ -181,31 +189,25 @@ export default async function InstallWindowsPage() {
               </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <TrackedLink
+                <Link
                   href="/download"
-                  eventName="cta_click"
-                  eventData={{ cta: "go_to_download", page: "install_windows" }}
                   className="inline-flex items-center gap-2 rounded-2xl bg-ink px-5 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                 >
                   Go to download page
                   <ArrowRight className="h-4 w-4" />
-                </TrackedLink>
-                <TrackedLink
+                </Link>
+                <Link
                   href="/compare/full-vs-lite"
-                  eventName="cta_click"
-                  eventData={{ cta: "compare_full_vs_lite", page: "install_windows" }}
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Compare Full vs Lite
-                </TrackedLink>
-                <TrackedLink
+                </Link>
+                <Link
                   href="/guides"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_guides", page: "install_windows" }}
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Browse all guides
-                </TrackedLink>
+                </Link>
               </div>
             </div>
 
@@ -241,15 +243,14 @@ export default async function InstallWindowsPage() {
               <div className="mt-5">
                 <CopyCommand
                   command={SITE_LINKS.wingetCommand}
-                  eventName="command_copy"
-                  eventData={{ command: "winget_install", page: "install_windows" }}
                 />
               </div>
             </aside>
           </div>
 
-          <section className="pt-16 sm:pt-20">
+          <section className="pt-16 sm:pt-20" data-scroll-beat="">
             <div className="section-divider mb-12" />
+            <SectionPin end="+=50%" pin={false}>
             <ScrollReveal>
               <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">
                 Decision tree: which install path?
@@ -291,9 +292,10 @@ export default async function InstallWindowsPage() {
                 ))}
               </div>
             </ScrollReveal>
+            </SectionPin>
           </section>
 
-          <section className="pt-16 sm:pt-20">
+          <section className="pt-16 sm:pt-20" data-scroll-beat="">
             <div className="section-divider mb-12" />
 
             <ScrollReveal className="grid gap-5 lg:grid-cols-3">
@@ -305,17 +307,15 @@ export default async function InstallWindowsPage() {
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">
                   Best first install for most people who want the smoother setup path.
                 </p>
-                <TrackedAnchor
+                <a
                   href={github.fullSetupUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "download_full", page: "install_windows" }}
                   className="mt-5 inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                 >
                   Download Full
                   <ArrowRight className="h-4 w-4" />
-                </TrackedAnchor>
+                </a>
               </article>
 
               <article className="install-card-secondary rounded-[1.75rem] p-6">
@@ -327,17 +327,15 @@ export default async function InstallWindowsPage() {
                   Better when you prefer to keep more of the tooling boundary under your own
                   control.
                 </p>
-                <TrackedAnchor
+                <a
                   href={github.liteSetupUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "download_lite", page: "install_windows" }}
                   className="mt-5 inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
                 >
                   Download Lite
                   <ArrowRight className="h-4 w-4" />
-                </TrackedAnchor>
+                </a>
               </article>
 
               <article className="surface-card-static rounded-[1.75rem] p-6">
@@ -352,22 +350,21 @@ export default async function InstallWindowsPage() {
                   If you want the most cautious install flow, verify SHA256 before running the
                   installer and start from GitHub Releases.
                 </p>
-                <TrackedLink
+                <Link
                   href="/trust/verify-checksum"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_verify_guide", page: "install_windows" }}
                   className="mt-5 inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Verify SHA256
                   <FileCheck2 className="h-4 w-4" />
-                </TrackedLink>
+                </Link>
               </article>
             </ScrollReveal>
           </section>
 
-          <section className="pt-16 sm:pt-20">
+          <section className="pt-16 sm:pt-20" data-scroll-beat="">
             <div className="section-divider mb-12" />
 
+            <SectionPin end="+=40%" pin={false}>
             <ScrollReveal className="rounded-[1.85rem] border border-line bg-paper/70 p-6 sm:p-7">
               <div className="max-w-2xl">
                 <div className="eyebrow">
@@ -399,9 +396,10 @@ export default async function InstallWindowsPage() {
                 ))}
               </div>
             </ScrollReveal>
+            </SectionPin>
           </section>
 
-          <section className="pt-16 sm:pt-20">
+          <section className="pt-16 sm:pt-20" data-scroll-beat="">
             <div className="section-divider mb-12" />
 
             <ScrollReveal className="grid gap-5 lg:grid-cols-2">
@@ -433,28 +431,27 @@ export default async function InstallWindowsPage() {
                   If you want more proof before first run, go straight to the SHA256 guide.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <TrackedLink
+                  <Link
                     href="/download"
-                    eventName="cta_click"
-                    eventData={{ cta: "go_to_download", page: "install_windows" }}
                     className="inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
                   >
                     Go to download page
-                  </TrackedLink>
-                  <TrackedLink
+                  </Link>
+                  <Link
                     href="/trust/verify-checksum"
-                    eventName="cta_click"
-                    eventData={{ cta: "open_verify_guide", page: "install_windows" }}
                     className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                   >
                     Verify SHA256
-                  </TrackedLink>
+                  </Link>
                 </div>
               </article>
             </ScrollReveal>
           </section>
 
-          <ProductRelatedGuides slug="install-halaldl-windows" />
+          <div data-scroll-beat="">
+            <ProductRelatedGuides slug="install-halaldl-windows" />
+          </div>
+          </ScrollBeats>
           </MarketingShell>
         </div>
       </main>

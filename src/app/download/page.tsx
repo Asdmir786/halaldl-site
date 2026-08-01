@@ -6,13 +6,12 @@ import {
   CheckCircle2,
   ExternalLink,
   FileCheck2,
-  Github,
   Package,
   ShieldCheck,
 } from "lucide-react";
+import { GitHubIcon } from "@/components/icons/github-icon";
 import { SiteHeader } from "@/components/home/home-header";
 import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
-import { TrackSectionView, TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { getGitHubSnapshot } from "@/lib/github";
@@ -20,7 +19,8 @@ import { getSiteUrl, getSocialImage, SITE_LINKS } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { formatMegabytes, shortenDigest } from "@/components/home/home-shared";
 import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
-import { MarketingShell } from "@/components/site/marketing-shell";
+import { DownloadExperience } from "@/components/experience/download-experience";
+import { SectionPin } from "@/components/experience/section-pin";
 
 const DOWNLOAD_META_TITLE = "Download HalalDL for Windows";
 const DOWNLOAD_META_DESCRIPTION =
@@ -135,7 +135,7 @@ export default async function DownloadPage() {
       <main id="main-content" className="overflow-x-hidden">
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
           <SiteHeader currentPage="download" />
-          <MarketingShell>
+          <DownloadExperience>
           <SubpageRouteStrip currentPage="download" />
 
           <nav
@@ -179,79 +179,63 @@ export default async function DownloadPage() {
               </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <TrackedAnchor
+                <a
                   href={github.fullSetupUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "download_full", page: "download" }}
                   className="glass-cta inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5"
                 >
                   Download Full
                   <ArrowUpRight className="h-4 w-4" />
-                </TrackedAnchor>
-                <TrackedAnchor
+                </a>
+                <a
                   href={github.checksumsUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_checksums", page: "download" }}
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Open SHA256SUMS.txt
                   <ExternalLink className="h-4 w-4" />
-                </TrackedAnchor>
-                <TrackedLink
+                </a>
+                <Link
                   href="/changelog"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_changelog", page: "download" }}
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   View changelog
-                </TrackedLink>
-                <TrackedLink
+                </Link>
+                <Link
                   href="/compare/full-vs-lite"
-                  eventName="cta_click"
-                  eventData={{ cta: "compare_full_vs_lite", page: "download" }}
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Compare Full vs Lite
-                </TrackedLink>
-                <TrackedLink
+                </Link>
+                <Link
                   href="/guides/best-yt-dlp-gui-windows"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_best_gui_guide", page: "download" }}
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Best yt-dlp GUI guide
-                </TrackedLink>
-                <TrackedLink
+                </Link>
+                <Link
                   href="/guides"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_guides", page: "download" }}
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   All guides
-                </TrackedLink>
+                </Link>
               </div>
 
               <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium">
-                <TrackedLink
+                <Link
                   href="/install/windows"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_install_guide", page: "download" }}
                   className="text-ink transition-colors hover:text-ink-soft"
                 >
                   Windows install guide
-                </TrackedLink>
-                <TrackedLink
+                </Link>
+                <Link
                   href="/trust/verify-checksum"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_verify_guide", page: "download" }}
                   className="text-ink transition-colors hover:text-ink-soft"
                 >
                   Verify SHA256 on Windows
-                </TrackedLink>
+                </Link>
               </div>
             </div>
 
@@ -299,13 +283,10 @@ export default async function DownloadPage() {
             </aside>
           </div>
 
-          <section className="pt-16 sm:pt-20">
+          <section id="download-variant-compare" className="pt-16 sm:pt-20">
             <div className="section-divider mb-12" />
 
-            <TrackSectionView
-              eventName="section_view"
-              eventData={{ section: "download_options", page: "download" }}
-            >
+                          <SectionPin end="+=40%" pin={false} className="pb-4">
               <ScrollReveal className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
               <article className="install-card-primary overflow-hidden rounded-[1.9rem] p-6 sm:p-7">
                 <div className="inline-flex items-center gap-1.5 rounded-full bg-mint px-3 py-1 text-xs font-semibold text-mint-strong">
@@ -342,28 +323,24 @@ export default async function DownloadPage() {
                 </ul>
 
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                  <TrackedAnchor
+                  <a
                     href={github.fullSetupUrl}
                     target="_blank"
                     rel="noreferrer"
-                    eventName="cta_click"
-                    eventData={{ cta: "download_full", page: "download" }}
                     className="glass-cta inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5"
                   >
                     Download Full
                     <ArrowUpRight className="h-4 w-4" />
-                  </TrackedAnchor>
-                  <TrackedAnchor
+                  </a>
+                  <a
                     href={github.latestReleaseUrl}
                     target="_blank"
                     rel="noreferrer"
-                    eventName="cta_click"
-                    eventData={{ cta: "open_github_release", page: "download" }}
                     className="inline-flex items-center justify-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
                   >
                     View GitHub Release
                     <ExternalLink className="h-4 w-4" />
-                  </TrackedAnchor>
+                  </a>
                 </div>
               </article>
 
@@ -380,17 +357,15 @@ export default async function DownloadPage() {
                   <p className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
                     {formatMegabytes(github.liteSetupSize)}
                   </p>
-                  <TrackedAnchor
+                  <a
                     href={github.liteSetupUrl}
                     target="_blank"
                     rel="noreferrer"
-                    eventName="cta_click"
-                    eventData={{ cta: "download_lite", page: "download" }}
                     className="mt-5 inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
                   >
                     Download Lite
                     <ArrowUpRight className="h-4 w-4" />
-                  </TrackedAnchor>
+                  </a>
                 </article>
 
                 <article className="install-card-secondary rounded-[1.6rem] p-6">
@@ -406,15 +381,13 @@ export default async function DownloadPage() {
                   <div className="mt-5">
                     <CopyCommand
                       command={SITE_LINKS.wingetCommand}
-                      eventName="command_copy"
-                      eventData={{ command: "winget_install", page: "download" }}
                     />
                   </div>
                 </article>
               </div>
             </ScrollReveal>
-            </TrackSectionView>
-          </section>
+              </SectionPin>
+                      </section>
 
           <section className="pt-16 sm:pt-20">
             <div className="section-divider mb-12" />
@@ -455,35 +428,31 @@ export default async function DownloadPage() {
                 </ol>
 
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <TrackedAnchor
+                  <a
                     href={github.checksumsUrl}
                     target="_blank"
                     rel="noreferrer"
-                    eventName="cta_click"
-                    eventData={{ cta: "open_checksums", page: "download" }}
                     className="inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-ink-soft"
                   >
                     View SHA256SUMS.txt
                     <FileCheck2 className="h-4 w-4" />
-                  </TrackedAnchor>
-                  <TrackedAnchor
+                  </a>
+                  <a
                     href={SITE_LINKS.supportUrl}
                     target="_blank"
                     rel="noreferrer"
-                    eventName="cta_click"
-                    eventData={{ cta: "open_support_docs", page: "download" }}
                     className="inline-flex items-center gap-2 text-sm font-semibold text-ink-soft hover:text-ink"
                   >
                     Support docs
                     <ExternalLink className="h-4 w-4" />
-                  </TrackedAnchor>
+                  </a>
                 </div>
               </article>
 
               <article className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
                 <div className="flex items-start gap-3">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-mint">
-                    <Github className="h-5 w-5 text-mint-strong" />
+                    <GitHubIcon className="h-5 w-5 text-mint-strong" />
                   </div>
                   <div>
                     <h2 className="font-display text-2xl font-semibold text-ink">Public release facts</h2>
@@ -513,28 +482,24 @@ export default async function DownloadPage() {
                 </dl>
 
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  <TrackedAnchor
+                  <a
                     href={SITE_LINKS.repoUrl}
                     target="_blank"
                     rel="noreferrer"
-                    eventName="cta_click"
-                    eventData={{ cta: "view_github_repo", page: "download" }}
                     className="inline-flex items-center justify-between rounded-2xl border border-line bg-paper/60 px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
                   >
                     Inspect source
                     <ExternalLink className="h-4 w-4" />
-                  </TrackedAnchor>
-                  <TrackedAnchor
+                  </a>
+                  <a
                     href={github.latestReleaseUrl}
                     target="_blank"
                     rel="noreferrer"
-                    eventName="cta_click"
-                    eventData={{ cta: "open_github_release", page: "download" }}
                     className="inline-flex items-center justify-between rounded-2xl border border-line bg-paper/60 px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
                   >
                     Latest release
                     <ExternalLink className="h-4 w-4" />
-                  </TrackedAnchor>
+                  </a>
                 </div>
               </article>
             </ScrollReveal>
@@ -558,36 +523,30 @@ export default async function DownloadPage() {
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <TrackedLink
+                <Link
                   href="/trust/verify-checksum"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_verify_guide", page: "download" }}
                   className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Verify SHA256
-                </TrackedLink>
-                <TrackedLink
+                </Link>
+                <Link
                   href="/changelog"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_changelog", page: "download" }}
                   className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Read changelog
-                </TrackedLink>
-                <TrackedLink
+                </Link>
+                <Link
                   href="/"
-                  eventName="cta_click"
-                  eventData={{ cta: "return_home", page: "download" }}
                   className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
                   Return home
-                </TrackedLink>
+                </Link>
               </div>
             </ScrollReveal>
           </section>
 
           <ProductRelatedGuides slug="best-yt-dlp-gui-windows" />
-          </MarketingShell>
+          </DownloadExperience>
         </div>
       </main>
     </>

@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/home/home-header";
 import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { GuideIndexCard } from "@/components/guides/guide-index-card";
 import { MarketingShell } from "@/components/site/marketing-shell";
+import { ScrollBeats } from "@/components/experience/scroll-beats";
 import { getGuidesByTier } from "@/lib/guides";
 import { getSocialImage } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
@@ -52,9 +53,16 @@ export default function GuidesHubPage() {
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
           <SiteHeader currentPage="guides" />
           <MarketingShell>
-          <SubpageRouteStrip currentPage="guides" />
+          <ScrollBeats>
+          <div data-scroll-beat="">
+            <SubpageRouteStrip currentPage="guides" />
+          </div>
 
-          <nav aria-label="Breadcrumb" className="mt-6 flex items-center gap-2 text-sm text-ink-muted">
+          <nav
+            aria-label="Breadcrumb"
+            className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
+            data-scroll-beat=""
+          >
             <Link href="/" className="transition-colors hover:text-ink">
               Home
             </Link>
@@ -62,7 +70,7 @@ export default function GuidesHubPage() {
             <span className="font-medium text-ink">Guides</span>
           </nav>
 
-          <div className="mt-8 max-w-3xl">
+          <div className="mt-8 max-w-3xl" data-scroll-beat="">
             <div className="eyebrow">Guides</div>
             <h1 className="mt-5 font-display text-4xl font-semibold tracking-[-0.03em] text-ink sm:text-5xl">
               yt-dlp GUI guidance for Windows, without the spam.
@@ -74,7 +82,7 @@ export default function GuidesHubPage() {
             </p>
           </div>
 
-          <section className="mt-14">
+          <section className="mt-14" data-scroll-beat="">
             <h2 className="font-display text-2xl font-semibold text-ink">Tier 1 — start here</h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {tier1.map((guide) => (
@@ -83,7 +91,7 @@ export default function GuidesHubPage() {
             </div>
           </section>
 
-          <section className="mt-16">
+          <section className="mt-16" data-scroll-beat="">
             <h2 className="font-display text-2xl font-semibold text-ink">Tier 2 — product depth</h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {tier2.map((guide) => (
@@ -92,7 +100,7 @@ export default function GuidesHubPage() {
             </div>
           </section>
 
-          <section className="mt-16">
+          <section className="mt-16" data-scroll-beat="">
             <h2 className="font-display text-2xl font-semibold text-ink">Tier 3 — broader topics</h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {tier3.map((guide) => (
@@ -100,6 +108,7 @@ export default function GuidesHubPage() {
               ))}
             </div>
           </section>
+          </ScrollBeats>
           </MarketingShell>
         </div>
       </main>

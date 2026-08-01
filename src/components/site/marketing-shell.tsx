@@ -1,4 +1,7 @@
+"use client";
+
 import type { ReactNode } from "react";
+import { MarketingExperience } from "@/components/site/marketing-experience";
 
 type MarketingShellProps = {
   children: ReactNode;
@@ -6,14 +9,9 @@ type MarketingShellProps = {
 };
 
 /**
- * Soft first-paint enter for marketing content below the site header.
- * CSS-only (opacity + translateY), reduced-motion kill-switch in globals.css.
+ * Soft first-paint enter + Lenis/GSAP substrate for marketing content.
  * Do not nest inside another opacity-0 reveal for the same above-fold block.
  */
 export function MarketingShell({ children, className }: MarketingShellProps) {
-  return (
-    <div className={["marketing-shell-enter", className].filter(Boolean).join(" ")}>
-      {children}
-    </div>
-  );
+  return <MarketingExperience className={className}>{children}</MarketingExperience>;
 }

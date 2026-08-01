@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
-import { TrackedLink } from "@/components/analytics/tracked-interactions";
 import type { GuideBlock, GuideCta } from "@/lib/guides/types";
 
 function CalloutTone({
@@ -29,34 +28,28 @@ function CalloutTone({
 
 export function GuideCtaButton({
   cta,
-  page,
   className,
 }: {
   cta: GuideCta;
-  page: string;
   className?: string;
 }) {
   return (
-    <TrackedLink
+    <Link
       href={cta.href}
-      eventName="cta_click"
-      eventData={{ cta: cta.eventCta, page }}
       className={
         className ??
         "glass-cta inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5"
       }
     >
       {cta.label}
-    </TrackedLink>
+    </Link>
   );
 }
 
 export function GuideBlocks({
   blocks,
-  page,
 }: {
   blocks: GuideBlock[];
-  page: string;
 }) {
   return (
     <div className="space-y-6">
@@ -168,7 +161,7 @@ export function GuideBlocks({
           case "cta":
             return (
               <div key={key} className="pt-2">
-                <GuideCtaButton cta={block.cta} page={page} />
+                <GuideCtaButton cta={block.cta} />
               </div>
             );
           default:

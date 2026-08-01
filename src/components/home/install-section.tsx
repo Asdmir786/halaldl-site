@@ -1,10 +1,8 @@
-import { ArrowUpRight, CopyCheck, ExternalLink, Package } from "lucide-react";
-import { TrackSectionView, TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
-import { ScrollReveal } from "@/components/ui/scroll-reveal";
-import { CopyCommand } from "@/components/ui/copy-command";
+import Link from "next/link";
+import { ArrowUpRight, CopyCheck, Crown, ExternalLink, FolderArchive } from "lucide-react";
+import { InstallCardsScroll } from "@/components/experience/install-cards-scroll";
 import { SectionIntro, SectionShell, formatMegabytes } from "@/components/home/home-shared";
 import type { GitHubSnapshot } from "@/lib/github";
-import { SITE_LINKS } from "@/lib/site";
 
 export function InstallSection({ github }: { github: GitHubSnapshot }) {
   return (
@@ -16,40 +14,44 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
           <SectionIntro
             id="install"
             eyebrow="Install"
-            title="Full, Lite, or WinGet."
-            accent="Pick the path that matches how hands-on you want to be."
-            body="Full is the default for most users. Lite is for people who want direct control over yt-dlp, ffmpeg, aria2, and optional runtime pieces. WinGet is convenient, but the download page is the better place to choose deliberately."
+            title="Portable, Lite, or Full."
+            accent="See each path, then pick the one that fits."
+            body="Portable keeps everything in one folder. Lite is for people who already manage yt-dlp and FFmpeg. Full is the recommended first install for most people — smoother setup, less chasing binaries."
           />
           <div className="mt-6 flex flex-wrap gap-4">
-            <TrackedLink
+            <Link
               href="/compare/full-vs-lite"
-              eventName="cta_click"
-              eventData={{ cta: "compare_full_vs_lite", page: "home" }}
               className="inline-flex items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-ink-soft"
             >
               Compare Full vs Lite
               <ArrowUpRight className="h-4 w-4" />
-            </TrackedLink>
-            <TrackedLink
-              href="/install/windows"
-              eventName="cta_click"
-              eventData={{ cta: "open_install_guide", page: "home" }}
+            </Link>
+            <Link
+              href="/download"
               className="inline-flex items-center gap-2 text-sm font-semibold text-ink transition-colors hover:text-ink-soft"
             >
-              Windows install guide
+              All download options
               <ArrowUpRight className="h-4 w-4" />
-            </TrackedLink>
+            </Link>
           </div>
         </div>
 
-        <TrackSectionView
-          eventName="section_view"
-          eventData={{ section: "install_options", page: "home" }}
-        >
-          <ScrollReveal className="grid items-stretch gap-4 lg:grid-cols-3">
-          <article className="install-card-primary overflow-hidden rounded-[1.5rem] p-6">
+        <InstallCardsScroll>
+          {/* Finale row order: Full → Lite → Portable */}
+          <article
+            data-install-card="full"
+            className="install-card-primary overflow-hidden rounded-[1.5rem] p-6"
+          >
             <div className="relative flex h-full flex-col">
-              <div className="flex items-center justify-between gap-3">
+              <div
+                data-install-crown=""
+                className="install-crown absolute -top-1 right-0 flex h-10 w-10 items-center justify-center rounded-full bg-mint text-mint-strong shadow-[0_10px_28px_rgba(14,116,104,0.35)]"
+                aria-hidden="true"
+              >
+                <Crown className="h-5 w-5" />
+              </div>
+
+              <div className="flex items-center justify-between gap-3 pr-12">
                 <div className="inline-flex items-center gap-1.5 rounded-full bg-mint px-3 py-1 text-xs font-semibold text-mint-strong">
                   Recommended
                 </div>
@@ -77,33 +79,32 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
               </ul>
 
               <div className="mt-auto grid gap-3 pt-6">
-                <TrackedAnchor
+                <a
                   href={github.fullSetupUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "download_full", page: "home" }}
                   className="inline-flex items-center justify-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition-all hover:opacity-90"
                 >
                   Download Full
                   <ArrowUpRight className="h-4 w-4" />
-                </TrackedAnchor>
-                <TrackedAnchor
+                </a>
+                <a
                   href={github.checksumsUrl}
                   target="_blank"
                   rel="noreferrer"
-                  eventName="cta_click"
-                  eventData={{ cta: "open_checksums", page: "home" }}
                   className="inline-flex items-center justify-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
                 >
                   Open SHA256SUMS.txt
                   <ExternalLink className="h-4 w-4" />
-                </TrackedAnchor>
+                </a>
               </div>
             </div>
           </article>
 
-          <article className="install-card-secondary rounded-[1.5rem] p-6">
+          <article
+            data-install-card="lite"
+            className="install-card-secondary rounded-[1.5rem] p-6"
+          >
             <div className="flex h-full flex-col">
               <div className="inline-flex w-fit items-center gap-1.5 rounded-full bg-sky px-3 py-1 text-xs font-semibold text-sky-strong">
                 Power users
@@ -116,42 +117,47 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
               <p className="mt-4 text-xs font-medium uppercase tracking-[0.12em] text-ink-muted">
                 {formatMegabytes(github.liteSetupSize)}
               </p>
-              <TrackedAnchor
+              <a
                 href={github.liteSetupUrl}
                 target="_blank"
                 rel="noreferrer"
-                eventName="cta_click"
-                eventData={{ cta: "download_lite", page: "home" }}
                 className="mt-auto inline-flex items-center justify-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
               >
                 Download Lite
                 <ArrowUpRight className="h-4 w-4" />
-              </TrackedAnchor>
+              </a>
             </div>
           </article>
 
-          <article className="install-card-secondary rounded-[1.5rem] p-6">
+          <article
+            data-install-card="portable"
+            className="install-card-secondary rounded-[1.5rem] p-6"
+          >
             <div className="flex h-full flex-col">
               <div className="inline-flex w-fit items-center gap-1.5 rounded-full bg-paper px-3 py-1 text-xs font-semibold text-ink-muted">
-                <Package className="h-3.5 w-3.5" />
-                Package manager
+                <FolderArchive className="h-3.5 w-3.5" />
+                No-install ZIP
               </div>
-              <h3 className="mt-4 font-display text-xl font-semibold text-ink">WinGet</h3>
+              <h3 className="mt-4 font-display text-xl font-semibold text-ink">Portable</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                Good for convenience and easy updates. Just do not assume it is the fastest path
-                to the newest release.
+                Keep the app, settings, and managed tools together in one folder — useful for
+                locked-down or no-install Windows setups.
               </p>
-              <div className="mt-auto pt-6">
-                <CopyCommand
-                  command={SITE_LINKS.wingetCommand}
-                  eventName="command_copy"
-                  eventData={{ command: "winget_install", page: "home" }}
-                />
-              </div>
+              <p className="mt-4 text-xs font-medium uppercase tracking-[0.12em] text-ink-muted">
+                {formatMegabytes(github.portableZipSize)}
+              </p>
+              <a
+                href={github.portableZipUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-auto inline-flex items-center justify-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
+              >
+                Download Portable
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
             </div>
           </article>
-          </ScrollReveal>
-        </TrackSectionView>
+        </InstallCardsScroll>
       </div>
     </SectionShell>
   );
