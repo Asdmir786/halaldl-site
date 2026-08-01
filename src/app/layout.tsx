@@ -40,9 +40,10 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
   keywords: [
     "HalalDL",
-    "Windows yt-dlp GUI",
     "yt-dlp GUI for Windows",
-    "Windows media downloader",
+    "best yt-dlp GUI Windows",
+    "Windows yt-dlp GUI",
+    "free yt-dlp GUI",
     "local-first media downloader",
     "yt-dlp Windows app",
   ],

@@ -2,15 +2,15 @@ import type { MetadataRoute } from "next";
 import { DEFAULT_SOCIAL_IMAGE, getSiteUrl, SITE_LINKS } from "@/lib/site";
 
 export const SITE_NAME = "HalalDL";
-export const HOMEPAGE_TITLE = "HalalDL — Local-first media downloader for Windows";
-export const HOMEPAGE_OG_TITLE = "HalalDL — Media downloading without the command line";
-export const HOMEPAGE_TWITTER_TITLE = "HalalDL — Local-first media downloader for Windows";
+export const HOMEPAGE_TITLE = "HalalDL — Free yt-dlp GUI for Windows (local-first)";
+export const HOMEPAGE_OG_TITLE = "HalalDL — Free yt-dlp GUI for Windows";
+export const HOMEPAGE_TWITTER_TITLE = "HalalDL — Free yt-dlp GUI for Windows";
 export const SITE_DESCRIPTION =
-  "HalalDL is a local-first Windows media downloader powered by yt-dlp, with presets, visible logs, and optional tool management.";
+  "Free open-source yt-dlp GUI for Windows 10/11. Local-first, no account, with presets, visible logs, and optional tool management.";
 export const HOMEPAGE_OG_DESCRIPTION =
-  "A local-first Windows media downloader powered by yt-dlp, with reusable presets, visible logs, and optional tool management.";
+  "A free, local-first yt-dlp GUI for Windows — presets, visible logs, and optional tool management. No account required.";
 export const HOMEPAGE_TWITTER_DESCRIPTION =
-  "Download authorized video and audio through a clear Windows interface powered by yt-dlp.";
+  "Free open-source yt-dlp GUI for Windows. Local-first, no account, presets and visible logs.";
 
 export const SITEMAP_ROUTES: MetadataRoute.Sitemap = [
   {

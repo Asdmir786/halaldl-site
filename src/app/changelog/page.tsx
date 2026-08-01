@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/home/home-header";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
 import { TrackedAnchor, TrackedLink } from "@/components/analytics/tracked-interactions";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
+import { MarketingShell } from "@/components/site/marketing-shell";
 import { getSocialImage } from "@/lib/site";
 import { getChangelogEntries } from "@/lib/changelog";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
@@ -56,21 +57,19 @@ export default async function ChangelogPage() {
       <main id="main-content" className="overflow-x-hidden">
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
           <SiteHeader currentPage="changelog" />
+          <MarketingShell>
+          <nav
+            aria-label="Breadcrumb"
+            className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
+          >
+            <Link href="/" className="transition-colors hover:text-ink">
+              Home
+            </Link>
+            <span>/</span>
+            <span className="font-medium text-ink">Changelog</span>
+          </nav>
 
-          <ScrollReveal className="mt-6" y={18}>
-            <nav
-              aria-label="Breadcrumb"
-              className="flex items-center gap-2 text-sm text-ink-muted"
-            >
-              <Link href="/" className="transition-colors hover:text-ink">
-                Home
-              </Link>
-              <span>/</span>
-              <span className="font-medium text-ink">Changelog</span>
-            </nav>
-          </ScrollReveal>
-
-          <ScrollReveal className="max-w-3xl mt-6" y={22}>
+          <div className="max-w-3xl mt-6">
             <div className="eyebrow">
               <FileStack className="h-3.5 w-3.5" />
               Changelog
@@ -83,7 +82,7 @@ export default async function ChangelogPage() {
               Each entry gives the high-signal summary first, then links back to the full GitHub
               release for raw notes and assets.
             </p>
-          </ScrollReveal>
+          </div>
 
           <section className="pt-14 sm:pt-16">
             <div className="section-divider mb-12" />
@@ -298,6 +297,7 @@ export default async function ChangelogPage() {
               ))}
             </div>
           </section>
+          </MarketingShell>
         </div>
       </main>
     </>

@@ -19,6 +19,8 @@ import { getGitHubSnapshot } from "@/lib/github";
 import { getSiteUrl, getSocialImage, SITE_LINKS } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { formatMegabytes, shortenDigest } from "@/components/home/home-shared";
+import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
+import { MarketingShell } from "@/components/site/marketing-shell";
 
 const DOWNLOAD_META_TITLE = "Download HalalDL for Windows";
 const DOWNLOAD_META_DESCRIPTION =
@@ -133,27 +135,21 @@ export default async function DownloadPage() {
       <main id="main-content" className="overflow-x-hidden">
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
           <SiteHeader currentPage="download" />
-          <ScrollReveal y={14} amount={0.35}>
-            <SubpageRouteStrip currentPage="download" />
-          </ScrollReveal>
+          <MarketingShell>
+          <SubpageRouteStrip currentPage="download" />
 
-          <ScrollReveal className="mt-6" y={18}>
-            <nav
-              aria-label="Breadcrumb"
-              className="flex items-center gap-2 text-sm text-ink-muted"
-            >
-              <Link href="/" className="transition-colors hover:text-ink">
-                Home
-              </Link>
-              <span>/</span>
-              <span className="font-medium text-ink">Download</span>
-            </nav>
-          </ScrollReveal>
-
-          <ScrollReveal
-            className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start"
-            y={22}
+          <nav
+            aria-label="Breadcrumb"
+            className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
           >
+            <Link href="/" className="transition-colors hover:text-ink">
+              Home
+            </Link>
+            <span>/</span>
+            <span className="font-medium text-ink">Download</span>
+          </nav>
+
+          <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
             <div className="max-w-2xl">
               <div className="eyebrow">
                 <BadgeCheck className="h-3.5 w-3.5" />
@@ -222,12 +218,20 @@ export default async function DownloadPage() {
                   Compare Full vs Lite
                 </TrackedLink>
                 <TrackedLink
+                  href="/guides/best-yt-dlp-gui-windows"
+                  eventName="cta_click"
+                  eventData={{ cta: "open_best_gui_guide", page: "download" }}
+                  className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
+                >
+                  Best yt-dlp GUI guide
+                </TrackedLink>
+                <TrackedLink
                   href="/guides"
                   eventName="cta_click"
                   eventData={{ cta: "open_guides", page: "download" }}
                   className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
                 >
-                  New here? Read guides
+                  All guides
                 </TrackedLink>
               </div>
 
@@ -293,7 +297,7 @@ export default async function DownloadPage() {
                 </div>
               </dl>
             </aside>
-          </ScrollReveal>
+          </div>
 
           <section className="pt-16 sm:pt-20">
             <div className="section-divider mb-12" />
@@ -581,6 +585,9 @@ export default async function DownloadPage() {
               </div>
             </ScrollReveal>
           </section>
+
+          <ProductRelatedGuides slug="best-yt-dlp-gui-windows" />
+          </MarketingShell>
         </div>
       </main>
     </>

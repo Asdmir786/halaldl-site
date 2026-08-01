@@ -16,6 +16,7 @@ import { getSocialImage, SITE_LINKS } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { shortenDigest } from "@/components/home/home-shared";
 import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
+import { MarketingShell } from "@/components/site/marketing-shell";
 
 const TRUST_META_TITLE = "Trust and verification — HalalDL";
 const TRUST_META_DESCRIPTION =
@@ -159,27 +160,21 @@ export default async function VerifyChecksumPage() {
       <main id="main-content" className="overflow-x-hidden">
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
           <SiteHeader currentPage="none" />
-          <ScrollReveal y={14} amount={0.35}>
-            <SubpageRouteStrip currentPage="trust" />
-          </ScrollReveal>
+          <MarketingShell>
+          <SubpageRouteStrip currentPage="trust" />
 
-          <ScrollReveal className="mt-6" y={18}>
-            <nav
-              aria-label="Breadcrumb"
-              className="flex items-center gap-2 text-sm text-ink-muted"
-            >
-              <Link href="/" className="transition-colors hover:text-ink">
-                Home
-              </Link>
-              <span>/</span>
-              <span className="font-medium text-ink">Verify SHA256</span>
-            </nav>
-          </ScrollReveal>
-
-          <ScrollReveal
-            className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start"
-            y={22}
+          <nav
+            aria-label="Breadcrumb"
+            className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
           >
+            <Link href="/" className="transition-colors hover:text-ink">
+              Home
+            </Link>
+            <span>/</span>
+            <span className="font-medium text-ink">Verify SHA256</span>
+          </nav>
+
+          <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
             <div className="max-w-2xl">
               <div className="eyebrow">
                 <ShieldCheck className="h-3.5 w-3.5" />
@@ -253,7 +248,7 @@ export default async function VerifyChecksumPage() {
                 ]}
               />
             </aside>
-          </ScrollReveal>
+          </div>
 
           <section className="pt-16 sm:pt-20">
             <div className="section-divider mb-12" />
@@ -413,6 +408,7 @@ export default async function VerifyChecksumPage() {
           </section>
 
           <ProductRelatedGuides slug="verify-sha256-smartscreen" />
+          </MarketingShell>
         </div>
       </main>
     </>

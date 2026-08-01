@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/home/home-header";
 import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { GuideIndexCard } from "@/components/guides/guide-index-card";
+import { MarketingShell } from "@/components/site/marketing-shell";
 import { getGuidesByTier } from "@/lib/guides";
 import { getSocialImage } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
@@ -50,6 +51,7 @@ export default function GuidesHubPage() {
       <main id="main-content" className="overflow-x-hidden">
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
           <SiteHeader currentPage="guides" />
+          <MarketingShell>
           <SubpageRouteStrip currentPage="guides" />
 
           <nav aria-label="Breadcrumb" className="mt-6 flex items-center gap-2 text-sm text-ink-muted">
@@ -98,6 +100,7 @@ export default function GuidesHubPage() {
               ))}
             </div>
           </section>
+          </MarketingShell>
         </div>
       </main>
     </>

@@ -43,6 +43,10 @@ export function FaqSection() {
         >
           {[
             { href: "/download", label: "Download HalalDL" },
+            {
+              href: "/guides/best-yt-dlp-gui-windows",
+              label: "Best yt-dlp GUI for Windows",
+            },
             { href: "/compare/full-vs-lite", label: "Compare Full vs Lite" },
             { href: "/install/windows", label: "Install on Windows" },
             { href: "/trust/verify-checksum", label: "Verify SHA256" },

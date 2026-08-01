@@ -21,25 +21,46 @@ export function HeroAtmosphere() {
     let cancelled = false;
     let cleanup: (() => void) | undefined;
 
-    void import("animejs").then(({ animate, stagger, utils }) => {
-      if (cancelled || !rootRef.current) return;
+    void import("animejs")
+      .then(({ animate, stagger, utils }) => {
+        if (cancelled || !rootRef.current) return;
 
-      const orbs = rootRef.current.querySelectorAll<HTMLElement>(".hero-atmosphere-orb");
-      if (orbs.length === 0) return;
+        const orbs = rootRef.current.querySelectorAll<HTMLElement>(".hero-atmosphere-orb");
+        if (orbs.length === 0) return;
 
-      const animation = animate(orbs, {
-        translateX: () => utils.random(-30, 30),
-        translateY: () => utils.random(-24, 18),
-        scale: [1, 1.08, 1],
-        duration: 9000,
-        delay: stagger(500),
-        loop: true,
-        alternate: true,
-        ease: "inOutSine",
+        orbs.forEach((orb) => orb.classList.add("is-animating"));
+
+        const animation = animate(orbs, {
+          translateX: () => utils.random(-30, 30),
+          translateY: () => utils.random(-24, 18),
+          scale: [1, 1.08, 1],
+          duration: 9000,
+          delay: stagger(500),
+          loop: true,
+          alternate: true,
+          ease: "inOutSine",
+        });
+
+        const onVisibility = () => {
+          if (document.hidden) {
+            animation.pause();
+          } else {
+            animation.play();
+          }
+        };
+
+        document.addEventListener("visibilitychange", onVisibility);
+        onVisibility();
+
+        cleanup = () => {
+          document.removeEventListener("visibilitychange", onVisibility);
+          animation.pause();
+          orbs.forEach((orb) => orb.classList.remove("is-animating"));
+        };
+      })
+      .catch(() => {
+        /* Decorative only — leave orbs static if anime.js fails to load. */
       });
-
-      cleanup = () => animation.pause();
-    });
 
     return () => {
       cancelled = true;

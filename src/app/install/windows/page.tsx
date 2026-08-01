@@ -18,10 +18,11 @@ import { getSocialImage, SITE_LINKS } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 import { formatMegabytes } from "@/components/home/home-shared";
 import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
+import { MarketingShell } from "@/components/site/marketing-shell";
 
-const INSTALL_META_TITLE = "Install HalalDL on Windows 10 and 11";
+const INSTALL_META_TITLE = "Download HalalDL for Windows — Install & Verify";
 const INSTALL_META_DESCRIPTION =
-  "Install HalalDL using the recommended Full installer, WinGet, Lite, MSI, or Portable packages, with SHA256 verification guidance.";
+  "Download and install HalalDL on Windows 10/11 from GitHub Releases. Full, Lite, Portable, MSI, or WinGet — with SHA256 checksum guidance.";
 
 export const metadata: Metadata = {
   title: {
@@ -136,27 +137,21 @@ export default async function InstallWindowsPage() {
       <main id="main-content" className="overflow-x-hidden">
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
           <SiteHeader currentPage="none" />
-          <ScrollReveal y={14} amount={0.35}>
-            <SubpageRouteStrip currentPage="install" />
-          </ScrollReveal>
+          <MarketingShell>
+          <SubpageRouteStrip currentPage="install" />
 
-          <ScrollReveal className="mt-6" y={18}>
-            <nav
-              aria-label="Breadcrumb"
-              className="flex items-center gap-2 text-sm text-ink-muted"
-            >
-              <Link href="/" className="transition-colors hover:text-ink">
-                Home
-              </Link>
-              <span>/</span>
-              <span className="font-medium text-ink">Install on Windows</span>
-            </nav>
-          </ScrollReveal>
-
-          <ScrollReveal
-            className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start"
-            y={22}
+          <nav
+            aria-label="Breadcrumb"
+            className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
           >
+            <Link href="/" className="transition-colors hover:text-ink">
+              Home
+            </Link>
+            <span>/</span>
+            <span className="font-medium text-ink">Install on Windows</span>
+          </nav>
+
+          <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
             <div className="max-w-2xl">
               <div className="eyebrow">
                 <Download className="h-3.5 w-3.5" />
@@ -251,7 +246,7 @@ export default async function InstallWindowsPage() {
                 />
               </div>
             </aside>
-          </ScrollReveal>
+          </div>
 
           <section className="pt-16 sm:pt-20">
             <div className="section-divider mb-12" />
@@ -460,6 +455,7 @@ export default async function InstallWindowsPage() {
           </section>
 
           <ProductRelatedGuides slug="install-halaldl-windows" />
+          </MarketingShell>
         </div>
       </main>
     </>

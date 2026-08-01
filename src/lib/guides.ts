@@ -28,7 +28,7 @@ export const GUIDES: GuideMeta[] = [
     slug: "best-yt-dlp-gui-windows",
     title: "Best yt-dlp GUI for Windows (2026) — honest comparison",
     description:
-      "Compare free yt-dlp GUI frontends for Windows, including HalalDL, Open Video Downloader, Parabolic, and other community tools — without the spam.",
+      "Compare free yt-dlp GUI frontends for Windows — HalalDL, Open Video Downloader, Parabolic, and more. Local-first, no account, checksums over spam sites.",
     primaryKeyword: "yt-dlp GUI Windows",
     tier: 1,
     publishedAt: GUIDE_DATE,
@@ -56,16 +56,16 @@ export const GUIDES: GuideMeta[] = [
   },
   {
     slug: "install-halaldl-windows",
-    title: "Install HalalDL on Windows 10 and 11",
+    title: "Download HalalDL for Windows — Install & Verify",
     description:
-      "Install HalalDL using Full, Lite, Portable, MSI, or WinGet, with guidance on which path fits your setup.",
+      "Download and install HalalDL on Windows 10/11 from GitHub Releases. Full, Lite, Portable, MSI, or WinGet — with SHA256 guidance.",
     primaryKeyword: "install HalalDL Windows",
     tier: 1,
     publishedAt: GUIDE_DATE,
     updatedAt: GUIDE_DATE,
     canonicalPath: "/install/windows",
     hostedInGuides: false,
-    relatedSlugs: ["full-vs-lite", "verify-sha256-smartscreen", "winget-vs-github-releases"],
+    relatedSlugs: ["best-yt-dlp-gui-windows", "full-vs-lite", "verify-sha256-smartscreen"],
     cta: { label: "Go to download", href: "/download", eventCta: "go_to_download" },
     eyebrow: "Install",
   },
