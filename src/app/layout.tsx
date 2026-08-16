@@ -37,16 +37,21 @@ export const metadata: Metadata = {
     template: "%s | HalalDL",
   },
   description: SITE_DESCRIPTION,
-  keywords: [
-    "HalalDL",
-    "yt-dlp GUI for Windows",
-    "best yt-dlp GUI Windows",
-    "Windows yt-dlp GUI",
-    "free yt-dlp GUI",
-    "local-first media downloader",
-    "yt-dlp Windows app",
-  ],
   applicationName: "HalalDL",
+  creator: "HalalDL",
+  publisher: "HalalDL",
+  referrer: "origin-when-cross-origin",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   alternates: {
     canonical: "/",
   },
@@ -56,6 +61,7 @@ export const metadata: Metadata = {
     title: HOMEPAGE_OG_TITLE,
     description: HOMEPAGE_OG_DESCRIPTION,
     siteName: "HalalDL",
+    locale: "en_US",
     images: [
       {
         url: "/social/halaldl-social-preview.png",
@@ -69,7 +75,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: HOMEPAGE_TWITTER_TITLE,
     description: HOMEPAGE_TWITTER_DESCRIPTION,
-    images: ["/social/halaldl-social-preview.png"],
+    images: [
+      {
+        url: "/social/halaldl-social-preview.png",
+        alt: "HalalDL local-first yt-dlp GUI for Windows",
+      },
+    ],
   },
   icons: {
     icon: [

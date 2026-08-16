@@ -24,9 +24,9 @@ export async function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
   const homeSectionHref = (item: (typeof navItems)[number]) =>
     currentPage === "home" ? `#${item.toLowerCase()}` : `/#${item.toLowerCase()}`;
   const navLinkClass =
-    "rounded-lg px-3 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:bg-line hover:text-ink";
+    "whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:bg-line hover:text-ink";
   const mobileNavLinkClass =
-    "shrink-0 rounded-full border border-line bg-paper-strong/70 px-3 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:bg-paper hover:text-ink";
+    "shrink-0 whitespace-nowrap rounded-full border border-line bg-paper-strong/70 px-3 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:bg-paper hover:text-ink";
 
   return (
     <header className="header-bar rounded-2xl px-4 py-2.5 sm:px-5">

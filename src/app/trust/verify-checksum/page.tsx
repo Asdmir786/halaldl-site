@@ -1,432 +1,59 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import {
-  ArrowRight,
-  ExternalLink,
-  FileCheck2,
-  ShieldCheck,
-  TerminalSquare,
-} from "lucide-react";
-import { SiteHeader } from "@/components/home/home-header";
-import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
-import { VerifyCommandPanel } from "@/components/trust/verify-command-panel";
-import { ScrollReveal } from "@/components/ui/scroll-reveal";
+import { VerifyChecksumContent } from "@/components/trust/verify-checksum-content";
 import { getGitHubSnapshot } from "@/lib/github";
-import { getSocialImage, SITE_LINKS } from "@/lib/site";
+import { getSocialImage } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
-import { shortenDigest } from "@/components/home/home-shared";
-import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
-import { MarketingShell } from "@/components/site/marketing-shell";
-import { ScrollBeats } from "@/components/experience/scroll-beats";
-import { SectionPin } from "@/components/experience/section-pin";
 
-const TRUST_META_TITLE = "Trust and verification — HalalDL";
+const TRUST_META_TITLE = "How to Verify SHA256 for a Windows Installer — HalalDL";
 const TRUST_META_DESCRIPTION =
-  "Learn how HalalDL uses public source code, GitHub Releases, SHA256 checksums, and local-first operation to provide a verifiable installation path.";
-
-export const metadata: Metadata = {
-  title: {
-    absolute: TRUST_META_TITLE,
-  },
-  description: TRUST_META_DESCRIPTION,
-  alternates: {
-    canonical: "/trust/verify-checksum",
-  },
-  openGraph: {
-    title: TRUST_META_TITLE,
-    description: TRUST_META_DESCRIPTION,
-    url: "/trust/verify-checksum",
-    type: "article",
-    siteName: "HalalDL",
-    images: getSocialImage("HalalDL SHA256 verification guide social preview"),
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TRUST_META_TITLE,
-    description: TRUST_META_DESCRIPTION,
-    images: ["/social/halaldl-social-preview.png"],
-  },
-};
+  "Verify a HalalDL Windows installer with SHA256SUMS.txt from the same GitHub Release. Use PowerShell, compare the exact hash, and handle SmartScreen without skipping provenance checks.";
 
 function getDownloadFileName(downloadUrl: string, fallbackName: string) {
   try {
-    const parsed = new URL(downloadUrl);
-    return decodeURIComponent(parsed.pathname.split("/").at(-1) ?? fallbackName);
+    return decodeURIComponent(new URL(downloadUrl).pathname.split("/").at(-1) ?? fallbackName);
   } catch {
     return fallbackName;
   }
 }
 
+function createHashCommand(fileName: string) {
+  return [
+    `$installer = Join-Path $env:USERPROFILE "Downloads\\${fileName}"`,
+    '$checksums = Join-Path $env:USERPROFILE "Downloads\\SHA256SUMS.txt"',
+    '$fileName = Split-Path $installer -Leaf',
+    '$entry = Get-Content $checksums | Where-Object { $_ -match [regex]::Escape($fileName) } | Select-Object -First 1',
+    'if (-not $entry) { "No checksum entry found for $fileName" } else { $expected = ($entry -split "\\s+")[0].ToLower(); $actual = (Get-FileHash $installer -Algorithm SHA256).Hash.ToLower(); if ($actual -eq $expected) { "SHA256 MATCH: $fileName" } else { "SHA256 MISMATCH: $fileName | Expected: $expected | Actual: $actual" } }',
+  ].join("; ");
+}
+
+export const metadata: Metadata = {
+  title: { absolute: TRUST_META_TITLE },
+  description: TRUST_META_DESCRIPTION,
+  alternates: { canonical: "/trust/verify-checksum" },
+  openGraph: { title: TRUST_META_TITLE, description: TRUST_META_DESCRIPTION, url: "/trust/verify-checksum", type: "article", siteName: "HalalDL", images: getSocialImage("HalalDL SHA256 verification guide social preview") },
+  twitter: { card: "summary_large_image", title: TRUST_META_TITLE, description: TRUST_META_DESCRIPTION, images: ["/social/halaldl-social-preview.png"] },
+};
+
 export default async function VerifyChecksumPage() {
   const github = await getGitHubSnapshot();
   const fullSetupName = getDownloadFileName(github.fullSetupUrl, "HalalDL-Full-setup.exe");
   const liteSetupName = getDownloadFileName(github.liteSetupUrl, "HalalDL-Lite-setup.exe");
-  const fullHashCommand = [
-    `$installer = Join-Path $env:USERPROFILE "Downloads\\${fullSetupName}"`,
-    '$checksums = Join-Path $env:USERPROFILE "Downloads\\SHA256SUMS.txt"',
-    '$fileName = Split-Path $installer -Leaf',
-    '$entry = Get-Content $checksums | Where-Object { $_ -match [regex]::Escape($fileName) } | Select-Object -First 1',
-    'if (-not $entry) { "No checksum entry found for $fileName" } else { $expected = ($entry -split "\\s+")[0].ToLower(); $actual = (Get-FileHash $installer -Algorithm SHA256).Hash.ToLower(); if ($actual -eq $expected) { "SHA256 MATCH: $fileName" } else { "SHA256 MISMATCH: $fileName | Expected: $expected | Actual: $actual" } }',
-  ].join("; ");
-  const liteHashCommand = [
-    `$installer = Join-Path $env:USERPROFILE "Downloads\\${liteSetupName}"`,
-    '$checksums = Join-Path $env:USERPROFILE "Downloads\\SHA256SUMS.txt"',
-    '$fileName = Split-Path $installer -Leaf',
-    '$entry = Get-Content $checksums | Where-Object { $_ -match [regex]::Escape($fileName) } | Select-Object -First 1',
-    'if (-not $entry) { "No checksum entry found for $fileName" } else { $expected = ($entry -split "\\s+")[0].ToLower(); $actual = (Get-FileHash $installer -Algorithm SHA256).Hash.ToLower(); if ($actual -eq $expected) { "SHA256 MATCH: $fileName" } else { "SHA256 MISMATCH: $fileName | Expected: $expected | Actual: $actual" } }',
-  ].join("; ");
-
   const verificationSteps = [
-    {
-      title: "Download the installer from GitHub Releases",
-      body: "Use the Full or Lite asset from the latest public release. That keeps the file source tied directly to the published release notes and attached SHA256SUMS.txt file.",
-    },
-    {
-      title: "Open SHA256SUMS.txt from the same release",
-      body: "SHA256SUMS.txt must come from the same GitHub Release as the installer you downloaded. Do not compare against an older release.",
-    },
-    {
-      title: "Compute the SHA256 hash on your Windows machine",
-      body: "Use PowerShell with Get-FileHash and compare the output to the matching installer line in SHA256SUMS.txt.",
-    },
-    {
-      title: "Only continue after the values match",
-      body: "If the hashes do not match, delete the file and download it again from the canonical release page before running anything.",
-    },
+    "Download the installer and SHA256SUMS.txt from the exact same official GitHub Release.",
+    "Calculate the SHA256 hash for the installer file you downloaded in PowerShell.",
+    "Compare the output against the matching manifest line and continue only when the values match.",
   ];
-
-  const howToSchema = {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    name: "How to verify HalalDL SHA256 checksums on Windows",
-    description: TRUST_META_DESCRIPTION,
-    step: verificationSteps.map((step, index) => ({
-      "@type": "HowToStep",
-      position: index + 1,
-      name: step.title,
-      text: step.body,
-    })),
-  };
-
+  const howToSchema = { "@context": "https://schema.org", "@type": "HowTo", name: TRUST_META_TITLE, description: TRUST_META_DESCRIPTION, step: verificationSteps.map((text, index) => ({ "@type": "HowToStep", position: index + 1, name: ["Keep the release files together", "Calculate the local SHA256", "Compare the exact hash"][index], text })) };
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: [
-      {
-        "@type": "Question",
-        name: "Why should I verify SHA256?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Verifying SHA256 confirms that the file you downloaded matches the release asset published on GitHub Releases.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What if SmartScreen warns on first run?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Current installers are not code-signed yet. Verify the GitHub release source and SHA256 checksum before deciding whether to continue.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Should I verify Lite differently from Full?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "No. The process is the same. You just compare the hash for the installer file you actually downloaded against the matching line in SHA256SUMS.txt.",
-        },
-      },
+      { "@type": "Question", name: "Why should I verify SHA256?", acceptedAnswer: { "@type": "Answer", text: "A matching SHA256 value confirms that the local file matches the release asset hash published in the GitHub Release you checked." } },
+      { "@type": "Question", name: "What if SmartScreen warns on first run?", acceptedAnswer: { "@type": "Answer", text: "Current installers are not code-signed yet. Confirm the GitHub Release source and compare SHA256 before deciding whether to continue." } },
+      { "@type": "Question", name: "Should I verify Lite differently from Full?", acceptedAnswer: { "@type": "Answer", text: "No. Use the same process and compare the hash for the exact installer file you downloaded against its matching SHA256SUMS.txt line." } },
     ],
   };
+  const breadcrumbSchema = getBreadcrumbSchema([{ name: "Home", path: "/" }, { name: "Verify SHA256", path: "/trust/verify-checksum" }]);
 
-  const breadcrumbSchema = getBreadcrumbSchema([
-    { name: "Home", path: "/" },
-    { name: "Verify SHA256", path: "/trust/verify-checksum" },
-  ]);
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(howToSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
-      />
-
-      <main id="main-content" className="overflow-x-hidden">
-        <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
-          <SiteHeader currentPage="none" />
-          <MarketingShell>
-          <ScrollBeats>
-          <div data-scroll-beat="">
-            <SubpageRouteStrip currentPage="trust" />
-          </div>
-
-          <nav
-            aria-label="Breadcrumb"
-            className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
-            data-scroll-beat=""
-          >
-            <Link href="/" className="transition-colors hover:text-ink">
-              Home
-            </Link>
-            <span>/</span>
-            <span className="font-medium text-ink">Verify SHA256</span>
-          </nav>
-
-          <div
-            className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start"
-            data-scroll-beat=""
-          >
-            <div className="max-w-2xl">
-              <div className="eyebrow">
-                <ShieldCheck className="h-3.5 w-3.5" />
-                Trust guide
-              </div>
-              <h1 className="mt-5 font-display text-4xl font-semibold tracking-[-0.03em] text-ink sm:text-5xl">
-                How to verify HalalDL SHA256 checksums on Windows.
-              </h1>
-               <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
-                 This page is the exact verification step. Download only from GitHub Releases — not
-                 random mirrors — open the SHA256SUMS file from the same release, compute the local
-                 hash in PowerShell, and only continue when both values match. Treat SmartScreen on
-                 unsigned OSS installers as a verification prompt, not a reason to skip trust checks.
-               </p>
-
-              <div className="mt-6 flex flex-wrap gap-3 text-sm text-ink-soft">
-                <span className="rounded-full border border-line bg-paper-strong/80 px-3 py-1.5">
-                  Latest release {github.latestVersion}
-                </span>
-                <span className="rounded-full border border-line bg-paper-strong/80 px-3 py-1.5">
-                  Checksum sample {shortenDigest(github.checksumDigest)}
-                </span>
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href={github.checksumsUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-2xl bg-ink px-5 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
-                >
-                  Open SHA256SUMS.txt
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-                <Link
-                  href="/download"
-                  className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
-                >
-                  Back to download page
-                </Link>
-              </div>
-            </div>
-
-            <aside className="surface-elevated rounded-[1.75rem] p-6 sm:p-7">
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                Verification command
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                Put the installer file and <span className="font-medium text-ink">SHA256SUMS.txt</span> in
-                your Downloads folder, then choose the installer you downloaded.
-              </p>
-              <p className="mt-2 text-xs leading-relaxed text-ink-muted">
-                Verified for Windows PowerShell 5.1 and PowerShell 7.
-              </p>
-              <VerifyCommandPanel
-                options={[
-                  {
-                    id: "full",
-                    label: "Full installer",
-                    fileName: fullSetupName,
-                    command: fullHashCommand,
-                    description: "Use this if you downloaded the Full setup from the release assets.",
-                  },
-                  {
-                    id: "lite",
-                    label: "Lite installer",
-                    fileName: liteSetupName,
-                    command: liteHashCommand,
-                    description: "Use this if you downloaded the Lite setup and manage more of the toolchain yourself.",
-                  },
-                ]}
-              />
-            </aside>
-          </div>
-
-          <section className="pt-16 sm:pt-20" data-scroll-beat="">
-            <div className="section-divider mb-12" />
-
-            <SectionPin end="+=40%" pin={false}>
-            <ScrollReveal className="grid gap-4 lg:grid-cols-2">
-              {verificationSteps.map((step, index) => (
-                <article key={step.title} className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
-                  <div className="flex items-start gap-4">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky text-sm font-semibold text-sky-strong">
-                      {index + 1}
-                    </span>
-                    <div>
-                      <h2 className="font-display text-2xl font-semibold text-ink">{step.title}</h2>
-                      <p className="mt-3 text-sm leading-relaxed text-ink-soft">{step.body}</p>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </ScrollReveal>
-            </SectionPin>
-          </section>
-
-          <section className="pt-16 sm:pt-20" data-scroll-beat="">
-            <div className="section-divider mb-12" />
-            <ScrollReveal className="rounded-[1.85rem] border border-line bg-paper/70 p-6 sm:p-7">
-              <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">
-                SmartScreen on unsigned OSS installers
-              </h2>
-              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-ink-soft sm:text-base">
-                Current HalalDL installers are not code-signed yet. Windows may warn because the
-                file is uncommon — not because checksum verification failed. The safe order is:
-                confirm GitHub Releases as the source, verify SHA256, then decide whether to
-                continue with More info → Run anyway.
-              </p>
-              <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-                {[
-                  "Never download HalalDL from a random mirror or “free tools” site",
-                  "Keep the installer and SHA256SUMS.txt from the same release",
-                  "If the hash mismatches, delete the file and start over",
-                  "SmartScreen is not a substitute for checksum verification",
-                ].map((item) => (
-                  <li
-                    key={item}
-                    className="rounded-2xl border border-line bg-paper/80 px-4 py-3 text-sm text-ink-soft"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </ScrollReveal>
-          </section>
-
-          <section className="pt-16 sm:pt-20" data-scroll-beat="">
-            <div className="section-divider mb-12" />
-
-            <ScrollReveal className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
-              <article className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky">
-                    <TerminalSquare className="h-5 w-5 text-sky-strong" />
-                  </div>
-                  <div>
-                    <h2 className="font-display text-2xl font-semibold text-ink">
-                      What matching looks like
-                    </h2>
-                    <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                      The SHA256 value returned by PowerShell should match the exact line for the
-                      installer you downloaded in SHA256SUMS.txt.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-6 rounded-2xl border border-line bg-paper/70 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                    Example installer
-                  </p>
-                  <p className="mt-2 break-all text-sm font-medium text-ink">{fullSetupName}</p>
-                </div>
-
-                <div className="mt-4 rounded-2xl border border-line bg-paper/70 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                    Example digest format
-                  </p>
-                  <p className="mt-2 break-all text-sm font-medium text-ink">
-                    {shortenDigest(github.checksumDigest)}
-                  </p>
-                </div>
-              </article>
-
-              <article className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-mint">
-                    <FileCheck2 className="h-5 w-5 text-mint-strong" />
-                  </div>
-                  <div>
-                    <h2 className="font-display text-2xl font-semibold text-ink">
-                      If SmartScreen warns
-                    </h2>
-                    <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                      That warning does not replace SHA256 verification. It is exactly why the
-                      source and hash should be explicit before first run.
-                    </p>
-                  </div>
-                </div>
-
-                <ul className="mt-6 space-y-3">
-                  {[
-                    "Confirm the file came from the latest GitHub Release.",
-                    "Compare against SHA256SUMS.txt from the same release.",
-                    "Only continue when the values match.",
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-3 text-sm text-ink-soft">
-                      <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-mint-strong" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            </ScrollReveal>
-          </section>
-
-          <section className="pt-16 sm:pt-20">
-            <div className="section-divider mb-10" />
-
-            <ScrollReveal
-              className="flex flex-wrap items-center justify-between gap-4 rounded-[1.75rem] border border-line bg-paper/70 p-6 sm:p-7"
-            >
-              <div className="max-w-2xl" data-scroll-beat="">
-                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                  Next move
-                </p>
-                <h2 className="mt-3 font-display text-2xl font-semibold text-ink">
-                  Verify first, then install.
-                </h2>
-                <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                  If SHA256 matches, go back to the download page or inspect the public release
-                  source directly on GitHub.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/download"
-                  className="inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90"
-                >
-                  Go to download page
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <a
-                  href={SITE_LINKS.latestReleaseUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
-                >
-                  View GitHub Releases
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              </div>
-            </ScrollReveal>
-          </section>
-
-          <div data-scroll-beat="">
-            <ProductRelatedGuides slug="verify-sha256-smartscreen" />
-          </div>
-          </ScrollBeats>
-          </MarketingShell>
-        </div>
-      </main>
-    </>
-  );
+  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(howToSchema) }} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }} /><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }} /><VerifyChecksumContent github={github} fullSetupName={fullSetupName} liteSetupName={liteSetupName} fullHashCommand={createHashCommand(fullSetupName)} liteHashCommand={createHashCommand(liteSetupName)} /></>;
 }

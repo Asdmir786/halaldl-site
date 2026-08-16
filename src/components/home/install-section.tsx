@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, CopyCheck, Crown, ExternalLink, FolderArchive } from "lucide-react";
 import { InstallCardsScroll } from "@/components/experience/install-cards-scroll";
+import { MotionField } from "@/components/ui/motion-field";
 import { SectionIntro, SectionShell, formatMegabytes } from "@/components/home/home-shared";
 import type { GitHubSnapshot } from "@/lib/github";
 
@@ -10,13 +11,13 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
       <div className="section-divider mb-16" />
 
       <div className="grid gap-10">
-        <div className="max-w-3xl">
+        <MotionField className="install-intro-reveal max-w-3xl">
           <SectionIntro
             id="install"
             eyebrow="Install"
             title="Portable, Lite, or Full."
             accent="See each path, then pick the one that fits."
-            body="Portable keeps everything in one folder. Lite is for people who already manage yt-dlp and FFmpeg. Full is the recommended first install for most people — smoother setup, less chasing binaries."
+            body="Full is the easy default. Lite keeps the engines explicit. Portable keeps the app, tools, and settings in one folder."
           />
           <div className="mt-6 flex flex-wrap gap-4">
             <Link
@@ -34,7 +35,7 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
               <ArrowUpRight className="h-4 w-4" />
             </Link>
           </div>
-        </div>
+        </MotionField>
 
         <InstallCardsScroll>
           {/* Finale row order: Full → Lite → Portable */}
@@ -61,15 +62,13 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
               </div>
               <h3 className="mt-5 font-display text-2xl font-semibold text-ink">Full build</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                Best first install for most people. The app handles more of the setup path so you
-                spend less time chasing binaries.
+                The recommended Windows path: less setup, fewer missing dependencies.
               </p>
 
               <ul className="mt-6 space-y-3">
                 {[
-                  "Recommended for most users",
-                  "Smoother first-run path",
-                  "Matches the site's trust-first install story",
+                  "Bundled setup for Windows",
+                  "Public releases and checksums",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3 text-sm text-ink-soft">
                     <CopyCheck className="mt-0.5 h-4 w-4 shrink-0 text-mint-strong" />
@@ -111,8 +110,7 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
               </div>
               <h3 className="mt-4 font-display text-xl font-semibold text-ink">Lite build</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                Better when you already manage your own yt-dlp, ffmpeg, aria2, or related tooling
-                and want that boundary to stay explicit.
+                Bring your own yt-dlp, FFmpeg, aria2, and related tools.
               </p>
               <p className="mt-4 text-xs font-medium uppercase tracking-[0.12em] text-ink-muted">
                 {formatMegabytes(github.liteSetupSize)}
@@ -140,8 +138,7 @@ export function InstallSection({ github }: { github: GitHubSnapshot }) {
               </div>
               <h3 className="mt-4 font-display text-xl font-semibold text-ink">Portable</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                Keep the app, settings, and managed tools together in one folder — useful for
-                locked-down or no-install Windows setups.
+                No install: keep the app, settings, and managed tools in one folder.
               </p>
               <p className="mt-4 text-xs font-medium uppercase tracking-[0.12em] text-ink-muted">
                 {formatMegabytes(github.portableZipSize)}

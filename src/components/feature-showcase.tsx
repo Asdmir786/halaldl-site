@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { Check } from "lucide-react";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import type { FeatureStory } from "@/lib/site";
@@ -95,7 +94,7 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
       className="grid gap-8 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:items-start lg:gap-12 xl:gap-16"
     >
       <div className="hidden lg:sticky lg:top-24 lg:block">
-        <div className="surface-elevated relative overflow-hidden rounded-[2rem] p-4 xl:p-5">
+        <div className="local-control-feature-stage surface-elevated relative overflow-hidden rounded-[2rem] p-4 xl:p-5">
           <div className="mb-4 flex items-center justify-between gap-3 border-b border-line px-1 pb-4">
             <div className="flex flex-wrap items-center gap-2">
               <span
@@ -118,7 +117,8 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeStory.id}
-                  initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.985 }}
+                  // The stage must never rely on a viewport animation to become visible.
+                  initial={false}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 1.008 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
@@ -175,7 +175,7 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
               <article
                 ref={registerBlock(story.id)}
                 data-story-id={story.id}
-                className="feature-story-block p-5 sm:p-6 lg:flex lg:min-h-[64vh] lg:flex-col lg:justify-center lg:p-0"
+                className="feature-story-block p-5 sm:p-6 lg:flex lg:min-h-[56vh] lg:flex-col lg:justify-center lg:p-0"
               >
                 <div
                   className={`lg:transition-opacity lg:duration-300 ${
@@ -201,15 +201,9 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
                     {story.description}
                   </p>
 
-                  <ul className="mt-5 grid max-w-xl gap-2">
+                  <ul className="feature-story-signals mt-5 max-w-xl" aria-label={`${story.label} details`}>
                     {story.bullets.map((bullet) => (
-                      <li
-                        key={bullet}
-                        className="flex items-start gap-2 rounded-2xl border border-line bg-paper-strong/70 px-3 py-2 text-sm text-ink-soft"
-                      >
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-mint-strong" />
-                        <span>{bullet}</span>
-                      </li>
+                      <li key={bullet}>{bullet}</li>
                     ))}
                   </ul>
 

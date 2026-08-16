@@ -16,10 +16,14 @@ type HomeExperienceProps = {
 export function HomeExperience({ header, story, afterStory }: HomeExperienceProps) {
   return (
     <MarketingExperience>
-      <div className="relative z-[1] mx-auto max-w-7xl px-5 pb-24 pt-4 sm:px-8">
-        {header}
-        <HomeScrollDirector className="home-scroll-story">{story}</HomeScrollDirector>
-        {afterStory}
+      <div className="relative z-[1] w-full pt-4">
+        <div className="mx-auto w-[calc(100%-2rem)] max-w-7xl sm:w-[calc(100%-3rem)] lg:w-[calc(100%-4rem)]">
+          {header}
+        </div>
+        <div className="homepage-body w-full">
+          <HomeScrollDirector className="home-scroll-story">{story}</HomeScrollDirector>
+          {afterStory}
+        </div>
       </div>
     </MarketingExperience>
   );

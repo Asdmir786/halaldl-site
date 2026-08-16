@@ -1,51 +1,52 @@
 import type { MetadataRoute } from "next";
+import { CURRENT_RELEASE } from "@/content/releases/registry";
 import { DEFAULT_SOCIAL_IMAGE, getSiteUrl, SITE_LINKS } from "@/lib/site";
 
 export const SITE_NAME = "HalalDL";
-export const HOMEPAGE_TITLE = "HalalDL — Free yt-dlp GUI for Windows (local-first)";
-export const HOMEPAGE_OG_TITLE = "HalalDL — Free yt-dlp GUI for Windows";
-export const HOMEPAGE_TWITTER_TITLE = "HalalDL — Free yt-dlp GUI for Windows";
-export const SITE_DESCRIPTION =
-  "Free open-source yt-dlp GUI for Windows 10/11. Local-first, no account, with presets, visible logs, and optional tool management.";
+export const HOMEPAGE_TITLE = "HalalDL — Free yt-dlp GUI for Windows | Download, Organize & Create";
+export const HOMEPAGE_OG_TITLE = "HalalDL — Download, Organize & Create locally";
+export const HOMEPAGE_TWITTER_TITLE = HOMEPAGE_OG_TITLE;
+export const SITE_DESCRIPTION = CURRENT_RELEASE.homepage!.description;
 export const HOMEPAGE_OG_DESCRIPTION =
-  "A free, local-first yt-dlp GUI for Windows — presets, visible logs, and optional tool management. No account required.";
-export const HOMEPAGE_TWITTER_DESCRIPTION =
-  "Free open-source yt-dlp GUI for Windows. Local-first, no account, presets and visible logs.";
+  "A free, local-first yt-dlp GUI for Windows. Preview, select, download, organize, recover, and create from local media—without an account.";
+export const HOMEPAGE_TWITTER_DESCRIPTION = HOMEPAGE_OG_DESCRIPTION;
+export const SITE_UPDATED_AT = new Date("2026-08-14T00:00:00Z");
 
 export const SITEMAP_ROUTES: MetadataRoute.Sitemap = [
   {
     url: "/",
-    lastModified: new Date("2026-04-12T14:31:16Z"),
+    lastModified: SITE_UPDATED_AT,
     changeFrequency: "weekly",
     priority: 1,
+    images: [DEFAULT_SOCIAL_IMAGE],
   },
   {
     url: "/download",
-    lastModified: new Date("2026-04-12T14:31:16Z"),
+    lastModified: SITE_UPDATED_AT,
     changeFrequency: "weekly",
     priority: 0.9,
   },
   {
     url: "/changelog",
-    lastModified: new Date("2026-04-12T14:31:16Z"),
+    lastModified: SITE_UPDATED_AT,
     changeFrequency: "weekly",
     priority: 0.85,
   },
   {
     url: "/install/windows",
-    lastModified: new Date("2026-04-12T14:31:16Z"),
+    lastModified: SITE_UPDATED_AT,
     changeFrequency: "monthly",
     priority: 0.8,
   },
   {
     url: "/compare/full-vs-lite",
-    lastModified: new Date("2026-04-12T14:31:16Z"),
+    lastModified: SITE_UPDATED_AT,
     changeFrequency: "monthly",
     priority: 0.75,
   },
   {
     url: "/trust/verify-checksum",
-    lastModified: new Date("2026-04-12T14:31:16Z"),
+    lastModified: SITE_UPDATED_AT,
     changeFrequency: "monthly",
     priority: 0.75,
   },
@@ -74,20 +75,19 @@ export function getBreadcrumbSchema(items: Array<{ name: string; path: string }>
 
 export function getSiteStructuredData() {
   const siteUrl = getSiteUrl();
+  const websiteId = absoluteUrl("/#website");
   const publisherId = absoluteUrl("/#publisher");
 
   return [
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "@id": absoluteUrl("/#website"),
+      "@id": websiteId,
       name: SITE_NAME,
       url: siteUrl.origin,
       description: SITE_DESCRIPTION,
-      inLanguage: "en",
-      publisher: {
-        "@id": publisherId,
-      },
+      inLanguage: "en-US",
+      publisher: { "@id": publisherId },
     },
     {
       "@context": "https://schema.org",
@@ -111,6 +111,7 @@ export function getSoftwareSourceCodeSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "SoftwareSourceCode",
+    "@id": absoluteUrl("/#source"),
     name: SITE_NAME,
     codeRepository: SITE_LINKS.repoUrl,
     license: "https://opensource.org/licenses/MIT",

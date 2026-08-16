@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getRelatedGuides } from "@/lib/guides";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 /** Related-guides strip for product canonical pages (install / trust / compare). */
 export function ProductRelatedGuides({ slug }: { slug: string }) {
@@ -7,7 +8,8 @@ export function ProductRelatedGuides({ slug }: { slug: string }) {
   if (guides.length === 0) return null;
 
   return (
-    <section className="mt-14">
+    <ScrollReveal className="mt-14">
+      <section>
       <div className="section-divider mb-8" />
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
@@ -32,6 +34,7 @@ export function ProductRelatedGuides({ slug }: { slug: string }) {
           </Link>
         ))}
       </div>
-    </section>
+      </section>
+    </ScrollReveal>
   );
 }

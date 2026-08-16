@@ -1,6 +1,6 @@
 # HalalDL Site
 
-Marketing site for [HalalDL](https://github.com/Asdmir786/HalalDL), built with Next.js App Router and tuned for Vercel.
+Release-aware marketing site for [HalalDL](https://github.com/Asdmir786/HalalDL), built with Next.js App Router and tuned for Vercel.
 
 This repo is the public-facing site layer for the product, not the desktop app itself. It exists to explain what HalalDL is, establish trust, route people to the right install path, and keep the download flow anchored to GitHub Releases.
 
@@ -21,7 +21,7 @@ The site is built around the current public HalalDL product story:
 - Upstream README: [HalalDL README](https://github.com/Asdmir786/HalalDL#readme)
 - Support: [SUPPORT.md](https://github.com/Asdmir786/HalalDL/blob/main/SUPPORT.md)
 
-Live product details were checked against GitHub on July 25, 2026. At that point, the latest public release was `v0.5.1`, published on July 25, 2026, and the repo described HalalDL as a Windows-first, local-first desktop GUI for `yt-dlp` with presets, raw logs, optional tool bundling, Install Trust and Copy Diagnostics, gentle support prompts after real usage, faster on-demand tool checks, and the official Steel Blue + Mint brand.
+The active release story is managed in `src/content/releases/registry.ts`. As of `v0.6.0`, HalalDL is positioned as a Windows-first, local-first desktop GUI for `yt-dlp` where people can preview supported links, select playlist entries, recover with Download Doctor, organize local media, follow chosen sources, and make clips from completed files. GitHub remains the live source for release facts and assets; the registry remains the editorial source for the site’s explanation of the release.
 
 ## Site Goals
 
@@ -91,9 +91,17 @@ src/
     feature-showcase.tsx
     theme-toggle.tsx
     themed-screenshot.tsx
+  content/
+    releases/registry.ts # current release story, official visuals, and fallback asset data
   lib/
-    github.ts           # live GitHub fetch + fallback snapshot
-    site.ts             # page content, links, feature story data
+    github.ts           # live GitHub fetch + registry-backed fallback snapshot
+    site.ts             # durable links, FAQs, and release-backed feature-story export
+
+docs/
+  DESIGN.md             # visual system, motion, and interaction rules
+  CONTENT.md            # product copy, claims, and SEO writing guide
+  RELEASES.md           # version update and validation playbook
+  MAINTAINING_THE_SITE.md # codebase map and maintenance routine
 
 public/
   brand/
@@ -169,6 +177,6 @@ The site copy is intentionally practical. It should stay aligned with the upstre
 - Full vs Lite as explicit install choices
 - checksums and SmartScreen explained plainly
 
-When a new HalalDL desktop release ships, follow **[docs/release-site-update.md](docs/release-site-update.md)** for what to update, what to leave alone, and why (live GitHub data vs fallback snapshot vs marketing assets/copy).
+When a new HalalDL desktop release ships, begin with **[`docs/RELEASES.md`](docs/RELEASES.md)**. It explains what is automatic from GitHub, what must be edited in the central registry, how to prepare official release media, and how to validate the public routes.
 
-If the product repo changes its positioning, install story, or release structure, update this site accordingly.
+Use **[`docs/DESIGN.md`](docs/DESIGN.md)** before changing visual treatment, **[`docs/CONTENT.md`](docs/CONTENT.md)** before writing feature or SEO copy, and **[`docs/MAINTAINING_THE_SITE.md`](docs/MAINTAINING_THE_SITE.md)** for the project map and routine checks.

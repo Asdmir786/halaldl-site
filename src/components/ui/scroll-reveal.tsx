@@ -1,7 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 
 type ScrollRevealProps = {
   children: ReactNode;
@@ -10,31 +9,47 @@ type ScrollRevealProps = {
   y?: number;
   amount?: number;
   margin?: string;
+  blur?: number;
 };
 
-export function ScrollReveal({
-  children,
-  delay = 0,
-  className,
-  y = 18,
-  amount = 0.2,
-  margin = "0px 0px 8% 0px",
-}: ScrollRevealProps) {
-  const shouldReduceMotion = useReducedMotion();
+/**
+ * Content-safe scroll entrance. The wrapper renders normally before JavaScript
+ * activates, so copy and actions never depend on an animation callback to exist.
+ */
+export function ScrollReveal({ children, delay = 0, className }: ScrollRevealProps) {
+  const ref = useRef<HTMLDivElement>(null);
 
-  if (shouldReduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const activate = () => element.classList.add("is-motion-active");
+
+    if (!("IntersectionObserver" in window)) {
+      activate();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        activate();
+        observer.disconnect();
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8%" },
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  const style = { "--scroll-reveal-delay": `${delay}s` } as CSSProperties;
 
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount, margin }}
-      transition={{ duration: 0.45, delay, ease: [0.23, 1, 0.32, 1] }}
-    >
+    <div ref={ref} className={`scroll-reveal-motion ${className ?? ""}`.trim()} style={style}>
       {children}
-    </motion.div>
+    </div>
   );
 }

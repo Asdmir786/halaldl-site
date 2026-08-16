@@ -9,5 +9,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [...SITEMAP_ROUTES, ...getGuideSitemapEntries()].map((route) => ({
     ...route,
     url: new URL(route.url, siteUrl).toString(),
+    images: route.images?.map((image) => new URL(image, siteUrl).toString()),
   }));
 }

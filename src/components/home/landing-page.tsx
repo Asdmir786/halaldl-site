@@ -6,7 +6,6 @@ import { HomeHeader } from "@/components/home/home-header";
 import { InstallSection } from "@/components/home/install-section";
 import { ProofSection } from "@/components/home/proof-section";
 import { TrustSection } from "@/components/home/trust-section";
-import { WorkflowSection } from "@/components/home/workflow-section";
 import { HomeExperience } from "@/components/experience/home-experience";
 
 type LandingPageProps = {
@@ -21,7 +20,6 @@ export function LandingPage({ github }: LandingPageProps) {
         story={
           <>
             <HeroSection github={github} />
-            <WorkflowSection />
             <ProofSection />
             <InstallSection github={github} />
           </>
