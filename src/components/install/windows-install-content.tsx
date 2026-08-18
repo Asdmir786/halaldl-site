@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, ClipboardCheck, Download, ExternalLink, FileCheck2, MonitorDown, PackageOpen, RefreshCw, ShieldCheck } from "lucide-react";
+import { ArrowRight, ClipboardCheck, Download, ExternalLink, FileCheck2, MonitorDown, PackageOpen, RefreshCw, ShieldCheck } from "lucide-react";
 import type { GitHubSnapshot } from "@/lib/github";
 import { SITE_LINKS } from "@/lib/site";
 import { SiteHeader } from "@/components/home/home-header";

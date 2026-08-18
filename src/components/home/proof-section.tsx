@@ -6,8 +6,6 @@ import { SectionIntro, SectionShell } from "@/components/home/home-shared";
 import { FEATURE_STORIES } from "@/lib/site";
 
 export function ProofSection() {
-  const releaseHomepage = CURRENT_RELEASE.homepage!;
-
   return (
     <SectionShell>
       <section id="features" className="local-control-story">

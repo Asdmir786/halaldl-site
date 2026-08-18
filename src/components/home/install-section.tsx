@@ -1,9 +1,13 @@
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { ArrowUpRight, CopyCheck, Crown, ExternalLink, FolderArchive } from "lucide-react";
-import { InstallCardsScroll } from "@/components/experience/install-cards-scroll";
 import { MotionField } from "@/components/ui/motion-field";
 import { SectionIntro, SectionShell, formatMegabytes } from "@/components/home/home-shared";
 import type { GitHubSnapshot } from "@/lib/github";
+
+const InstallCardsScroll = dynamic(() =>
+  import("@/components/experience/install-cards-scroll").then((module) => module.InstallCardsScroll),
+);
 
 export function InstallSection({ github }: { github: GitHubSnapshot }) {
   return (

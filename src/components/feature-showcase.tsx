@@ -11,10 +11,56 @@ type FeatureShowcaseProps = {
 };
 
 const ACCENT_CHIP: Record<FeatureStory["accent"], string> = {
-  mint: "bg-mint text-mint-strong",
-  coral: "bg-coral text-coral-strong",
-  sky: "bg-sky text-sky-strong",
+  mint: "bg-mint text-ink",
+  coral: "bg-coral text-ink",
+  sky: "bg-sky text-ink",
 };
+
+function DeferredFeatureScreenshot({
+  lightSrc,
+  darkSrc,
+  alt,
+}: Pick<FeatureStory["media"], "lightSrc" | "darkSrc" | "alt">) {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+
+    if (!("IntersectionObserver" in window)) {
+      const fallback = setTimeout(() => setIsReady(true), 0);
+      return () => clearTimeout(fallback);
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        setIsReady(true);
+        observer.disconnect();
+      },
+      { rootMargin: "900px 0px 900px 0px", threshold: 0 },
+    );
+
+    observer.observe(host);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={hostRef} className="absolute inset-0">
+      {isReady ? (
+        <ThemedScreenshot
+          lightSrc={lightSrc}
+          darkSrc={darkSrc}
+          alt={alt}
+          sizes="100vw"
+          renderMode="active"
+          imageClassName="border border-line-strong bg-paper-strong object-contain object-center"
+        />
+      ) : null}
+    </div>
+  );
+}
 
 /**
  * Scroll-pinned feature stage: the screenshot stays anchored beside the story
@@ -209,13 +255,10 @@ export function FeatureShowcase({ stories }: FeatureShowcaseProps) {
 
                   <div className="screenshot-frame mt-5 p-2 lg:hidden">
                     <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-paper-elevated">
-                      <ThemedScreenshot
+                      <DeferredFeatureScreenshot
                         lightSrc={story.media.lightSrc}
                         darkSrc={story.media.darkSrc}
                         alt={story.media.alt}
-                        sizes="100vw"
-                        renderMode="active"
-                        imageClassName="border border-line-strong bg-paper-strong object-contain object-center"
                       />
                     </div>
                   </div>

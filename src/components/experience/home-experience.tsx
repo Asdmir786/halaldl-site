@@ -1,8 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
-import { HomeScrollDirector } from "@/components/experience/home-scroll-director";
 import { MarketingExperience } from "@/components/site/marketing-experience";
+
+const HomeScrollDirector = dynamic(() =>
+  import("@/components/experience/home-scroll-director").then((module) => module.HomeScrollDirector),
+);
 
 type HomeExperienceProps = {
   header: ReactNode;

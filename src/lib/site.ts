@@ -99,9 +99,9 @@ export const FAQ_ITEMS = [
       "Yes. The website changelog gives a high-level summary, and each entry can link back to the matching GitHub Release for the full raw notes and assets.",
   },
   {
-    question: "What changed in HalalDL 0.5.1?",
+    question: "What changed in HalalDL 0.6.0?",
     answer:
-      "0.5.1 is the Trust And Feedback update: an Install Trust card, Copy Diagnostics, gentle Star/Feedback prompts after three completed downloads, faster on-demand tool checks with Performance timings, and the official Steel Blue + Mint brand.",
+      "0.6.0 adds preview and individual playlist selection, Download Doctor recovery guidance, Library and editable Follows, Local Clip Maker, stronger tool detection, and clearer queue and clipboard flows.",
   },
   {
     question: "Do preset filename templates need %(ext)s?",

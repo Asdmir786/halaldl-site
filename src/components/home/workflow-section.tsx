@@ -2,15 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  Captions,
   CheckCircle2,
-  ChevronRight,
-  Download,
   FolderOpen,
-  Link2,
   ListVideo,
   Music2,
-  Play,
   SlidersHorizontal,
 } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
@@ -144,7 +139,7 @@ export function WorkflowSection() {
       <div ref={sectionRef} className="grid gap-10 lg:grid-cols-[minmax(17rem,0.86fr)_minmax(0,1.14fr)] lg:items-start lg:gap-14 xl:grid-cols-[minmax(20rem,0.92fr)_minmax(0,1.08fr)] xl:gap-20">
         <div className="lg:sticky lg:top-24">
           <SectionIntro
-            id="features"
+            id="workflow"
             eyebrow="Workflow"
             title="From a link to a file."
             accent="Without the shell routine."
@@ -158,7 +153,7 @@ export function WorkflowSection() {
               aria-label="HalalDL download workflow"
               style={{ "--workflow-progress": `${((activeIndex + 1) / WORKFLOW_STEPS.length) * 100}%` } as React.CSSProperties}
             >
-              {WORKFLOW_STEPS.map((step, index) => {
+              {WORKFLOW_STEPS.map((step) => {
                 const isActive = step.id === activeId;
                 return (
                   <button

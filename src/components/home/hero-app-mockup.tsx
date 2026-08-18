@@ -229,7 +229,6 @@ export function HeroAppMockup({ theme }: { theme: "light" | "dark" }) {
   const [presetOpen, setPresetOpen] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState("Best Video");
   const [downloadProgress, setDownloadProgress] = useState(0);
-  const [doneProgress, setDoneProgress] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rafRef = useRef<number | null>(null);
 
@@ -260,7 +259,6 @@ export function HeroAppMockup({ theme }: { theme: "light" | "dark" }) {
       setTypedUrl(URL_TEXT);
       setSelectedPreset(SELECTED_PRESET);
       setDownloadProgress(100);
-      setDoneProgress(100);
       return;
     }
 
@@ -272,7 +270,6 @@ export function HeroAppMockup({ theme }: { theme: "light" | "dark" }) {
       setPresetOpen(false);
       setSelectedPreset("Best Video");
       setDownloadProgress(0);
-      setDoneProgress(0);
 
       // 1. Pause at idle
       schedule(() => {
@@ -308,8 +305,7 @@ export function HeroAppMockup({ theme }: { theme: "light" | "dark" }) {
                       setStage("done");
                       // 6. Show done state, then restart
                       schedule(() => {
-                        setDoneProgress(100);
-                        schedule(runLoop, 2800);
+                                          schedule(runLoop, 2800);
                       }, 300);
                       return;
                     }

@@ -37,7 +37,7 @@ export function useHeroLiveAppDemo() {
     timeoutIds.current.push(id);
   }, []);
 
-  const runAnimation = useCallback(() => {
+  const runAnimation = useCallback(function runAnimation() {
     const cycle = HERO_DEMO_CYCLES[cycleRef.current]!;
     setStage("init");
     setTypedUrl("");
@@ -135,7 +135,7 @@ export function useHeroLiveAppDemo() {
       return;
     }
 
-    const initialTimer = window.setTimeout(runAnimation, 2200);
+    const initialTimer = window.setTimeout(runAnimation, 3200);
     return () => {
       window.clearTimeout(initialTimer);
       clearTimers();

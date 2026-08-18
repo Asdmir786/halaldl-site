@@ -43,29 +43,28 @@ export function LocalControlRoom({ github }: { github: GitHubSnapshot }) {
   const current = useRef({ x: 0, y: 0 });
   const scrollRef = useRef(0);
   const frameRef = useRef<number | null>(null);
+  const isVisibleRef = useRef(false);
 
   useEffect(() => {
-    const root = refs.current.root;
+    const planeRefs = refs.current;
+    const root = planeRefs.root;
     if (!root || reducedMotion) return;
 
-    const onPointerMove = (event: PointerEvent) => {
-      const bounds = root.getBoundingClientRect();
-      if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) {
-        pointer.current = { x: 0, y: 0 };
-        return;
-      }
-      pointer.current = {
-        x: ((event.clientX - bounds.left) / Math.max(bounds.width, 1) - 0.5) * 2,
-        y: ((event.clientY - bounds.top) / Math.max(bounds.height, 1) - 0.5) * 2,
-      };
-    };
+    let previousProgress = scrollRef.current;
 
-    const onScroll = () => {
-      const bounds = root.getBoundingClientRect();
-      scrollRef.current = Math.min(Math.max(-bounds.top / Math.max(bounds.height * 0.82, 1), 0), 1);
+    const stopFrame = () => {
+      if (frameRef.current !== null) {
+        cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
     };
 
     const tick = () => {
+      if (!isVisibleRef.current || document.visibilityState !== "visible") {
+        frameRef.current = null;
+        return;
+      }
+
       current.current.x += (pointer.current.x - current.current.x) * 0.045;
       current.current.y += (pointer.current.y - current.current.y) * 0.045;
       const x = current.current.x;
@@ -98,19 +97,74 @@ export function LocalControlRoom({ github }: { github: GitHubSnapshot }) {
         0.86 + progress * 0.14,
       );
 
+      const pointerSettled = Math.abs(pointer.current.x - x) < 0.002 && Math.abs(pointer.current.y - y) < 0.002;
+      const scrollSettled = Math.abs(progress - previousProgress) < 0.0005;
+      previousProgress = progress;
+      if (pointerSettled && scrollSettled) {
+        frameRef.current = null;
+        return;
+      }
+
       frameRef.current = requestAnimationFrame(tick);
     };
 
+    const startFrame = () => {
+      if (isVisibleRef.current && document.visibilityState === "visible" && frameRef.current === null) {
+        frameRef.current = requestAnimationFrame(tick);
+      }
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      const bounds = root.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) {
+        pointer.current = { x: 0, y: 0 };
+        startFrame();
+        return;
+      }
+      pointer.current = {
+        x: ((event.clientX - bounds.left) / Math.max(bounds.width, 1) - 0.5) * 2,
+        y: ((event.clientY - bounds.top) / Math.max(bounds.height, 1) - 0.5) * 2,
+      };
+      startFrame();
+    };
+
+    const onScroll = () => {
+      const bounds = root.getBoundingClientRect();
+      scrollRef.current = Math.min(Math.max(-bounds.top / Math.max(bounds.height * 0.82, 1), 0), 1);
+      startFrame();
+    };
+
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = Boolean(entry?.isIntersecting);
+        if (isVisibleRef.current) {
+          onScroll();
+          startFrame();
+        } else {
+          stopFrame();
+        }
+      },
+      { rootMargin: "180px 0px 180px 0px", threshold: 0 },
+    );
+
+    const onDocumentVisibility = () => {
+      if (document.visibilityState === "visible") startFrame();
+      else stopFrame();
+    };
+
+    visibilityObserver.observe(root);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("visibilitychange", onDocumentVisibility);
     onScroll();
-    frameRef.current = requestAnimationFrame(tick);
 
     return () => {
+      visibilityObserver.disconnect();
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("scroll", onScroll);
-      if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
-      Object.values(refs.current).forEach((node) => {
+      document.removeEventListener("visibilitychange", onDocumentVisibility);
+      stopFrame();
+      Object.values(planeRefs).forEach((node) => {
         if (node) {
           node.style.transform = "";
           node.style.opacity = "";

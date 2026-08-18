@@ -90,8 +90,8 @@ const currentRelease: ReleaseDefinition = {
   summary:
     "Preview links, select playlist entries, recover with Download Doctor, organize local media, follow chosen sources, and make clips from completed files.",
   changelogMedia: {
-    lightSrc: "/releases/0.6.0/hero-light.png",
-    darkSrc: "/releases/0.6.0/hero-dark.png",
+    lightSrc: "/releases/0.6.0/hero-light.webp",
+    darkSrc: "/releases/0.6.0/hero-dark.webp",
     alt: "HalalDL 0.6.0 Download, Organize and Create release hero",
   },
   homepage: {
@@ -129,7 +129,7 @@ const currentRelease: ReleaseDefinition = {
         ],
         accent: "mint",
         stat: "Control before the queue",
-        media: { kind: "image", lightSrc: "/releases/0.6.0/playlist-light.png", darkSrc: "/releases/0.6.0/playlist-dark.png", alt: "HalalDL v0.6.0 playlist selection interface", width: 1600, height: 900 },
+        media: { kind: "image", lightSrc: "/releases/0.6.0/playlist-light.webp", darkSrc: "/releases/0.6.0/playlist-dark.webp", alt: "HalalDL v0.6.0 playlist selection interface", width: 1600, height: 900 },
       },
       {
         id: "download-doctor",
@@ -140,7 +140,7 @@ const currentRelease: ReleaseDefinition = {
         bullets: ["Read the underlying failure in clearer language", "Try a safe next step such as cookies or an alternate format", "Use aria2 fallback and clearer tool detection when setup needs help"],
         accent: "coral",
         stat: "Recover without guessing",
-        media: { kind: "image", lightSrc: "/releases/0.6.0/doctor-light.png", darkSrc: "/releases/0.6.0/doctor-dark.png", alt: "HalalDL v0.6.0 Download Doctor recovery workflow", width: 1600, height: 900 },
+        media: { kind: "image", lightSrc: "/releases/0.6.0/doctor-light.webp", darkSrc: "/releases/0.6.0/doctor-dark.webp", alt: "HalalDL v0.6.0 Download Doctor recovery workflow", width: 1600, height: 900 },
       },
       {
         id: "library-follows",
@@ -151,7 +151,7 @@ const currentRelease: ReleaseDefinition = {
         bullets: ["Organize completed media into local Library folders", "Edit the YouTube sources you want to follow", "Use the recommended six-hour interval while the app is open or in the tray"],
         accent: "sky",
         stat: "Local organization, your schedule",
-        media: { kind: "image", lightSrc: "/releases/0.6.0/library-light.png", darkSrc: "/releases/0.6.0/library-dark.png", alt: "HalalDL v0.6.0 Library and YouTube follows editor", width: 1600, height: 900 },
+        media: { kind: "image", lightSrc: "/releases/0.6.0/library-light.webp", darkSrc: "/releases/0.6.0/library-dark.webp", alt: "HalalDL v0.6.0 Library and YouTube follows editor", width: 1600, height: 900 },
       },
       {
         id: "clip-maker",
@@ -162,7 +162,7 @@ const currentRelease: ReleaseDefinition = {
         bullets: ["Start from media already completed on your machine", "Use chapters to choose a useful range", "Create a new local clip without changing the original"],
         accent: "mint",
         stat: "Create from what you keep",
-        media: { kind: "image", lightSrc: "/releases/0.6.0/clips-light.png", darkSrc: "/releases/0.6.0/clips-dark.png", alt: "HalalDL v0.6.0 Local Clip Maker", width: 1600, height: 900 },
+        media: { kind: "image", lightSrc: "/releases/0.6.0/clips-light.webp", darkSrc: "/releases/0.6.0/clips-dark.webp", alt: "HalalDL v0.6.0 Local Clip Maker", width: 1600, height: 900 },
       },
       {
         id: "reliability",
@@ -173,7 +173,7 @@ const currentRelease: ReleaseDefinition = {
         bullets: ["Improved quick-panel and clipboard behavior", "A stronger Instagram download engine", "Package-reliability and dependency updates throughout the app"],
         accent: "coral",
         stat: "A calmer everyday workflow",
-        media: { kind: "image", lightSrc: "/releases/0.6.0/reliability-light.png", darkSrc: "/releases/0.6.0/reliability-dark.png", alt: "HalalDL v0.6.0 reliability improvements", width: 1600, height: 900 },
+        media: { kind: "image", lightSrc: "/releases/0.6.0/reliability-light.webp", darkSrc: "/releases/0.6.0/reliability-dark.webp", alt: "HalalDL v0.6.0 reliability improvements", width: 1600, height: 900 },
       },
     ],
   },
@@ -204,7 +204,7 @@ const legacyReleases: ReleaseDefinition[] = [
     title: "The Trust And Feedback Update",
     releaseUrl: `${REPOSITORY}/releases/tag/v0.5.1`,
     summary: "Install Trust, Copy Diagnostics, support prompts, faster tool checks, and the Steel Blue and Mint brand.",
-    changelogMedia: { lightSrc: "/releases/0.5.1/promo/hero-light.png", darkSrc: "/releases/0.5.1/promo/hero-dark.png", alt: "HalalDL 0.5.1 Trust And Feedback release hero" },
+    changelogMedia: { lightSrc: "/releases/0.5.1/promo/hero-light.webp", darkSrc: "/releases/0.5.1/promo/hero-dark.webp", alt: "HalalDL 0.5.1 Trust And Feedback release hero" },
     fallback: v060Fallback,
   },
   {
@@ -214,7 +214,7 @@ const legacyReleases: ReleaseDefinition[] = [
     title: "Precision polish",
     releaseUrl: `${REPOSITORY}/releases/tag/v0.4.1`,
     summary: "Preset filename templates, compact quick panel, settings persistence, and finished-card polish.",
-    changelogMedia: { lightSrc: "/releases/0.4.1/promo/hero-light.png", darkSrc: "/releases/0.4.1/promo/hero-dark.png", alt: "HalalDL 0.4.1 precision polish release hero" },
+    changelogMedia: { lightSrc: "/releases/0.4.1/promo/hero-light.webp", darkSrc: "/releases/0.4.1/promo/hero-dark.webp", alt: "HalalDL 0.4.1 precision polish release hero" },
     fallback: v060Fallback,
   },
   {
@@ -224,7 +224,7 @@ const legacyReleases: ReleaseDefinition[] = [
     title: "Update flow",
     releaseUrl: `${REPOSITORY}/releases/tag/v0.4.0`,
     summary: "A clearer verified app-update experience.",
-    changelogMedia: { lightSrc: "/releases/0.4.0/promo/update-flow.png", darkSrc: "/releases/0.4.0/promo/update-flow-dark.png", alt: "HalalDL 0.4.0 update flow" },
+    changelogMedia: { lightSrc: "/releases/0.4.0/promo/update-flow.webp", darkSrc: "/releases/0.4.0/promo/update-flow-dark.webp", alt: "HalalDL 0.4.0 update flow" },
     fallback: v060Fallback,
   },
   {
@@ -234,7 +234,7 @@ const legacyReleases: ReleaseDefinition[] = [
     title: "Downloads view",
     releaseUrl: `${REPOSITORY}/releases/tag/v0.3.9`,
     summary: "A polished HalalDL downloads screen.",
-    changelogMedia: { lightSrc: "/screenshots/light/halaldl-downloads.png", darkSrc: "/screenshots/halaldl-downloads.png", alt: "HalalDL downloads screen" },
+    changelogMedia: { lightSrc: "/screenshots/light/halaldl-downloads.webp", darkSrc: "/screenshots/halaldl-downloads.webp", alt: "HalalDL downloads screen" },
     fallback: v060Fallback,
   },
 ];

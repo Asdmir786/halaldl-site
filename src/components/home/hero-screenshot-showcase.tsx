@@ -16,8 +16,8 @@ const SCREENS = [
       "Drop any video, playlist, or direct media link into the URL bar. Choose a preset and hit Start — no flags, no terminal.",
     chips: ["URL autofill", "Queue management", "Live progress"],
     accent: "mint" as const,
-    light: "/screenshots/github/light/halaldl-downloads.png",
-    dark: "/screenshots/github/dark/halaldl-downloads-dark.png",
+    light: "/screenshots/light/halaldl-downloads.webp",
+    dark: "/screenshots/github/dark/halaldl-downloads-dark.webp",
   },
   {
     id: "presets",
@@ -27,8 +27,8 @@ const SCREENS = [
       "Built-in presets for Best Video, Audio MP3, WhatsApp Ready, and more. Create your own with any yt-dlp format string.",
     chips: ["Built-in profiles", "Custom presets", "yt-dlp format strings"],
     accent: "sky" as const,
-    light: "/screenshots/github/light/halaldl-presets.png",
-    dark: "/screenshots/github/dark/halaldl-presets-dark.png",
+    light: "/screenshots/github/light/halaldl-presets.webp",
+    dark: "/screenshots/halaldl-presets.webp",
   },
   {
     id: "history",
@@ -38,8 +38,8 @@ const SCREENS = [
       "Browse your full download history, re-queue anything, and manage your local media library — all without leaving the app.",
     chips: ["Media library", "Re-queue items", "File management"],
     accent: "coral" as const,
-    light: "/screenshots/github/light/halaldl-history.png",
-    dark: "/screenshots/github/dark/halaldl-history-dark.png",
+    light: "/screenshots/light/halaldl-history.webp",
+    dark: "/screenshots/github/dark/halaldl-history-dark.webp",
   },
   {
     id: "tools",
@@ -49,8 +49,8 @@ const SCREENS = [
       "The Full build handles yt-dlp, ffmpeg, aria2, and related tools. Check versions, update on demand, or bring your own.",
     chips: ["yt-dlp managed", "ffmpeg bundled", "On-demand updates"],
     accent: "sky" as const,
-    light: "/screenshots/github/light/halaldl-tools.png",
-    dark: "/screenshots/github/dark/halaldl-tools-dark.png",
+    light: "/screenshots/light/halaldl-tools.webp",
+    dark: "/screenshots/github/dark/halaldl-tools-dark.webp",
   },
   {
     id: "logs",
@@ -60,8 +60,8 @@ const SCREENS = [
       "When a site changes or an extractor breaks, the raw yt-dlp log is right there. No debug mode, no digging — just the output.",
     chips: ["Raw yt-dlp output", "No debug mode needed", "Copy diagnostics"],
     accent: "mint" as const,
-    light: "/screenshots/github/light/halaldl-logs.png",
-    dark: "/screenshots/github/dark/halaldl-logs-dark.png",
+    light: "/screenshots/light/halaldl-logs.webp",
+    dark: "/screenshots/github/dark/halaldl-logs-dark.webp",
   },
 ];
 

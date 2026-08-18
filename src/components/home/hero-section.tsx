@@ -33,7 +33,7 @@ function HeroCopy({ github }: { github: GitHubSnapshot }) {
       const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       if (eyebrow) timeline.fromTo(eyebrow, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.42 }, 0);
-      if (headline) timeline.fromTo(headline, { y: 18, filter: "blur(3px)" }, { y: 0, filter: "blur(0px)", duration: 0.62 }, 0.08);
+      if (headline) timeline.fromTo(headline, { opacity: 0.96 }, { opacity: 1, duration: 0.28 }, 0.05);
       if (supporting) timeline.fromTo(supporting, { opacity: 0, y: 17 }, { opacity: 1, y: 0, duration: 0.5 }, 0.28);
       if (actions.length) timeline.fromTo(actions, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.07 }, 0.43);
       if (proof) timeline.fromTo(proof, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, 0.58);

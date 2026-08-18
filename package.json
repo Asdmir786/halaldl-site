@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "optimize:images": "python3 scripts/convert-content-images.py"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

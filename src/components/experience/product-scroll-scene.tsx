@@ -12,8 +12,8 @@ import {
 } from "@/components/experience/use-prefers-reduced-motion";
 
 const TEXTURES = {
-  light: "/releases/0.5.1/promo/hero-light.png",
-  dark: "/releases/0.5.1/promo/hero-dark.png",
+  light: "/releases/0.6.0/hero-light.webp",
+  dark: "/releases/0.6.0/hero-dark.webp",
 } as const;
 
 const _camPos = new THREE.Vector3();

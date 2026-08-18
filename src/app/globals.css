@@ -2964,8 +2964,8 @@ html.lenis {
   pointer-events: none;
   opacity: 0.2;
   background: linear-gradient(145deg, color-mix(in srgb, var(--mint-strong) 84%, white), var(--mint-strong));
-  -webkit-mask: url('/brand/icon-light.png') center / contain no-repeat;
-  mask: url('/brand/icon-light.png') center / contain no-repeat;
+  -webkit-mask: url('/brand/icon-light.webp') center / contain no-repeat;
+  mask: url('/brand/icon-light.webp') center / contain no-repeat;
   filter: drop-shadow(0 0 30px color-mix(in srgb, var(--mint-strong) 38%, transparent));
   transform: translate(-50%, -50%);
 }
@@ -2976,59 +2976,111 @@ html.lenis {
   .install-brand-mark { width: 8.5rem; opacity: 0.13; }
 }
 
-/* Trust refinement: short verification actions read as a single calm checklist. */
+/* Trust refinement: make the verification path read as a deliberate sequence, not three cramped pills. */
+.trust-card-kicker {
+  color: var(--ink-muted);
+  font-size: 0.66rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.trust-card-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.9rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--sky-strong) 20%, transparent);
+  border-radius: 999px;
+  color: var(--sky-strong);
+  background: color-mix(in srgb, var(--sky) 58%, transparent);
+  font-size: 0.7rem;
+  font-weight: 750;
+}
+
 .trust-path-steps {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.55rem;
-  margin-bottom: 0;
+  gap: 0.65rem;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.trust-path-steps li {
+.trust-path-step {
+  position: relative;
   display: flex;
-  align-items: center;
-  gap: 0.45rem;
+  align-items: flex-start;
+  gap: 0.8rem;
   min-width: 0;
-  padding: 0.68rem 0.65rem;
+  padding: 0.9rem 1rem;
   border: 1px solid var(--line);
-  border-radius: 0.85rem;
+  border-radius: 1rem;
   background: color-mix(in srgb, var(--paper) 72%, transparent);
 }
 
-.trust-path-steps li span {
+.trust-path-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 2.65rem;
+  bottom: -0.75rem;
+  left: 1.56rem;
+  width: 1px;
+  background: color-mix(in srgb, var(--sky-strong) 24%, transparent);
+}
+
+.trust-path-step > span {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 1.28rem;
-  height: 1.28rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-top: 0.05rem;
   border-radius: 999px;
   color: var(--sky-strong);
   background: var(--sky);
-  font-size: 0.62rem;
-  font-weight: 750;
+  font-size: 0.65rem;
+  font-weight: 800;
 }
 
-.trust-path-steps li strong {
+.trust-path-step-copy {
   min-width: 0;
-  overflow: hidden;
-  color: var(--ink-soft);
-  font-size: 0.68rem;
-  font-weight: 680;
-  line-height: 1.15;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.trust-experience .surface-card-static > .mt-6.flex.flex-wrap.gap-3 {
+.trust-path-step-copy strong {
+  display: block;
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.trust-path-step-copy p {
+  margin-top: 0.25rem;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.trust-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 1rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--line);
+}
+
+.trust-source-note {
+  background: color-mix(in srgb, var(--mint) 46%, transparent);
 }
 
 @media (max-width: 640px) {
-  .trust-path-steps { grid-template-columns: 1fr; }
-  .trust-path-steps li { padding: 0.6rem 0.7rem; }
+  .trust-card-footer { align-items: flex-start; flex-direction: column; }
+  .trust-card-footer a { width: 100%; justify-content: center; }
 }
 
 /* Footer redesign: one clear brand column, three compact link groups, and a visible motion entry. */
@@ -3403,7 +3455,7 @@ html.lenis {
   border-radius: 0.42rem;
   background: var(--paper-strong);
   padding: 0.25rem 0.3rem;
-  color: var(--ink-muted);
+  color: var(--ink-soft);
   font-size: 0.59rem;
   font-weight: 700;
 }
@@ -3767,6 +3819,8 @@ html.lenis {
   .trust-card,
   .trust-path-step,
   .trust-repo-signal,
+  .trust-card-footer,
+  .trust-source-note,
   .faq-grid > div,
   .faq-item,
   .faq-answer-grid,

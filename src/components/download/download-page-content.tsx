@@ -21,7 +21,6 @@ import { MotionField } from "@/components/ui/motion-field";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { formatMegabytes, shortenDigest } from "@/components/home/home-shared";
 
-const releaseHomepage = CURRENT_RELEASE.homepage!;
 
 type DownloadPageContentProps = {
   github: GitHubSnapshot;

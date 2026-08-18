@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Inter, Space_Grotesk } from "next/font/google";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getSiteUrl, SITE_LINKS } from "@/lib/site";
@@ -145,7 +144,6 @@ export default function RootLayout({
           Skip to content
         </a>
         <ThemeProvider>{children}</ThemeProvider>
-        <SpeedInsights />
         <div className="sr-only">
           Canonical downloads route: {SITE_LINKS.latestReleaseUrl}
         </div>

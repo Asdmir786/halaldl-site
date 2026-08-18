@@ -15,7 +15,6 @@ type GuidesHubContentProps = {
   currentReleaseGuide?: GuideMeta;
 };
 
-const releaseHomepage = CURRENT_RELEASE.homepage!;
 
 export function GuidesHubContent({ tier1, tier2, tier3, currentReleaseGuide }: GuidesHubContentProps) {
   const featuredMedia = CURRENT_RELEASE.changelogMedia!;

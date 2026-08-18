@@ -20,7 +20,7 @@ export async function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
   const initialThemePreference = resolveThemePreference(
     cookieStore.get(THEME_COOKIE)?.value,
   );
-  const navItems = ["Features", "Install", "Trust", "FAQ"] as const;
+  const navItems = ["Features", "Workflow", "Install", "Trust", "FAQ"] as const;
   const homeSectionHref = (item: (typeof navItems)[number]) =>
     currentPage === "home" ? `#${item.toLowerCase()}` : `/#${item.toLowerCase()}`;
   const navLinkClass =
