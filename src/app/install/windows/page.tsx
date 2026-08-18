@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { WindowsInstallContent } from "@/components/install/windows-install-content";
 import { getGitHubSnapshot } from "@/lib/github";
-import { getSocialImage } from "@/lib/site";
+import { getSocialImage, SITE_LINKS } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 
 const INSTALL_META_TITLE = "How to Install HalalDL on Windows 10/11 and Verify SHA256";
@@ -37,7 +37,8 @@ export default async function InstallWindowsPage() {
     "@type": "FAQPage",
     mainEntity: [
       { "@type": "Question", name: "Which build should most people install?", acceptedAnswer: { "@type": "Answer", text: "Most people should install the Full build because it provides the smoother first-run path." } },
-      { "@type": "Question", name: "Can I install HalalDL with WinGet?", acceptedAnswer: { "@type": "Answer", text: "Yes. WinGet is convenient, but GitHub Releases remains the direct source for the newest release assets and SHA256SUMS.txt." } },
+      { "@type": "Question", name: "Can I install HalalDL with WinGet?", acceptedAnswer: { "@type": "Answer", text: "Yes. WinGet provides Full, Lite, and Portable package IDs. The catalog can lag, so GitHub Releases remains the direct source for the newest release assets and SHA256SUMS.txt." } },
+      { "@type": "Question", name: "Where can I find HalalDL on AlternativeTo?", acceptedAnswer: { "@type": "Answer", text: `The HalalDL listing is available at ${SITE_LINKS.alternativeToUrl} for discovery and comparisons.` } },
       { "@type": "Question", name: "What should I do if SmartScreen warns?", acceptedAnswer: { "@type": "Answer", text: "Verify that the installer came from GitHub Releases and compare it against SHA256SUMS.txt before proceeding." } },
     ],
   };

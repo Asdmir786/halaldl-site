@@ -38,7 +38,7 @@ The landing page is intentionally product-led:
 - Hero with immediate product framing and primary download CTA
 - Trust rail with version, license, Windows scope, checksum, and repo signals
 - Feature scrollytelling built around real screenshots
-- Install section covering Full, Lite, and WinGet
+- Install section covering Full, Lite, Portable, WinGet, and AlternativeTo discovery
 - Trust and safety section explaining canonical source and verification flow
 - FAQ and final CTA
 

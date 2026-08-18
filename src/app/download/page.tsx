@@ -53,7 +53,7 @@ export default async function DownloadPage() {
     releaseNotes: github.releaseNotes,
     featureList: releaseHomepage.schemaFeatures,
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    sameAs: [SITE_LINKS.repoUrl, github.latestReleaseUrl, SITE_LINKS.supportUrl],
+    sameAs: [SITE_LINKS.repoUrl, github.latestReleaseUrl, SITE_LINKS.supportUrl, SITE_LINKS.alternativeToUrl],
   };
 
   const faqSchema = {
@@ -68,7 +68,12 @@ export default async function DownloadPage() {
       {
         "@type": "Question",
         name: "What is the canonical download source?",
-        acceptedAnswer: { "@type": "Answer", text: "GitHub Releases is the direct source for the latest build. WinGet is convenient, but it can lag behind the newest release assets." },
+        acceptedAnswer: { "@type": "Answer", text: "GitHub Releases is the direct source for the latest build. WinGet provides Full, Lite, and Portable package IDs, but its catalog can lag behind the newest release assets." },
+      },
+      {
+        "@type": "Question",
+        name: "Where can I compare HalalDL with similar tools?",
+        acceptedAnswer: { "@type": "Answer", text: "Use the HalalDL listing on AlternativeTo for discovery and comparisons. GitHub Releases remains the canonical download source." },
       },
       {
         "@type": "Question",

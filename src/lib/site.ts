@@ -5,7 +5,12 @@ export const SITE_LINKS = {
   latestReleaseUrl: "https://github.com/Asdmir786/HalalDL/releases/latest",
   issuesUrl: "https://github.com/Asdmir786/HalalDL/issues/new/choose",
   supportUrl: "https://github.com/Asdmir786/HalalDL/blob/main/SUPPORT.md",
-  wingetCommand: "winget install --id Asdmir786.HalalDL",
+  alternativeToUrl: "https://alternativeto.net/software/halaldl/about/",
+  wingetCommands: {
+    full: "winget install --id Asdmir786.HalalDL",
+    lite: "winget install --id Asdmir786.HalalDL.Lite",
+    portable: "winget install --id Asdmir786.HalalDL.Portable",
+  },
 };
 
 export const PRODUCTION_SITE_URL = "https://halaldl.vercel.app";

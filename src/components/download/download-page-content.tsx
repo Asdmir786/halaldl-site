@@ -18,6 +18,7 @@ import { SiteHeader } from "@/components/home/home-header";
 import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
 import { MotionField } from "@/components/ui/motion-field";
+import { CopyCommand } from "@/components/ui/copy-command";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { formatMegabytes, shortenDigest } from "@/components/home/home-shared";
 
@@ -167,6 +168,37 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
               <p className="mt-3 text-sm leading-relaxed text-ink-soft">A self-contained folder when you prefer to carry the app or replace the release folder manually when you update.</p>
               <p className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">{formatMegabytes(github.portableZipSize)}</p>
               <a href={github.portableZipUrl} target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-ink-soft">Download Portable <ArrowUpRight className="h-4 w-4" /></a>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        <section className="pt-16 sm:pt-20">
+          <ScrollReveal>
+            <div className="max-w-2xl">
+              <div className="eyebrow"><ExternalLink className="h-3.5 w-3.5" /> Other ways to find HalalDL</div>
+              <h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.03em] text-ink sm:text-4xl">WinGet for installs. AlternativeTo for discovery.</h2>
+              <p className="mt-4 text-base leading-relaxed text-ink-soft">GitHub Releases remains the canonical source. WinGet offers package-manager convenience for each build, while AlternativeTo helps people compare HalalDL with other tools.</p>
+            </div>
+          </ScrollReveal>
+
+          <div className="mt-8 grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+            <ScrollReveal className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">WinGet package IDs</p>
+              <h3 className="mt-3 font-display text-2xl font-semibold text-ink">Choose the build you want to install.</h3>
+              <p className="mt-3 text-sm leading-relaxed text-ink-soft">The catalog can lag behind GitHub Releases, especially when a new Portable manifest is still propagating.</p>
+              <div className="mt-5 grid gap-3">
+                <div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Full</p><CopyCommand command={SITE_LINKS.wingetCommands.full} /></div>
+                <div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Lite</p><CopyCommand command={SITE_LINKS.wingetCommands.lite} /></div>
+                <div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Portable</p><CopyCommand command={SITE_LINKS.wingetCommands.portable} /></div>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.08} className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Discovery and comparison</p>
+              <h3 className="mt-3 font-display text-2xl font-semibold text-ink">Find HalalDL on AlternativeTo.</h3>
+              <p className="mt-3 text-sm leading-relaxed text-ink-soft">See the public HalalDL profile, compare similar software, and help people discover the project outside package catalogs.</p>
+              <a href={SITE_LINKS.alternativeToUrl} target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper">Open AlternativeTo listing <ExternalLink className="h-4 w-4" /></a>
+              <p className="mt-6 rounded-xl border border-amber/40 bg-amber/15 p-3 text-xs leading-relaxed text-ink-soft"><span className="font-semibold text-ink">Chocolatey:</span> no verified public package or install command yet.</p>
             </ScrollReveal>
           </div>
         </section>
