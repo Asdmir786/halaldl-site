@@ -3,7 +3,6 @@
 import { useSyncExternalStore } from "react";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
-import { requestThemePreference } from "@/components/theme-provider";
 import {
   DEFAULT_THEME_PREFERENCE,
   getThemePreferenceSnapshotFromDocument,
@@ -46,6 +45,8 @@ type ThemeToggleProps = {
 export function ThemeToggle({
   initialPreference = DEFAULT_THEME_PREFERENCE,
 }: ThemeToggleProps) {
+  const loadThemeTransition = () => import("@/lib/theme-transition");
+
   const preference = useSyncExternalStore(
     subscribe,
     getThemePreferenceSnapshotFromDocument,
@@ -71,8 +72,12 @@ export function ThemeToggle({
             aria-checked={isActive}
             aria-label={`${option.label} theme`}
             title={option.label}
-            onClick={(event) => {
-              requestThemePreference(option.value, event.currentTarget);
+            onPointerEnter={loadThemeTransition}
+            onFocus={loadThemeTransition}
+            onClick={async (event) => {
+              const origin = event.currentTarget;
+              const { requestThemePreference } = await loadThemeTransition();
+              requestThemePreference(option.value, origin);
             }}
             className={`relative flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
               isActive ? "text-ink" : "text-ink-muted hover:text-ink-soft"

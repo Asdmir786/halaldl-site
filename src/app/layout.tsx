@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Inter, Space_Grotesk } from "next/font/google";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getSiteUrl, SITE_LINKS } from "@/lib/site";
@@ -37,16 +36,21 @@ export const metadata: Metadata = {
     template: "%s | HalalDL",
   },
   description: SITE_DESCRIPTION,
-  keywords: [
-    "HalalDL",
-    "yt-dlp GUI for Windows",
-    "best yt-dlp GUI Windows",
-    "Windows yt-dlp GUI",
-    "free yt-dlp GUI",
-    "local-first media downloader",
-    "yt-dlp Windows app",
-  ],
   applicationName: "HalalDL",
+  creator: "HalalDL",
+  publisher: "HalalDL",
+  referrer: "origin-when-cross-origin",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   alternates: {
     canonical: "/",
   },
@@ -56,6 +60,7 @@ export const metadata: Metadata = {
     title: HOMEPAGE_OG_TITLE,
     description: HOMEPAGE_OG_DESCRIPTION,
     siteName: "HalalDL",
+    locale: "en_US",
     images: [
       {
         url: "/social/halaldl-social-preview.png",
@@ -69,7 +74,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: HOMEPAGE_TWITTER_TITLE,
     description: HOMEPAGE_TWITTER_DESCRIPTION,
-    images: ["/social/halaldl-social-preview.png"],
+    images: [
+      {
+        url: "/social/halaldl-social-preview.png",
+        alt: "HalalDL local-first yt-dlp GUI for Windows",
+      },
+    ],
   },
   icons: {
     icon: [
@@ -134,7 +144,6 @@ export default function RootLayout({
           Skip to content
         </a>
         <ThemeProvider>{children}</ThemeProvider>
-        <SpeedInsights />
         <div className="sr-only">
           Canonical downloads route: {SITE_LINKS.latestReleaseUrl}
         </div>

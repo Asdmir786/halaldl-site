@@ -9,6 +9,7 @@ import { ffmpegYtDlpWindowsArticle } from "@/lib/guides/content/ffmpeg-yt-dlp-wi
 import { wingetVsGithubReleasesArticle } from "@/lib/guides/content/winget-vs-github-releases";
 import { halaldl041Article } from "@/lib/guides/content/halaldl-0-4-1";
 import { halaldl051Article } from "@/lib/guides/content/halaldl-0-5-1";
+import { halaldl060Article } from "@/lib/guides/content/halaldl-0-6-0";
 import { portableHalaldlArticle } from "@/lib/guides/content/portable-halaldl";
 import { quickPanelWorkflowArticle } from "@/lib/guides/content/quick-panel-workflow";
 import { localFirstWindowsDownloaderArticle } from "@/lib/guides/content/local-first-windows-downloader";
@@ -175,6 +176,21 @@ export const GUIDES: GuideMeta[] = [
     eyebrow: "Release notes",
   },
   {
+    slug: "halaldl-0-6-0",
+    title: "What changed in HalalDL 0.6.0 — Download, Organize & Create",
+    description:
+      "A practical guide to HalalDL 0.6.0: playlist selection, Download Doctor, Library & Follows, Local Clip Maker, reliability changes, and update notes.",
+    primaryKeyword: "HalalDL 0.6.0",
+    tier: 1,
+    publishedAt: "2026-08-12T19:33:57Z",
+    updatedAt: "2026-08-14T00:00:00Z",
+    canonicalPath: "/guides/halaldl-0-6-0",
+    hostedInGuides: true,
+    relatedSlugs: ["playlist-gui-workflow", "troubleshooting-windows", "halaldl-0-5-1"],
+    cta: { label: "Download HalalDL v0.6.0", href: "/download", eventCta: "go_to_download" },
+    eyebrow: "Release notes",
+  },
+  {
     slug: "halaldl-0-4-1",
     title: "What changed in HalalDL 0.4.1 (and why)",
     description:
@@ -334,6 +350,7 @@ const ARTICLES: Record<string, GuideArticle> = {
   "ffmpeg-yt-dlp-windows": ffmpegYtDlpWindowsArticle,
   "winget-vs-github-releases": wingetVsGithubReleasesArticle,
   "halaldl-0-5-1": halaldl051Article,
+  "halaldl-0-6-0": halaldl060Article,
   "halaldl-0-4-1": halaldl041Article,
   "portable-halaldl": portableHalaldlArticle,
   "quick-panel-workflow": quickPanelWorkflowArticle,

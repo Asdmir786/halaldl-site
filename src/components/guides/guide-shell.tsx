@@ -30,8 +30,8 @@ export function GuideShell({
   showRouteStrip = true,
 }: GuideShellProps) {
   return (
-    <main id="main-content" className="overflow-x-hidden">
-      <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
+    <main id="main-content" className="secondary-page overflow-x-hidden">
+      <div className="mx-auto max-w-6xl px-5 pb-16 pt-8 sm:px-8 sm:pb-20">
         <SiteHeader currentPage="guides" />
         <MarketingShell>
           <GuideReadingProgress targetId="guide-article-body" />
@@ -60,17 +60,23 @@ export function GuideShell({
 
             <div className="mt-8 grid gap-10 xl:grid-cols-[minmax(0,1fr)_16rem] xl:items-start">
               <article id="guide-article-body" data-scroll-beat="">
-                {eyebrow ? <div className="eyebrow">{eyebrow}</div> : null}
-                <h1 className="mt-5 font-display text-4xl font-semibold tracking-[-0.03em] text-ink sm:text-5xl">
-                  {title}
-                </h1>
-                <p className="mt-5 max-w-3xl text-base leading-relaxed text-ink-soft sm:text-lg">
-                  {description}
-                </p>
+                <header className="secondary-hero guide-article-hero relative overflow-hidden rounded-[1.85rem] border border-line bg-paper/70 p-6 sm:p-8">
+                  <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-sky/70 blur-3xl" aria-hidden="true" />
+                  <div className="relative">
+                    {eyebrow ? <div className="eyebrow">{eyebrow}</div> : null}
+                    <h1 className="mt-5 max-w-4xl font-display text-4xl font-semibold tracking-[-0.04em] text-ink sm:text-5xl">
+                      {title}
+                    </h1>
+                    <p className="mt-5 max-w-3xl text-base leading-relaxed text-ink-soft sm:text-lg">
+                      {description}
+                    </p>
+                    <div className="mt-6 flex items-center gap-2 text-sm font-medium text-mint-strong"><span className="h-1.5 w-1.5 rounded-full bg-mint-strong" /> Practical local-first Windows guidance</div>
+                  </div>
+                </header>
 
-                <div className="mt-10">{children}</div>
+                <div className="mt-8 rounded-[1.85rem] border border-line bg-paper/45 p-6 sm:p-8">{children}</div>
 
-                <div className="mt-12 rounded-[1.75rem] border border-line bg-paper/70 p-6 sm:p-7">
+                <div className="mt-10 rounded-[1.75rem] border border-mint-strong/20 bg-mint/25 p-6 sm:p-7">
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
                     Next step
                   </p>
@@ -91,7 +97,7 @@ export function GuideShell({
                 />
               </article>
 
-              <div data-scroll-beat="">
+              <div data-scroll-beat="" className="xl:sticky xl:top-24">
                 <GuideToc items={tocItems} />
               </div>
             </div>

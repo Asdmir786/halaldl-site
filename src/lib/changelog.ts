@@ -1,3 +1,4 @@
+import { getReleaseByTag } from "@/content/releases/registry";
 import { getGitHubReleases, type GitHubRelease } from "@/lib/github";
 
 export type ChangelogMedia =
@@ -33,32 +34,20 @@ export type ReleaseChecklistGroup = {
   items: string[];
 };
 
-const RELEASE_MEDIA_BY_VERSION: Record<string, ChangelogMedia> = {
-  "v0.5.1": {
+function getReleaseMedia(tag: string): ChangelogMedia | undefined {
+  const media = getReleaseByTag(tag)?.changelogMedia;
+
+  if (!media) {
+    return undefined;
+  }
+
+  return {
     type: "image",
-    lightSrc: "/releases/0.5.1/promo/hero-light.png",
-    darkSrc: "/releases/0.5.1/promo/hero-dark.png",
-    alt: "HalalDL 0.5.1 Trust And Feedback release hero",
-  },
-  "v0.4.1": {
-    type: "image",
-    lightSrc: "/releases/0.4.1/promo/hero-light.png",
-    darkSrc: "/releases/0.4.1/promo/hero-dark.png",
-    alt: "HalalDL 0.4.1 precision polish release hero",
-  },
-  "v0.4.0": {
-    type: "image",
-    lightSrc: "/releases/0.4.0/promo/update-flow.png",
-    darkSrc: "/releases/0.4.0/promo/update-flow-dark.png",
-    alt: "HalalDL 0.4.0 update flow and verified app update experience",
-  },
-  "v0.3.9": {
-    type: "image",
-    lightSrc: "/screenshots/light/halaldl-downloads.png",
-    darkSrc: "/screenshots/halaldl-downloads.png",
-    alt: "HalalDL downloads screen",
-  },
-};
+    lightSrc: media.lightSrc,
+    darkSrc: media.darkSrc,
+    alt: media.alt,
+  };
+}
 
 export const RELEASE_CHECKLIST: ReleaseChecklistGroup[] = [
   {
@@ -337,7 +326,7 @@ function toChangelogEntry(release: GitHubRelease, index: number): ChangelogEntry
     summary: parsed.summary,
     releaseUrl: release.htmlUrl,
     featured: index === 0,
-    media: RELEASE_MEDIA_BY_VERSION[release.tagName],
+    media: getReleaseMedia(release.tagName),
     added: parsed.added.length ? parsed.added : undefined,
     improved: parsed.improved.length ? parsed.improved : undefined,
     fixed: parsed.fixed.length ? parsed.fixed : undefined,

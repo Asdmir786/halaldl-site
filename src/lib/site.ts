@@ -1,3 +1,5 @@
+import { CURRENT_RELEASE, type ReleaseProofStory } from "@/content/releases/registry";
+
 export const SITE_LINKS = {
   repoUrl: "https://github.com/Asdmir786/HalalDL",
   latestReleaseUrl: "https://github.com/Asdmir786/HalalDL/releases/latest",
@@ -97,9 +99,9 @@ export const FAQ_ITEMS = [
       "Yes. The website changelog gives a high-level summary, and each entry can link back to the matching GitHub Release for the full raw notes and assets.",
   },
   {
-    question: "What changed in HalalDL 0.5.1?",
+    question: "What changed in HalalDL 0.6.0?",
     answer:
-      "0.5.1 is the Trust And Feedback update: an Install Trust card, Copy Diagnostics, gentle Star/Feedback prompts after three completed downloads, faster on-demand tool checks with Performance timings, and the official Steel Blue + Mint brand.",
+      "0.6.0 adds preview and individual playlist selection, Download Doctor recovery guidance, Library and editable Follows, Local Clip Maker, stronger tool detection, and clearer queue and clipboard flows.",
   },
   {
     question: "Do preset filename templates need %(ext)s?",
@@ -121,138 +123,25 @@ export const FAQ_ITEMS = [
     answer:
       "No. Clip mode depends on yt-dlp download-section behavior, so exact cut behavior can depend on the source, selected format, and available local tooling.",
   },
-];
-
-export type FeatureStory = {
-  id: string;
-  label: string;
-  title: string;
-  description: string;
-  bullets: string[];
-  accent: "sky" | "mint" | "coral";
-  stat: string;
-  media: {
-    kind: "image";
-    lightSrc: string;
-    darkSrc: string;
-    alt: string;
-    width: number;
-    height: number;
-  };
-};
-
-export const FEATURE_STORIES: FeatureStory[] = [
   {
-    id: "trust-diagnostics",
-    label: "Install Trust",
-    title: "Explain where the build came from — and how to verify it.",
-    description:
-      "HalalDL 0.5.1 adds an Install Trust card in About: official downloads come from GitHub Releases, releases are still unsigned, and SHA256SUMS.txt is the integrity check when you want it.",
-    bullets: [
-      "About states the canonical GitHub Releases download path",
-      "Unsigned-installer and SmartScreen expectations stay explicit",
-      "Copy Diagnostics packs version, mode, tools, history, and startup timings",
-    ],
-    accent: "sky",
-    stat: "Trust you can verify",
-    media: {
-      kind: "image",
-      lightSrc: "/releases/0.5.1/promo/trust-diagnostics-light.png",
-      darkSrc: "/releases/0.5.1/promo/trust-diagnostics-dark.png",
-      alt: "HalalDL Install Trust card and Copy Diagnostics",
-      width: 1600,
-      height: 900,
-    },
+    question: "Can I choose individual entries from a playlist?",
+    answer:
+      "Yes. HalalDL 0.6.0 previews supported links and lets you select individual playlist entries before the queue starts, so a larger playlist does not need to become an all-or-nothing download.",
   },
   {
-    id: "support-prompts",
-    label: "Support Prompts",
-    title: "Ask for a star or feedback only after real usage.",
-    description:
-      "After three completed downloads, Settings/About and History gently offer Star, Feedback, or Not now — no first-launch nag and no modal interruption.",
-    bullets: [
-      "Prompts appear after three completed downloads",
-      "Star, Feedback, and Not now stay one-click choices",
-      "No first-run modal wall or blocking overlay",
-    ],
-    accent: "mint",
-    stat: "Feedback without friction",
-    media: {
-      kind: "image",
-      lightSrc: "/releases/0.5.1/promo/support-prompts-light.png",
-      darkSrc: "/releases/0.5.1/promo/support-prompts-dark.png",
-      alt: "HalalDL gentle Star and Feedback support prompts",
-      width: 1600,
-      height: 900,
-    },
+    question: "What does Download Doctor do?",
+    answer:
+      "Download Doctor explains common failures in plain language and offers safe next steps you can choose before retrying, such as checking cookies, changing format, or reviewing the local tool path.",
   },
   {
-    id: "faster-startup",
-    label: "Faster Startup",
-    title: "Check tools when you need them — not before every open.",
-    description:
-      "Startup no longer probes every managed tool up front. Settings → Performance shows timings in-app, and they ride along when you copy diagnostics.",
-    bullets: [
-      "On-demand yt-dlp and related tool checks",
-      "Performance timings visible in Settings",
-      "ASAP URL autofill keeps unique clipboard links ready",
-    ],
-    accent: "coral",
-    stat: "Snappier everyday opens",
-    media: {
-      kind: "image",
-      lightSrc: "/releases/0.5.1/promo/faster-startup-light.png",
-      darkSrc: "/releases/0.5.1/promo/faster-startup-dark.png",
-      alt: "HalalDL Settings Performance timings and faster startup",
-      width: 1600,
-      height: 900,
-    },
-  },
-  {
-    id: "brand-identity",
-    label: "Brand",
-    title: "Ship the official Steel Blue + Mint identity end to end.",
-    description:
-      "0.5.1 locks the approved Steel Blue + Mint palette, ships a theme-aware BrandLogo in Sidebar and About, and regenerates Windows icons from the transparent marks.",
-    bullets: [
-      "Default theme maps to the approved Steel Blue + Mint identity",
-      "Theme-aware BrandLogo in Sidebar and About",
-      "Regenerated Tauri and Windows icon assets",
-    ],
-    accent: "sky",
-    stat: "Clearly itself on open",
-    media: {
-      kind: "image",
-      lightSrc: "/releases/0.5.1/promo/brand-identity-light.png",
-      darkSrc: "/releases/0.5.1/promo/brand-identity-dark.png",
-      alt: "HalalDL Steel Blue and Mint brand identity",
-      width: 1600,
-      height: 900,
-    },
-  },
-  {
-    id: "logs",
-    label: "Raw Logs",
-    title: "Keep the engine visible when a site or extractor behaves badly.",
-    description:
-      "Even with the Trust And Feedback focus in 0.5.1, HalalDL still keeps raw output close at hand. That matters when a platform changes, an extractor breaks, or you need to explain a failure clearly.",
-    bullets: [
-      "Raw output stays part of the product story instead of hiding behind debug mode",
-      "Useful when validation passes but the downstream extractor still misbehaves",
-      "Supports the same trust-first posture as release notes, checksums, and public issues",
-    ],
-    accent: "coral",
-    stat: "Visible output beats vague progress",
-    media: {
-      kind: "image",
-      lightSrc: "/releases/0.5.1/promo/raw-logs-light.png",
-      darkSrc: "/releases/0.5.1/promo/raw-logs-dark.png",
-      alt: "HalalDL Logs screen with visible yt-dlp console output",
-      width: 1600,
-      height: 900,
-    },
+    question: "What is Local Clip Maker?",
+    answer:
+      "Local Clip Maker creates a new clip from completed media already on your machine. You can use chapters to help choose the range while keeping the original file unchanged.",
   },
 ];
+
+export type FeatureStory = ReleaseProofStory;
+export const FEATURE_STORIES: FeatureStory[] = CURRENT_RELEASE.homepage?.productProof ?? [];
 
 export function getSiteUrl() {
   const configuredUrl =

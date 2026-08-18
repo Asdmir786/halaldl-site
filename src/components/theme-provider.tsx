@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { applyThemePreference } from "@/lib/theme-transition";
+import { applyThemePreference } from "@/lib/theme-apply";
 import {
   getThemeColor,
   resolveThemePreference,
@@ -22,8 +22,6 @@ function syncThemeColor(theme: Theme) {
 
   meta.setAttribute("content", color);
 }
-
-export { applyThemePreference, requestThemePreference } from "@/lib/theme-transition";
 
 /** Keeps system preference live and theme-color meta in sync with the resolved theme. */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {

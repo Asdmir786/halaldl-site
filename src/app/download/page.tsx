@@ -1,42 +1,22 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import {
-  ArrowUpRight,
-  BadgeCheck,
-  CheckCircle2,
-  ExternalLink,
-  FileCheck2,
-  Package,
-  ShieldCheck,
-} from "lucide-react";
-import { GitHubIcon } from "@/components/icons/github-icon";
-import { SiteHeader } from "@/components/home/home-header";
-import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
-import { ScrollReveal } from "@/components/ui/scroll-reveal";
-import { CopyCommand } from "@/components/ui/copy-command";
+import { CURRENT_RELEASE } from "@/content/releases/registry";
+import { DownloadPageContent } from "@/components/download/download-page-content";
 import { getGitHubSnapshot } from "@/lib/github";
 import { getSiteUrl, getSocialImage, SITE_LINKS } from "@/lib/site";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
-import { formatMegabytes, shortenDigest } from "@/components/home/home-shared";
-import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
-import { DownloadExperience } from "@/components/experience/download-experience";
-import { SectionPin } from "@/components/experience/section-pin";
 
-const DOWNLOAD_META_TITLE = "Download HalalDL for Windows";
+const releaseHomepage = CURRENT_RELEASE.homepage!;
+const DOWNLOAD_META_TITLE = "Download HalalDL for Windows 10/11 — Full, Lite & Portable";
 const DOWNLOAD_META_DESCRIPTION =
-  "Download HalalDL for Windows 10 and 11. The Full installer is recommended, with Lite, Portable, MSI, and WinGet options also available.";
+  "Download HalalDL for Windows 10/11 from official GitHub Releases. Compare Full, Lite, and Portable builds, choose the right setup path, and verify SHA256 before first run.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const github = await getGitHubSnapshot();
 
   return {
-    title: {
-      absolute: DOWNLOAD_META_TITLE,
-    },
+    title: { absolute: DOWNLOAD_META_TITLE },
     description: DOWNLOAD_META_DESCRIPTION,
-    alternates: {
-      canonical: "/download",
-    },
+    alternates: { canonical: "/download" },
     openGraph: {
       title: DOWNLOAD_META_TITLE,
       description: DOWNLOAD_META_DESCRIPTION,
@@ -51,9 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: DOWNLOAD_META_DESCRIPTION,
       images: ["/social/halaldl-social-preview.png"],
     },
-    other: {
-      "release-version": github.latestVersion,
-    },
+    other: { "release-version": github.latestVersion },
   };
 }
 
@@ -73,11 +51,8 @@ export default async function DownloadPage() {
     downloadUrl: `${siteUrl.origin}/download`,
     installUrl: `${siteUrl.origin}/download`,
     releaseNotes: github.releaseNotes,
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-    },
+    featureList: releaseHomepage.schemaFeatures,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     sameAs: [SITE_LINKS.repoUrl, github.latestReleaseUrl, SITE_LINKS.supportUrl],
   };
 
@@ -88,26 +63,17 @@ export default async function DownloadPage() {
       {
         "@type": "Question",
         name: "Which download should most people use?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Most people should use the Full build because it smooths out the first-run setup path.",
-        },
+        acceptedAnswer: { "@type": "Answer", text: "Most people should use the Full build because it smooths out the first-run setup path." },
       },
       {
         "@type": "Question",
         name: "What is the canonical download source?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "GitHub Releases is the direct source for the latest build. WinGet is convenient, but it can lag behind the newest release assets.",
-        },
+        acceptedAnswer: { "@type": "Answer", text: "GitHub Releases is the direct source for the latest build. WinGet is convenient, but it can lag behind the newest release assets." },
       },
       {
         "@type": "Question",
         name: "How should I verify the installer?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Download from GitHub Releases, open SHA256SUMS.txt, and verify SHA256 before first run if you want an extra integrity check.",
-        },
+        acceptedAnswer: { "@type": "Answer", text: "Download from GitHub Releases, open SHA256SUMS.txt from the same release, and verify SHA256 before first run if you want an integrity check." },
       },
     ],
   };
@@ -119,436 +85,10 @@ export default async function DownloadPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(downloadSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
-      />
-
-      <main id="main-content" className="overflow-x-hidden">
-        <div className="mx-auto max-w-6xl px-5 pb-24 pt-8 sm:px-8">
-          <SiteHeader currentPage="download" />
-          <DownloadExperience>
-          <SubpageRouteStrip currentPage="download" />
-
-          <nav
-            aria-label="Breadcrumb"
-            className="mt-6 flex items-center gap-2 text-sm text-ink-muted"
-          >
-            <Link href="/" className="transition-colors hover:text-ink">
-              Home
-            </Link>
-            <span>/</span>
-            <span className="font-medium text-ink">Download</span>
-          </nav>
-
-          <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-start">
-            <div className="max-w-2xl">
-              <div className="eyebrow">
-                <BadgeCheck className="h-3.5 w-3.5" />
-                Download
-              </div>
-
-              <h1 className="mt-5 font-display text-4xl font-semibold tracking-[-0.03em] text-ink sm:text-5xl">
-                Download HalalDL for Windows.
-              </h1>
-
-              <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
-                Choose the install path that matches how hands-on you want to be. Full is best for
-                most people. Lite keeps more of the underlying toolchain boundary explicit. WinGet
-                is convenient, but GitHub Releases is still the direct route to the newest build.
-              </p>
-
-              <div className="mt-6 flex flex-wrap gap-3 text-sm text-ink-soft">
-                <span className="rounded-full border border-line bg-paper-strong/80 px-3 py-1.5">
-                  Latest release {github.latestVersion}
-                </span>
-                <span className="rounded-full border border-line bg-paper-strong/80 px-3 py-1.5">
-                  Published {github.latestReleaseLabel}
-                </span>
-                <span className="rounded-full border border-line bg-paper-strong/80 px-3 py-1.5">
-                  Windows 10/11 x64
-                </span>
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href={github.fullSetupUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="glass-cta inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5"
-                >
-                  Download Full
-                  <ArrowUpRight className="h-4 w-4" />
-                </a>
-                <a
-                  href={github.checksumsUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
-                >
-                  Open SHA256SUMS.txt
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-                <Link
-                  href="/changelog"
-                  className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
-                >
-                  View changelog
-                </Link>
-                <Link
-                  href="/compare/full-vs-lite"
-                  className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
-                >
-                  Compare Full vs Lite
-                </Link>
-                <Link
-                  href="/guides/best-yt-dlp-gui-windows"
-                  className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
-                >
-                  Best yt-dlp GUI guide
-                </Link>
-                <Link
-                  href="/guides"
-                  className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
-                >
-                  All guides
-                </Link>
-              </div>
-
-              <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium">
-                <Link
-                  href="/install/windows"
-                  className="text-ink transition-colors hover:text-ink-soft"
-                >
-                  Windows install guide
-                </Link>
-                <Link
-                  href="/trust/verify-checksum"
-                  className="text-ink transition-colors hover:text-ink-soft"
-                >
-                  Verify SHA256 on Windows
-                </Link>
-              </div>
-            </div>
-
-            <aside className="surface-elevated rounded-[1.75rem] p-6 sm:p-7">
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                Release summary
-              </p>
-              <p className="mt-3 font-display text-2xl font-semibold text-ink">
-                {github.latestReleaseName}
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-ink-soft">{github.releaseNotes}</p>
-
-              <dl className="mt-6 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-line bg-paper/70 p-4">
-                  <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                    Full build
-                  </dt>
-                  <dd className="mt-2 text-sm font-medium text-ink">
-                    {formatMegabytes(github.fullSetupSize)}
-                  </dd>
-                </div>
-                <div className="rounded-2xl border border-line bg-paper/70 p-4">
-                  <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                    Lite build
-                  </dt>
-                  <dd className="mt-2 text-sm font-medium text-ink">
-                    {formatMegabytes(github.liteSetupSize)}
-                  </dd>
-                </div>
-                <div className="rounded-2xl border border-line bg-paper/70 p-4">
-                  <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                    Checksum sample
-                  </dt>
-                  <dd className="mt-2 break-all text-sm font-medium text-ink">
-                    {shortenDigest(github.checksumDigest)}
-                  </dd>
-                </div>
-                <div className="rounded-2xl border border-line bg-paper/70 p-4">
-                  <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                    Public source
-                  </dt>
-                  <dd className="mt-2 text-sm font-medium text-ink">GitHub Releases</dd>
-                </div>
-              </dl>
-            </aside>
-          </div>
-
-          <section id="download-variant-compare" className="pt-16 sm:pt-20">
-            <div className="section-divider mb-12" />
-
-                          <SectionPin end="+=40%" pin={false} className="pb-4">
-              <ScrollReveal className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
-              <article className="install-card-primary overflow-hidden rounded-[1.9rem] p-6 sm:p-7">
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-mint px-3 py-1 text-xs font-semibold text-mint-strong">
-                  Recommended
-                </div>
-                <div className="mt-5 flex flex-wrap items-start justify-between gap-4">
-                  <div className="max-w-lg">
-                    <h2 className="font-display text-3xl font-semibold text-ink">Full build</h2>
-                    <p className="mt-3 text-sm leading-relaxed text-ink-soft sm:text-base">
-                      Best first install for most users. This is the path for people who want the
-                      cleanest setup flow and less manual dependency handling.
-                    </p>
-                  </div>
-                  <span className="rounded-full border border-sky-strong/30 bg-sky px-3 py-1 text-xs font-semibold text-sky-strong">
-                    {formatMegabytes(github.fullSetupSize)}
-                  </span>
-                </div>
-
-                <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-                  {[
-                    "Recommended for most users",
-                    "Smoother first-run path",
-                    "Best fit for a straightforward desktop install",
-                    "Still paired with GitHub Releases and SHA256 verification",
-                  ].map((item) => (
-                    <li
-                      key={item}
-                      className="flex items-start gap-3 rounded-2xl border border-line bg-paper/60 p-4 text-sm text-ink-soft"
-                    >
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-mint-strong" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                  <a
-                    href={github.fullSetupUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="glass-cta inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5"
-                  >
-                    Download Full
-                    <ArrowUpRight className="h-4 w-4" />
-                  </a>
-                  <a
-                    href={github.latestReleaseUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
-                  >
-                    View GitHub Release
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </div>
-              </article>
-
-              <div className="grid gap-5">
-                <article className="install-card-secondary rounded-[1.6rem] p-6">
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-sky px-3 py-1 text-xs font-semibold text-sky-strong">
-                    Power users
-                  </div>
-                  <h2 className="mt-4 font-display text-2xl font-semibold text-ink">Lite build</h2>
-                  <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                    Better when you want more direct control over yt-dlp, ffmpeg, aria2, and the
-                    wider toolchain boundary.
-                  </p>
-                  <p className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                    {formatMegabytes(github.liteSetupSize)}
-                  </p>
-                  <a
-                    href={github.liteSetupUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-5 inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
-                  >
-                    Download Lite
-                    <ArrowUpRight className="h-4 w-4" />
-                  </a>
-                </article>
-
-                <article className="install-card-secondary rounded-[1.6rem] p-6">
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-paper px-3 py-1 text-xs font-semibold text-ink-muted">
-                    <Package className="h-3.5 w-3.5" />
-                    Package manager
-                  </div>
-                  <h2 className="mt-4 font-display text-2xl font-semibold text-ink">WinGet</h2>
-                  <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                    Best for convenience and updates. Good option, but do not treat it as the most
-                    authoritative or fastest path to the newest release.
-                  </p>
-                  <div className="mt-5">
-                    <CopyCommand
-                      command={SITE_LINKS.wingetCommand}
-                    />
-                  </div>
-                </article>
-              </div>
-            </ScrollReveal>
-              </SectionPin>
-                      </section>
-
-          <section className="pt-16 sm:pt-20">
-            <div className="section-divider mb-12" />
-
-            <ScrollReveal className="grid gap-5 lg:grid-cols-[1fr_1fr]">
-              <article className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-sky">
-                    <ShieldCheck className="h-5 w-5 text-sky-strong" />
-                  </div>
-                  <div>
-                    <h2 className="font-display text-2xl font-semibold text-ink">
-                      Verify before first run
-                    </h2>
-                    <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                      Keep the file path explicit. Download from GitHub Releases, open
-                      SHA256SUMS.txt from the same release, and then decide how to handle any
-                      SmartScreen warning.
-                    </p>
-                  </div>
-                </div>
-
-                <ol className="mt-6 space-y-3">
-                  {[
-                    "Download from the Full or Lite release asset, or open the GitHub Release page directly.",
-                    "Open SHA256SUMS.txt and verify SHA256 before first run.",
-                    "If SmartScreen warns, verify source plus checksum before continuing.",
-                  ].map((item, index) => (
-                    <li key={item} className="rounded-2xl border border-line bg-paper/70 p-4">
-                      <div className="flex gap-3">
-                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sky text-xs font-semibold text-sky-strong">
-                          {index + 1}
-                        </span>
-                        <p className="text-sm leading-relaxed text-ink-soft">{item}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <a
-                    href={github.checksumsUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-ink-soft"
-                  >
-                    View SHA256SUMS.txt
-                    <FileCheck2 className="h-4 w-4" />
-                  </a>
-                  <a
-                    href={SITE_LINKS.supportUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-ink-soft hover:text-ink"
-                  >
-                    Support docs
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </div>
-              </article>
-
-              <article className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-mint">
-                    <GitHubIcon className="h-5 w-5 text-mint-strong" />
-                  </div>
-                  <div>
-                    <h2 className="font-display text-2xl font-semibold text-ink">Public release facts</h2>
-                    <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                      Releases, source, checksums, and issue tracking all stay tied to one public
-                      origin.
-                    </p>
-                  </div>
-                </div>
-
-                <dl className="mt-6 space-y-3">
-                  {[
-                    { label: "Latest release", value: `${github.latestVersion} · ${github.latestReleaseLabel}` },
-                    { label: "First public release", value: `${github.firstPublicVersion} · ${github.firstPublicReleaseLabel}` },
-                    { label: "Checksum sample", value: shortenDigest(github.checksumDigest) },
-                    { label: "Primary source", value: "GitHub Releases" },
-                  ].map((item) => (
-                    <div key={item.label} className="rounded-2xl border border-line bg-paper/70 p-4">
-                      <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                        {item.label}
-                      </dt>
-                      <dd className="mt-2 break-all text-sm font-medium leading-relaxed text-ink">
-                        {item.value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  <a
-                    href={SITE_LINKS.repoUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-between rounded-2xl border border-line bg-paper/60 px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
-                  >
-                    Inspect source
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                  <a
-                    href={github.latestReleaseUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-between rounded-2xl border border-line bg-paper/60 px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
-                  >
-                    Latest release
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </div>
-              </article>
-            </ScrollReveal>
-          </section>
-
-          <section className="pt-16 sm:pt-20">
-            <div className="section-divider mb-10" />
-
-            <ScrollReveal className="flex flex-wrap items-center justify-between gap-4 rounded-[1.75rem] border border-line bg-paper/70 p-6 sm:p-7">
-              <div className="max-w-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
-                  Still deciding?
-                </p>
-                <h2 className="mt-3 font-display text-2xl font-semibold text-ink">
-                  Take one last check before you install.
-                </h2>
-                <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                  Verify SHA256 if you want to confirm the file, read the changelog to see
-                  what changed, or head back home for the broader product overview.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/trust/verify-checksum"
-                  className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
-                >
-                  Verify SHA256
-                </Link>
-                <Link
-                  href="/changelog"
-                  className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
-                >
-                  Read changelog
-                </Link>
-                <Link
-                  href="/"
-                  className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper-strong"
-                >
-                  Return home
-                </Link>
-              </div>
-            </ScrollReveal>
-          </section>
-
-          <ProductRelatedGuides slug="best-yt-dlp-gui-windows" />
-          </DownloadExperience>
-        </div>
-      </main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(downloadSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }} />
+      <DownloadPageContent github={github} />
     </>
   );
 }

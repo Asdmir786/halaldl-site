@@ -57,32 +57,34 @@ export function ThemedScreenshot({
     >
       {renderMode === "paired" ? (
         <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={lightSrc}
             alt=""
             aria-hidden="true"
-            loading={priority ? "eager" : "lazy"}
+            fill
+            priority={priority}
+            sizes={sizes}
             className={`theme-image theme-image-light h-full w-full ${sharedClassName}`.trim()}
           />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={darkSrc}
             alt=""
             aria-hidden="true"
-            loading={priority ? "eager" : "lazy"}
+            fill
+            priority={priority}
+            sizes={sizes}
             className={`theme-image theme-image-dark h-full w-full ${sharedClassName}`.trim()}
           />
         </>
       ) : native ? (
-        // Native img avoids theme-switch lag for below-the-fold screenshot stages.
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           key={`${theme}-${activeSrc}`}
           src={activeSrc}
           alt=""
           aria-hidden="true"
-          loading={priority ? "eager" : "lazy"}
+          fill
+          priority={priority}
+          sizes={sizes}
           className={`h-full w-full ${sharedClassName}`.trim()}
         />
       ) : (

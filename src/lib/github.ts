@@ -1,3 +1,4 @@
+import { CURRENT_RELEASE } from "@/content/releases/registry";
 import { SITE_LINKS } from "@/lib/site";
 
 type GitHubRepoResponse = {
@@ -80,35 +81,29 @@ export type GitHubSnapshot = {
 const FALLBACK_SNAPSHOT: GitHubSnapshot = {
   source: "fallback",
   repoUrl: SITE_LINKS.repoUrl,
-  repoDescription:
-    "A local-first Windows media downloader powered by yt-dlp, with presets, visible logs, and optional tool management.",
+  repoDescription: CURRENT_RELEASE.fallback.repoDescription,
   stars: 3,
   openIssues: 0,
   licenseName: "MIT License",
-  lastPushedAt: "2026-07-25T19:44:31Z",
-  lastPushedLabel: formatDate("2026-07-25T19:44:31Z"),
-  latestVersion: "v0.5.1",
-  latestReleaseName: "v0.5.1 - The Trust And Feedback Update",
-  latestReleaseUrl: "https://github.com/Asdmir786/HalalDL/releases/tag/v0.5.1",
-  latestReleaseDate: "2026-07-25T20:07:16Z",
-  latestReleaseLabel: formatDate("2026-07-25T20:07:16Z"),
+  lastPushedAt: CURRENT_RELEASE.date,
+  lastPushedLabel: formatDate(CURRENT_RELEASE.date),
+  latestVersion: CURRENT_RELEASE.tag,
+  latestReleaseName: `${CURRENT_RELEASE.tag} — ${CURRENT_RELEASE.title}`,
+  latestReleaseUrl: CURRENT_RELEASE.releaseUrl,
+  latestReleaseDate: CURRENT_RELEASE.date,
+  latestReleaseLabel: CURRENT_RELEASE.dateLabel,
   firstPublicVersion: "v0.1.0",
   firstPublicReleaseDate: "2026-01-10T18:09:25Z",
   firstPublicReleaseLabel: formatDate("2026-01-10T18:09:25Z"),
-  releaseNotes:
-    "Latest checked release snapshot from July 25, 2026. Install Trust card, Copy Diagnostics, gentle support prompts after real usage, faster on-demand tool checks, and the official Steel Blue + Mint brand.",
-  fullSetupUrl:
-    "https://github.com/Asdmir786/HalalDL/releases/download/v0.5.1/HalalDL-Full-v0.5.1-win10%2B11-x64-setup.exe",
-  fullSetupSize: 6097536,
-  liteSetupUrl:
-    "https://github.com/Asdmir786/HalalDL/releases/download/v0.5.1/HalalDL-Lite-v0.5.1-win10%2B11-x64-setup.exe",
-  liteSetupSize: 6096699,
-  portableZipUrl:
-    "https://github.com/Asdmir786/HalalDL/releases/download/v0.5.1/HalalDL-Portable-v0.5.1-win10%2B11-x64.zip",
-  portableZipSize: 143488125,
-  checksumsUrl:
-    "https://github.com/Asdmir786/HalalDL/releases/download/v0.5.1/SHA256SUMS.txt",
-  checksumDigest: "sha256:b8e440eaf9006790d6623ca62afc3f87868359010044eacec623fb56ebcb0575",
+  releaseNotes: CURRENT_RELEASE.fallback.releaseNotes,
+  fullSetupUrl: CURRENT_RELEASE.fallback.assets.fullSetup,
+  fullSetupSize: null,
+  liteSetupUrl: CURRENT_RELEASE.fallback.assets.liteSetup,
+  liteSetupSize: null,
+  portableZipUrl: CURRENT_RELEASE.fallback.assets.portableZip,
+  portableZipSize: null,
+  checksumsUrl: CURRENT_RELEASE.fallback.assets.checksums,
+  checksumDigest: null,
 };
 
 function formatDate(input: string) {
