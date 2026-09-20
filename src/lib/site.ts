@@ -6,6 +6,8 @@ export const SITE_LINKS = {
   issuesUrl: "https://github.com/Asdmir786/HalalDL/issues/new/choose",
   supportUrl: "https://github.com/Asdmir786/HalalDL/blob/main/SUPPORT.md",
   alternativeToUrl: "https://alternativeto.net/software/halaldl/about/",
+  chocolateyUrl: "https://community.chocolatey.org/packages/halaldl",
+  chocolateyCommand: "choco install halaldl",
   wingetCommands: {
     full: "winget install --id Asdmir786.HalalDL",
     lite: "winget install --id Asdmir786.HalalDL.Lite",

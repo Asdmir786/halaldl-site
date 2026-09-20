@@ -49,7 +49,7 @@ export function OpenInHalalDl({ surface, className = "" }: OpenInHalalDlProps) {
             Paste a media link
           </h3>
           <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-            Validate it in this browser, then queue it in HalalDL v0.6.1 or newer. Nothing starts automatically.
+            Validate it in this browser, then add it directly to the HalalDL queue. Requires v0.6.1 or newer; nothing starts automatically.
           </p>
         </div>
       </div>
@@ -83,7 +83,7 @@ export function OpenInHalalDl({ surface, className = "" }: OpenInHalalDlProps) {
             type="submit"
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-ink px-5 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint-strong/70"
           >
-            Open in HalalDL <ExternalLink className="h-4 w-4" aria-hidden="true" />
+            Add to HalalDL queue <ExternalLink className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
         {error ? (
@@ -95,7 +95,7 @@ export function OpenInHalalDl({ surface, className = "" }: OpenInHalalDlProps) {
 
       {attempted ? (
         <p role="status" className="mt-3 text-sm text-ink-soft">
-          HalalDL was asked to open. Your browser cannot reliably confirm whether the app launched.
+          Sent to HalalDL. Check the Downloads queue; the browser cannot confirm whether the app received it.
         </p>
       ) : null}
 

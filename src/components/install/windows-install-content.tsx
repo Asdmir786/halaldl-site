@@ -47,15 +47,19 @@ export function WindowsInstallContent({ github }: WindowsInstallContentProps) {
             </article>
             <article className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Convenience paths</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-ink">WinGet is useful—just not the release authority.</h2>
-              <p className="mt-4 text-base leading-relaxed text-ink-soft">Use WinGet when its update rhythm fits your setup. When you want the newest asset or checksum first, go to the GitHub Release.</p>
+              <h2 className="mt-3 font-display text-3xl font-semibold text-ink">Package managers are useful—just not the release authority.</h2>
+              <p className="mt-4 text-base leading-relaxed text-ink-soft">Use WinGet for Full, Lite, or Portable, or Chocolatey for Full. When you want the newest asset or checksum first, go to the GitHub Release.</p>
               <div className="mt-5 grid gap-3">
                 <div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Full</p><CopyCommand command={SITE_LINKS.wingetCommands.full} /></div>
                 <div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Lite</p><CopyCommand command={SITE_LINKS.wingetCommands.lite} /></div>
                 <div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Portable</p><CopyCommand command={SITE_LINKS.wingetCommands.portable} /></div>
               </div>
+              <div className="mt-5">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Chocolatey · Full</p>
+                <CopyCommand command={SITE_LINKS.chocolateyCommand} />
+                <a href={SITE_LINKS.chocolateyUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-ink hover:text-ink-soft">View the approved Chocolatey package <ExternalLink className="h-3.5 w-3.5" /></a>
+              </div>
               <a href={SITE_LINKS.alternativeToUrl} target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-ink-soft">View the AlternativeTo listing <ExternalLink className="h-4 w-4" /></a>
-              <p className="mt-5 rounded-xl border border-amber/40 bg-amber/15 p-3 text-xs leading-relaxed text-ink-soft"><span className="font-semibold text-ink">Chocolatey:</span> no verified public package or install command yet.</p>
             </article>
           </ScrollReveal>
         </section>

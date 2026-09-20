@@ -176,17 +176,17 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
         <section className="pt-16 sm:pt-20">
           <details className="rounded-[1.75rem] border border-line bg-paper/55 p-5 sm:p-7">
             <summary className="cursor-pointer list-none font-display text-2xl font-semibold text-ink [&::-webkit-details-marker]:hidden">Other install and discovery options</summary>
-            <p className="mt-2 text-sm leading-relaxed text-ink-soft">Open this for WinGet package commands and the AlternativeTo listing.</p>
-          <ScrollReveal>
+            <p className="mt-2 text-sm leading-relaxed text-ink-soft">Open this for WinGet and Chocolatey commands, plus the AlternativeTo listing.</p>
+          <div>
             <div className="mt-8 max-w-2xl">
               <div className="eyebrow"><ExternalLink className="h-3.5 w-3.5" /> Other ways to find HalalDL</div>
-              <h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.03em] text-ink sm:text-4xl">WinGet for installs. AlternativeTo for discovery.</h2>
-              <p className="mt-4 text-base leading-relaxed text-ink-soft">GitHub Releases remains the canonical source. WinGet offers package-manager convenience for each build, while AlternativeTo helps people compare HalalDL with other tools.</p>
+              <h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.03em] text-ink sm:text-4xl">Package-manager installs and independent discovery.</h2>
+              <p className="mt-4 text-base leading-relaxed text-ink-soft">GitHub Releases remains the canonical source. WinGet covers every build, Chocolatey provides the Full build, and AlternativeTo helps people compare HalalDL with other tools.</p>
             </div>
-          </ScrollReveal>
+          </div>
 
           <div className="mt-8 grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-            <ScrollReveal className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
+            <article className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">WinGet package IDs</p>
               <h3 className="mt-3 font-display text-2xl font-semibold text-ink">Choose the build you want to install.</h3>
               <p className="mt-3 text-sm leading-relaxed text-ink-soft">The catalog can lag behind GitHub Releases, especially when a new Portable manifest is still propagating.</p>
@@ -195,15 +195,20 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
                 <div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Lite</p><CopyCommand command={SITE_LINKS.wingetCommands.lite} /></div>
                 <div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Portable</p><CopyCommand command={SITE_LINKS.wingetCommands.portable} /></div>
               </div>
-            </ScrollReveal>
+            </article>
 
-            <ScrollReveal delay={0.08} className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
+            <article className="surface-card-static rounded-[1.75rem] p-6 sm:p-7">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Discovery and comparison</p>
               <h3 className="mt-3 font-display text-2xl font-semibold text-ink">Find HalalDL on AlternativeTo.</h3>
               <p className="mt-3 text-sm leading-relaxed text-ink-soft">See the public HalalDL profile, compare similar software, and help people discover the project outside package catalogs.</p>
               <a href={SITE_LINKS.alternativeToUrl} target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 rounded-xl border border-line-strong bg-paper-strong px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper">Open AlternativeTo listing <ExternalLink className="h-4 w-4" /></a>
-              <p className="mt-6 rounded-xl border border-amber/40 bg-amber/15 p-3 text-xs leading-relaxed text-ink-soft"><span className="font-semibold text-ink">Chocolatey:</span> no verified public package or install command yet.</p>
-            </ScrollReveal>
+              <div className="mt-6 rounded-xl border border-line bg-paper/65 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-muted">Chocolatey · Full build</p>
+                <div className="mt-3"><CopyCommand command={SITE_LINKS.chocolateyCommand} /></div>
+                <a href={SITE_LINKS.chocolateyUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-ink hover:text-ink-soft">View the approved package <ExternalLink className="h-3.5 w-3.5" /></a>
+                <p className="mt-3 text-xs leading-relaxed text-ink-muted">Community moderation can make Chocolatey trail the newest GitHub release.</p>
+              </div>
+            </article>
           </div>
           </details>
         </section>
