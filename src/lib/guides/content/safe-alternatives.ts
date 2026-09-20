@@ -16,6 +16,12 @@ export const safeAlternativesArticle: GuideArticle = {
   ],
   blocks: [
     {
+      type: "callout",
+      tone: "mint",
+      title: "A safer default",
+      body: "Prefer a local tool with an official project page, named release assets, a visible license, and a verifiable update trail. A web page promising every platform with no source trail is not the same thing.",
+    },
+    {
       type: "paragraph",
       text: "Random “free YouTube to MP4” websites are a malware and privacy lottery. Prefer open-source desktop tools with public GitHub Releases and checksums — whether that is yt-dlp itself or a GUI like HalalDL.",
     },

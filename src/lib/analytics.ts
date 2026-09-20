@@ -1,26 +1,63 @@
+export type AnalyticsSurface =
+  | "guide_body"
+  | "guide_next_step"
+  | "download_hero"
+  | "download_builds"
+  | "download_page"
+  | "flagship_comparison"
+  | "comparison_table"
+  | "comparison_card"
+  | "roadmap";
+
+export type ComparisonToolId =
+  | "halaldl"
+  | "parabolic"
+  | "open-video-downloader"
+  | "tartube"
+  | "stacher"
+  | "yt-dlp";
+
+export type ComparisonAction =
+  | "compare_full_vs_lite"
+  | "open_official_source"
+  | "filter_all"
+  | "filter_windows"
+  | "filter_cross-platform"
+  | "filter_simple"
+  | "filter_power"
+  | "filter_archive"
+  | "filter_open-source";
+
 export type AnalyticsEvent =
   | {
       name: "download_cta_click";
-      properties: { cta: string; surface: string };
+      properties: {
+        action: "go_to_download";
+        surface: Extract<AnalyticsSurface, "guide_body" | "guide_next_step">;
+      };
     }
   | {
       name: "download_channel_select";
       properties: {
         channel: "full" | "lite" | "portable" | "checksums";
-        surface: string;
+        surface: Extract<AnalyticsSurface, "download_hero" | "download_builds">;
       };
     }
   | {
       name: "comparison_interaction";
-      properties: { action: string; surface: string; tool?: string };
+      properties: {
+        action: ComparisonAction;
+        surface: Extract<AnalyticsSurface, "guide_body" | "guide_next_step" | "flagship_comparison" | "comparison_table" | "comparison_card">;
+        tool?: ComparisonToolId;
+      };
     }
   | {
       name: "open_in_app_click";
-      properties: { surface: string };
+      properties: { surface: Extract<AnalyticsSurface, "flagship_comparison" | "download_page"> };
     }
   | {
       name: "extension_interest_click";
-      properties: { browser?: string; surface: string };
+      properties: { browser?: "chrome" | "firefox" | "edge"; surface: "roadmap" };
     };
 
 declare global {

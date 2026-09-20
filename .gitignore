@@ -5,6 +5,7 @@ node_modules/
 .next/
 out/
 .vercel/
+.analytics/
 *.tsbuildinfo
 next-env.d.ts
 

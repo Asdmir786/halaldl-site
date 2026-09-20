@@ -5,9 +5,9 @@ import { getSocialImage } from "@/lib/site";
 import { getChangelogEntries } from "@/lib/changelog";
 import { getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 
-const CHANGELOG_META_TITLE = "HalalDL changelog — v0.6.0 Download, Organize & Create";
+const CHANGELOG_META_TITLE = "HalalDL changelog — v0.6.1 Privacy and Security Maintenance";
 const CHANGELOG_META_DESCRIPTION =
-  `Read the complete HalalDL ${CURRENT_RELEASE.tag} release story, including playlist control, Download Doctor, Library & Follows, Local Clip Maker, fixes, install boundaries, and the full release archive.`;
+  `Read the complete HalalDL ${CURRENT_RELEASE.tag} release story, including desktop telemetry removal, queue-only deep links, tighter Tauri boundaries, preserved local data, and the full release archive.`;
 
 export const metadata: Metadata = {
   title: { absolute: CHANGELOG_META_TITLE },

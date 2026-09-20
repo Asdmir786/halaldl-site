@@ -81,7 +81,7 @@ const v060Fallback = {
   },
 };
 
-const currentRelease: ReleaseDefinition = {
+const v060Release: ReleaseDefinition = {
   tag: "v0.6.0",
   date: "2026-08-12T19:33:57Z",
   dateLabel: "Aug 12, 2026",
@@ -196,7 +196,89 @@ const currentRelease: ReleaseDefinition = {
   fallback: v060Fallback,
 };
 
+const v061Fallback = {
+  repoDescription:
+    "A local-first Windows media downloader powered by yt-dlp, with presets, visible logs, optional tool management, and no desktop telemetry.",
+  releaseNotes:
+    "HalalDL v0.6.1 is the Privacy and Security Maintenance release: desktop telemetry removed, queue-only website handoffs, tighter Tauri boundaries, and no removal of downloads, history, presets, settings, or media.",
+  assets: {
+    fullSetup: releaseAsset("v0.6.1", "HalalDL-Full-v0.6.1-win10%2B11-x64-setup.exe"),
+    liteSetup: releaseAsset("v0.6.1", "HalalDL-Lite-v0.6.1-win10%2B11-x64-setup.exe"),
+    portableZip: releaseAsset("v0.6.1", "HalalDL-Portable-v0.6.1-win10%2B11-x64.zip"),
+    checksums: releaseAsset("v0.6.1", "SHA256SUMS.txt"),
+  },
+};
+
+const currentRelease: ReleaseDefinition = {
+  tag: "v0.6.1",
+  date: "2026-09-20T11:03:39Z",
+  dateLabel: "Sep 20, 2026",
+  title: "Privacy and Security Maintenance",
+  releaseUrl: `${REPOSITORY}/releases/tag/v0.6.1`,
+  summary:
+    "Desktop telemetry is removed, website handoffs queue by default, and the Tauri security boundary is tighter without removing downloads, history, presets, settings, or media.",
+  changelogMedia: {
+    lightSrc: "/releases/0.6.0/hero-light.webp",
+    darkSrc: "/releases/0.6.0/hero-dark.webp",
+    alt: "HalalDL local-first Windows download workflow",
+  },
+  homepage: {
+    ...v060Release.homepage!,
+    eyebrow: "v0.6.1 — Privacy and Security Maintenance",
+    description:
+      "A free, local-first yt-dlp GUI for Windows 10/11 with no desktop telemetry, reusable presets, visible raw logs, playlist selection, and Full, Lite, or Portable builds.",
+    capabilityChips: ["No desktop telemetry", "Queue-only handoff", "Visible raw logs", "Full / Lite / Portable", "Up to 4K*"],
+    note: "v0.6.1 preserves downloads, history, presets, settings, and local media. Maximum quality depends on the source and available formats.",
+    releaseCardTitle: "Privacy tightened. Local workflows preserved.",
+    releaseCardBody:
+      "v0.6.1 removes the legacy telemetry path, hardens deep links and Tauri permissions, and keeps the existing download workflow intact.",
+    schemaFeatures: [
+      "No desktop telemetry or account requirement",
+      "Queue-only website-to-app handoff for validated HTTP and HTTPS links",
+      "Preview supported links and select individual playlist entries",
+      "Video, audio, subtitle, metadata, and reusable preset workflows",
+      "Visible raw yt-dlp logs and local Download Doctor guidance",
+    ],
+  },
+  changelog: {
+    intro:
+      "A maintenance release that removes the legacy desktop telemetry path, hardens deep links and Tauri boundaries, and preserves existing local workflows.",
+    sections: [
+      {
+        title: "Privacy maintenance",
+        items: [
+          "Removed desktop telemetry collection and transmission.",
+          "Startup cleanup deletes only the obsolete telemetry.json identifier file.",
+        ],
+      },
+      {
+        title: "Safer app handoffs",
+        items: [
+          "halaldl://download?url=... queues a valid HTTP(S) link without starting automatically.",
+          "Malformed, credentialed, unsupported, and oversized URLs are rejected.",
+        ],
+      },
+      {
+        title: "Desktop hardening",
+        items: [
+          "Tightened the Tauri content security policy and capability permissions.",
+          "Restricted local file opening to approved paths and supported targets.",
+        ],
+      },
+    ],
+    beforeYouInstall: [
+      "Full remains the recommended installer for most Windows users. Lite is bring-your-own tooling, and Portable is a self-contained ZIP.",
+      "Installers are currently unsigned, so Windows SmartScreen may appear. Verify the chosen asset against SHA256SUMS.txt when needed.",
+      "Downloads, history, presets, settings, cookies, completed files, and local media are not removed by this maintenance release.",
+    ],
+    developerNote:
+      "The website may use privacy-limited GA4 when configured, but the HalalDL desktop application itself sends no product telemetry.",
+  },
+  fallback: v061Fallback,
+};
+
 const legacyReleases: ReleaseDefinition[] = [
+  v060Release,
   {
     tag: "v0.5.1",
     date: "2026-07-25T20:07:16Z",

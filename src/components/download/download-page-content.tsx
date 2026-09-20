@@ -21,6 +21,7 @@ import { MotionField } from "@/components/ui/motion-field";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { TrackedAnchor } from "@/components/analytics/tracked-link";
+import { OpenInHalalDl } from "@/components/handoff/open-in-halaldl";
 import { formatMegabytes, shortenDigest } from "@/components/home/home-shared";
 
 
@@ -127,6 +128,8 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
             </div>
           </div>
         </MotionField>
+
+        <OpenInHalalDl surface="download_page" className="mt-8" />
 
         <section className="pt-16 sm:pt-20">
           <ScrollReveal>

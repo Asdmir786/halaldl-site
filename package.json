@@ -9,6 +9,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test:handoff": "node --experimental-strip-types --test tests/handoff.test.ts",
+    "analytics:gsc-baseline": "node scripts/export-search-console-baseline.mjs",
     "optimize:images": "python3 scripts/convert-content-images.py"
   },
   "dependencies": {
