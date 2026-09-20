@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { getSiteUrl, SITE_LINKS } from "@/lib/site";
 import {
   HOMEPAGE_OG_DESCRIPTION,
@@ -144,6 +145,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <ThemeProvider>{children}</ThemeProvider>
+        <GoogleAnalytics />
         <div className="sr-only">
           Canonical downloads route: {SITE_LINKS.latestReleaseUrl}
         </div>

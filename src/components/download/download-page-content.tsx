@@ -20,6 +20,7 @@ import { ProductRelatedGuides } from "@/components/guides/product-related-guides
 import { MotionField } from "@/components/ui/motion-field";
 import { CopyCommand } from "@/components/ui/copy-command";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
+import { TrackedAnchor } from "@/components/analytics/tracked-link";
 import { formatMegabytes, shortenDigest } from "@/components/home/home-shared";
 
 
@@ -87,15 +88,15 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
               </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <a href={github.fullSetupUrl} target="_blank" rel="noreferrer" className="glass-cta inline-flex items-center gap-2 rounded-2xl px-5 py-3.5 text-sm font-semibold transition-all hover:-translate-y-0.5">
+                <TrackedAnchor analyticsEvent={{ name: "download_channel_select", properties: { channel: "full", surface: "download_hero" } }} href={github.fullSetupUrl} target="_blank" rel="noreferrer" className="glass-cta inline-flex items-center gap-2 rounded-2xl px-5 py-3.5 text-sm font-semibold transition-all hover:-translate-y-0.5">
                   <Download className="h-4 w-4" />
                   Download Full
                   <ArrowUpRight className="h-4 w-4" />
-                </a>
-                <a href={github.checksumsUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper-strong px-5 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-paper">
+                </TrackedAnchor>
+                <TrackedAnchor analyticsEvent={{ name: "download_channel_select", properties: { channel: "checksums", surface: "download_hero" } }} href={github.checksumsUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper-strong px-5 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-paper">
                   <FileCheck2 className="h-4 w-4" />
                   Verify SHA256
-                </a>
+                </TrackedAnchor>
               </div>
 
               <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-ink-soft">
@@ -151,7 +152,7 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
                   <li key={item} className="flex items-center gap-2 text-sm text-ink-soft"><CheckCircle2 className="h-4 w-4 shrink-0 text-mint-strong" />{item}</li>
                 ))}
               </ul>
-              <a href={github.fullSetupUrl} target="_blank" rel="noreferrer" className="glass-cta mt-7 inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-transform hover:-translate-y-0.5">Download Full <ArrowUpRight className="h-4 w-4" /></a>
+              <TrackedAnchor analyticsEvent={{ name: "download_channel_select", properties: { channel: "full", surface: "download_builds" } }} href={github.fullSetupUrl} target="_blank" rel="noreferrer" className="glass-cta mt-7 inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-transform hover:-translate-y-0.5">Download Full <ArrowUpRight className="h-4 w-4" /></TrackedAnchor>
             </ScrollReveal>
 
             <ScrollReveal delay={0.11} className="surface-card-static rounded-[1.75rem] p-6">
@@ -159,7 +160,7 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
               <h3 className="mt-5 font-display text-2xl font-semibold text-ink">Lite build</h3>
               <p className="mt-3 text-sm leading-relaxed text-ink-soft">For people who already prefer to manage yt-dlp, ffmpeg, aria2, and their wider setup boundary directly.</p>
               <p className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">{formatMegabytes(github.liteSetupSize)}</p>
-              <a href={github.liteSetupUrl} target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-ink-soft">Download Lite <ArrowUpRight className="h-4 w-4" /></a>
+              <TrackedAnchor analyticsEvent={{ name: "download_channel_select", properties: { channel: "lite", surface: "download_builds" } }} href={github.liteSetupUrl} target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-ink-soft">Download Lite <ArrowUpRight className="h-4 w-4" /></TrackedAnchor>
             </ScrollReveal>
 
             <ScrollReveal delay={0.18} className="surface-card-static rounded-[1.75rem] p-6">
@@ -167,7 +168,7 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
               <h3 className="mt-5 font-display text-2xl font-semibold text-ink">Portable</h3>
               <p className="mt-3 text-sm leading-relaxed text-ink-soft">A self-contained folder when you prefer to carry the app or replace the release folder manually when you update.</p>
               <p className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">{formatMegabytes(github.portableZipSize)}</p>
-              <a href={github.portableZipUrl} target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-ink-soft">Download Portable <ArrowUpRight className="h-4 w-4" /></a>
+              <TrackedAnchor analyticsEvent={{ name: "download_channel_select", properties: { channel: "portable", surface: "download_builds" } }} href={github.portableZipUrl} target="_blank" rel="noreferrer" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-ink-soft">Download Portable <ArrowUpRight className="h-4 w-4" /></TrackedAnchor>
             </ScrollReveal>
           </div>
         </section>

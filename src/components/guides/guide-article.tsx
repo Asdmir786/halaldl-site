@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
+import { TrackedLink } from "@/components/analytics/tracked-link";
 import type { GuideBlock, GuideCta } from "@/lib/guides/types";
 
 function CalloutTone({
@@ -29,20 +30,33 @@ function CalloutTone({
 export function GuideCtaButton({
   cta,
   className,
+  analyticsSurface = "guide",
 }: {
   cta: GuideCta;
   className?: string;
+  analyticsSurface?: string;
 }) {
+  const analyticsEvent = cta.eventCta.startsWith("compare_")
+    ? {
+        name: "comparison_interaction" as const,
+        properties: { action: cta.eventCta, surface: analyticsSurface },
+      }
+    : {
+        name: "download_cta_click" as const,
+        properties: { cta: cta.eventCta, surface: analyticsSurface },
+      };
+
   return (
-    <Link
+    <TrackedLink
       href={cta.href}
+      analyticsEvent={analyticsEvent}
       className={
         className ??
         "glass-cta inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5"
       }
     >
       {cta.label}
-    </Link>
+    </TrackedLink>
   );
 }
 
@@ -115,13 +129,19 @@ export function GuideBlocks({
             );
           case "table":
             return (
-              <div key={key} className="overflow-x-auto rounded-2xl border border-line">
+              <div
+                key={key}
+                role="region"
+                aria-label={block.caption ?? "Guide comparison table"}
+                tabIndex={0}
+                className="max-w-full overflow-x-auto rounded-2xl border border-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint-strong/60"
+              >
                 {block.caption ? (
                   <p className="border-b border-line bg-paper/70 px-4 py-3 text-xs text-ink-muted">
                     {block.caption}
                   </p>
                 ) : null}
-                <table className="min-w-full text-left text-sm">
+                <table className="w-full min-w-[48rem] text-left text-sm">
                   <thead className="bg-paper-strong/80 text-ink">
                     <tr>
                       {block.table.headers.map((header) => (
@@ -161,7 +181,7 @@ export function GuideBlocks({
           case "cta":
             return (
               <div key={key} className="pt-2">
-                <GuideCtaButton cta={block.cta} />
+                <GuideCtaButton cta={block.cta} analyticsSurface="guide_body" />
               </div>
             );
           default:

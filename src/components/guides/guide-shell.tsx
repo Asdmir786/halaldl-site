@@ -59,7 +59,7 @@ export function GuideShell({
             </nav>
 
             <div className="mt-8 grid gap-10 xl:grid-cols-[minmax(0,1fr)_16rem] xl:items-start">
-              <article id="guide-article-body" data-scroll-beat="">
+              <article id="guide-article-body" data-scroll-beat="" className="min-w-0">
                 <header className="secondary-hero guide-article-hero relative overflow-hidden rounded-[1.85rem] border border-line bg-paper/70 p-6 sm:p-8">
                   <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-sky/70 blur-3xl" aria-hidden="true" />
                   <div className="relative">
@@ -74,7 +74,7 @@ export function GuideShell({
                   </div>
                 </header>
 
-                <div className="mt-8 rounded-[1.85rem] border border-line bg-paper/45 p-6 sm:p-8">{children}</div>
+                <div className="mt-8 min-w-0 rounded-[1.85rem] border border-line bg-paper/45 p-6 sm:p-8">{children}</div>
 
                 <div className="mt-10 rounded-[1.75rem] border border-mint-strong/20 bg-mint/25 p-6 sm:p-7">
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
@@ -84,7 +84,7 @@ export function GuideShell({
                     Ready to install on Windows?
                   </p>
                   <div className="mt-5">
-                    <GuideCtaButton cta={cta} />
+                    <GuideCtaButton cta={cta} analyticsSurface="guide_next_step" />
                   </div>
                 </div>
 
