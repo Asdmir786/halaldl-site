@@ -60,6 +60,11 @@ export type AnalyticsEvent =
       properties: { browser?: "chrome" | "firefox" | "edge"; surface: "roadmap" };
     };
 
+type AnalyticsDispatchOptions = {
+  onSent?: () => void;
+  timeoutMs?: number;
+};
+
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
@@ -70,10 +75,33 @@ declare global {
  * Sends only allowlisted product-funnel metadata. Callers must never add media
  * URLs, filenames, local paths, clipboard content, or download history.
  */
-export function trackAnalyticsEvent(event: AnalyticsEvent): void {
+export function trackAnalyticsEvent(
+  event: AnalyticsEvent,
+  { onSent, timeoutMs = 750 }: AnalyticsDispatchOptions = {},
+): void {
   if (typeof window === "undefined") return;
 
-  window.gtag?.("event", event.name, event.properties);
+  const dispatch = window.gtag;
+  if (!dispatch) {
+    onSent?.();
+  } else if (onSent) {
+    let completed = false;
+    const finish = () => {
+      if (completed) return;
+      completed = true;
+      onSent();
+    };
+
+    dispatch("event", event.name, {
+      ...event.properties,
+      transport_type: "beacon",
+      event_callback: finish,
+      event_timeout: timeoutMs,
+    });
+    window.setTimeout(finish, timeoutMs + 50);
+  } else {
+    dispatch("event", event.name, event.properties);
+  }
 
   if (process.env.NODE_ENV !== "production") {
     window.dispatchEvent(new CustomEvent("halaldl:analytics", { detail: event }));

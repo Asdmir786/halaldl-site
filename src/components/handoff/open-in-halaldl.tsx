@@ -29,8 +29,10 @@ export function OpenInHalalDl({ surface, className = "" }: OpenInHalalDlProps) {
 
     setError(null);
     setAttempted(true);
-    trackAnalyticsEvent({ name: "open_in_app_click", properties: { surface } });
-    window.location.assign(result.deepLink);
+    trackAnalyticsEvent(
+      { name: "open_in_app_click", properties: { surface } },
+      { onSent: () => window.location.assign(result.deepLink) },
+    );
   };
 
   return (
