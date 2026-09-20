@@ -16,6 +16,12 @@ export const troubleshootingWindowsArticle: GuideArticle = {
   ],
   blocks: [
     {
+      type: "callout",
+      tone: "mint",
+      title: "Start with the evidence",
+      body: "Capture the failing item, current yt-dlp version, relevant preset, and raw error line before changing multiple settings. One concrete failure is easier to fix than a rewritten setup.",
+    },
+    {
       type: "paragraph",
       text: "Most Windows yt-dlp pain clusters around outdated extractors, missing FFmpeg, blocked unsigned installers, and opaque GUI failures. Fix the checklist in order before you rewrite your whole setup.",
     },

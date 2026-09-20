@@ -21,6 +21,12 @@ export const ytDlpCliVsGuiArticle: GuideArticle = {
   ],
   blocks: [
     {
+      type: "callout",
+      tone: "mint",
+      title: "Use both when that is the honest answer",
+      body: "A GUI wins for interactive Windows jobs, saved presets, and readable recovery. The CLI wins for scripts, servers, exact flags, and unattended automation. Many power users keep both.",
+    },
+    {
       type: "paragraph",
       text: "yt-dlp is excellent. The question is not “CLI or nothing?” — it is which interface matches the job in front of you. This guide separates batch/automation work from everyday Windows downloads, and explains where a GUI like HalalDL fits without pretending the engine disappeared.",
     },

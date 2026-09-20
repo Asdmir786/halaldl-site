@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import { TrackedLink } from "@/components/analytics/tracked-link";
+import { GuideComparisonBlock } from "@/components/guides/comparison-block";
+import { OpenInHalalDl } from "@/components/handoff/open-in-halaldl";
+import type { AnalyticsEvent, AnalyticsSurface } from "@/lib/analytics";
 import type { GuideBlock, GuideCta } from "@/lib/guides/types";
 
 function CalloutTone({
@@ -30,20 +33,20 @@ function CalloutTone({
 export function GuideCtaButton({
   cta,
   className,
-  analyticsSurface = "guide",
+  analyticsSurface = "guide_body",
 }: {
   cta: GuideCta;
   className?: string;
-  analyticsSurface?: string;
+  analyticsSurface?: Extract<AnalyticsSurface, "guide_body" | "guide_next_step">;
 }) {
-  const analyticsEvent = cta.eventCta.startsWith("compare_")
+  const analyticsEvent: AnalyticsEvent = cta.eventCta === "compare_full_vs_lite"
     ? {
         name: "comparison_interaction" as const,
-        properties: { action: cta.eventCta, surface: analyticsSurface },
+        properties: { action: "compare_full_vs_lite", surface: analyticsSurface },
       }
     : {
         name: "download_cta_click" as const,
-        properties: { cta: cta.eventCta, surface: analyticsSurface },
+        properties: { action: "go_to_download" as const, surface: analyticsSurface },
       };
 
   return (
@@ -165,6 +168,10 @@ export function GuideBlocks({
                 </table>
               </div>
             );
+          case "comparison":
+            return <GuideComparisonBlock key={key} block={block} />;
+          case "handoff":
+            return <OpenInHalalDl key={key} surface={block.surface} />;
           case "faq":
             return (
               <div key={key} className="space-y-3">

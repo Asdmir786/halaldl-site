@@ -16,6 +16,12 @@ export const whyRawLogsMatterArticle: GuideArticle = {
   ],
   blocks: [
     {
+      type: "callout",
+      tone: "mint",
+      title: "Logs are the escape hatch",
+      body: "A friendly explanation helps first. The unedited yt-dlp output must still be available when you need to verify the cause, search an exact error, or file a useful report.",
+    },
+    {
       type: "paragraph",
       text: "Extractors break. Platforms change. A GUI that only says “failed” is not trustworthy. Raw yt-dlp output is how you see what actually happened — the same signal power users already read in the terminal.",
     },

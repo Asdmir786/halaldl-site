@@ -16,6 +16,12 @@ export const playlistGuiWorkflowArticle: GuideArticle = {
   ],
   blocks: [
     {
+      type: "callout",
+      tone: "mint",
+      title: "Match the tool to the list",
+      body: "Use HalalDL when you want to preview and choose entries before they reach a local queue. Use Tartube for a long-lived channel database, or yt-dlp CLI for large unattended batches.",
+    },
+    {
       type: "paragraph",
       text: "Playlists and channels are where yt-dlp shines — and where a GUI has to stay honest about progress, failures, and naming. The job is not only “start many downloads”; it is keeping the run understandable when one item fails.",
     },

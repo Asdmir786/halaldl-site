@@ -21,7 +21,8 @@ export function GoogleAnalytics() {
           gtag('config', '${measurementId}', {
             allow_google_signals: false,
             allow_ad_personalization_signals: false,
-            anonymize_ip: true
+            anonymize_ip: true,
+            debug_mode: new URLSearchParams(window.location.search).get('analytics_debug') === '1'
           });
         `}
       </Script>

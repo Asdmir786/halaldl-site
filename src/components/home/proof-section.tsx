@@ -16,11 +16,11 @@ export function ProofSection() {
             eyebrow="Inside the control room"
             title="Every decision stays visible."
             accent="Preview, choose, recover, keep, and create."
-            body={`The ${CURRENT_RELEASE.tag} release turns a supported link into a local workflow with clear states—not a black-box queue.`}
+            body={`HalalDL ${CURRENT_RELEASE.tag} keeps the visible local workflow and tightens its privacy and security boundaries.`}
             className="max-w-2xl"
           />
           <p className="local-control-story-aside">
-            Official product screens from {CURRENT_RELEASE.tag}. <Link href="/guides/halaldl-0-6-0">Read the release guide</Link> for the full change set.
+            Core product screens introduced in v0.6.0 remain current. <Link href="/guides/halaldl-0-6-1">Read the v0.6.1 maintenance guide</Link> for the latest boundary changes.
           </p>
         </MotionField>
 
