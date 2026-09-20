@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
-import { Download } from "lucide-react";
+import { Download, Menu } from "lucide-react";
 import { GitHubIcon } from "@/components/icons/github-icon";
 import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -20,13 +20,13 @@ export async function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
   const initialThemePreference = resolveThemePreference(
     cookieStore.get(THEME_COOKIE)?.value,
   );
-  const navItems = ["Features", "Workflow", "Install", "Trust", "FAQ"] as const;
-  const homeSectionHref = (item: (typeof navItems)[number]) =>
-    currentPage === "home" ? `#${item.toLowerCase()}` : `/#${item.toLowerCase()}`;
   const navLinkClass =
     "whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:bg-line hover:text-ink";
-  const mobileNavLinkClass =
-    "shrink-0 whitespace-nowrap rounded-full border border-line bg-paper-strong/70 px-3 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:bg-paper hover:text-ink";
+  const primaryNav = [
+    { label: "Compare", href: "/guides/best-yt-dlp-gui-windows", active: currentPage === "compare" },
+    { label: "Guides", href: "/guides", active: currentPage === "guides" },
+    { label: "Changelog", href: "/changelog", active: currentPage === "changelog" },
+  ] as const;
 
   return (
     <header className="header-bar rounded-2xl px-4 py-2.5 sm:px-5">
@@ -39,43 +39,21 @@ export async function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main navigation">
-          <Link
-            href="/"
-            className={`${navLinkClass} ${currentPage === "home" ? "bg-line text-ink" : ""}`.trim()}
-          >
-            Home
-          </Link>
-          <Link
-            href="/changelog"
-            className={`${navLinkClass} ${currentPage === "changelog" ? "bg-line text-ink" : ""}`.trim()}
-          >
-            Changelog
-          </Link>
-          <Link
-            href="/compare/full-vs-lite"
-            className={`${navLinkClass} ${currentPage === "compare" ? "bg-line text-ink" : ""}`.trim()}
-          >
-            Full vs Lite
-          </Link>
-          <Link
-            href="/guides"
-            className={`${navLinkClass} ${currentPage === "guides" ? "bg-line text-ink" : ""}`.trim()}
-          >
-            Guides
-          </Link>
-          {navItems.map((item) => (
-            <a
-              key={item}
-              href={homeSectionHref(item)}
-              className={navLinkClass}
+          {primaryNav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`${navLinkClass} ${item.active ? "bg-line text-ink" : ""}`.trim()}
             >
-              {item}
-            </a>
+              {item.label}
+            </Link>
           ))}
         </nav>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle initialPreference={initialThemePreference} />
+          <div className="hidden md:block">
+            <ThemeToggle initialPreference={initialThemePreference} />
+          </div>
           <a
             href={SITE_LINKS.repoUrl}
             target="_blank"
@@ -98,44 +76,26 @@ export async function SiteHeader({ currentPage = "home" }: SiteHeaderProps) {
         </div>
       </div>
 
-      <nav
-        className="-mx-1 mt-3 flex flex-wrap gap-2 px-1 pb-1 md:hidden"
-        aria-label="Mobile navigation"
-      >
-        <Link
-          href="/"
-          className={`${mobileNavLinkClass} ${currentPage === "home" ? "bg-paper text-ink" : ""}`.trim()}
-        >
-          Home
-        </Link>
-        <Link
-          href="/changelog"
-          className={`${mobileNavLinkClass} ${currentPage === "changelog" ? "bg-paper text-ink" : ""}`.trim()}
-        >
-          Changelog
-        </Link>
-        <Link
-          href="/compare/full-vs-lite"
-          className={`${mobileNavLinkClass} ${currentPage === "compare" ? "bg-paper text-ink" : ""}`.trim()}
-        >
-          Full vs Lite
-        </Link>
-        <Link
-          href="/guides"
-          className={`${mobileNavLinkClass} ${currentPage === "guides" ? "bg-paper text-ink" : ""}`.trim()}
-        >
-          Guides
-        </Link>
-        {navItems.map((item) => (
-          <a
-            key={item}
-            href={homeSectionHref(item)}
-            className={mobileNavLinkClass}
-          >
-            {item}
-          </a>
-        ))}
-      </nav>
+      <details className="group mt-2 md:hidden">
+        <summary className="flex min-h-10 cursor-pointer list-none items-center justify-center gap-2 rounded-xl border border-line bg-paper-strong/70 px-3 py-2 text-sm font-semibold text-ink transition-colors hover:bg-paper [&::-webkit-details-marker]:hidden">
+          <Menu className="h-4 w-4" aria-hidden="true" />
+          Menu
+        </summary>
+        <nav className="mt-2 grid gap-1 rounded-xl border border-line bg-paper-strong/90 p-2" aria-label="Mobile navigation">
+          {primaryNav.map((item) => (
+            <Link key={item.href} href={item.href} className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-soft hover:bg-paper hover:text-ink">
+              {item.label}
+            </Link>
+          ))}
+          <Link href="/compare/full-vs-lite" className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-soft hover:bg-paper hover:text-ink">Choose a build</Link>
+          <Link href="/install/windows" className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-soft hover:bg-paper hover:text-ink">Install and verify</Link>
+          <a href={SITE_LINKS.repoUrl} target="_blank" rel="noreferrer" className="rounded-lg px-3 py-2.5 text-sm font-medium text-ink-soft hover:bg-paper hover:text-ink">GitHub</a>
+          <div className="mt-1 flex items-center justify-between gap-3 border-t border-line px-3 pt-3">
+            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">Appearance</span>
+            <ThemeToggle initialPreference={initialThemePreference} />
+          </div>
+        </nav>
+      </details>
     </header>
   );
 }

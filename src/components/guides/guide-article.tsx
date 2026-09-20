@@ -63,6 +63,59 @@ export function GuideCtaButton({
   );
 }
 
+function GuideDataTable({ block }: { block: Extract<GuideBlock, { type: "table" }> }) {
+  return (
+    <>
+      <div className="grid gap-3 lg:hidden" aria-label={block.caption ?? "Guide comparison"}>
+        {block.table.rows.map((row, rowIndex) => (
+          <article key={rowIndex} className="rounded-2xl border border-line bg-paper/65 p-4">
+            <h3 className="font-display text-lg font-semibold text-ink">{row[0]}</h3>
+            <dl className="mt-4 grid gap-3 sm:grid-cols-2">
+              {row.slice(1).map((cell, cellIndex) => (
+                <div key={`${rowIndex}-${cellIndex}`} className="rounded-xl border border-line bg-paper-strong/60 p-3">
+                  <dt className="text-xs font-semibold uppercase tracking-[0.08em] text-ink-muted">
+                    {block.table.headers[cellIndex + 1]}
+                  </dt>
+                  <dd className="mt-1.5 text-sm leading-relaxed text-ink-soft">{cell}</dd>
+                </div>
+              ))}
+            </dl>
+          </article>
+        ))}
+      </div>
+
+      <div
+        role="region"
+        aria-label={block.caption ?? "Guide comparison table"}
+        tabIndex={0}
+        className="hidden max-w-full overflow-hidden rounded-2xl border border-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint-strong/60 lg:block"
+      >
+        {block.caption ? (
+          <p className="border-b border-line bg-paper/70 px-4 py-3 text-xs text-ink-muted">{block.caption}</p>
+        ) : null}
+        <table className="w-full table-fixed text-left text-sm">
+          <thead className="bg-paper-strong/80 text-ink">
+            <tr>
+              {block.table.headers.map((header) => (
+                <th key={header} className="break-words px-3 py-2.5 font-semibold">{header}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {block.table.rows.map((row, rowIndex) => (
+              <tr key={rowIndex} className="border-t border-line text-ink-soft">
+                {row.map((cell, cellIndex) => (
+                  <td key={`${rowIndex}-${cellIndex}`} className="break-words px-3 py-2.5 align-top leading-relaxed">{cell}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
 export function GuideBlocks({
   blocks,
 }: {
@@ -131,43 +184,7 @@ export function GuideBlocks({
               />
             );
           case "table":
-            return (
-              <div
-                key={key}
-                role="region"
-                aria-label={block.caption ?? "Guide comparison table"}
-                tabIndex={0}
-                className="max-w-full overflow-x-auto rounded-2xl border border-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint-strong/60"
-              >
-                {block.caption ? (
-                  <p className="border-b border-line bg-paper/70 px-4 py-3 text-xs text-ink-muted">
-                    {block.caption}
-                  </p>
-                ) : null}
-                <table className="w-full min-w-[48rem] text-left text-sm">
-                  <thead className="bg-paper-strong/80 text-ink">
-                    <tr>
-                      {block.table.headers.map((header) => (
-                        <th key={header} className="px-3 py-2.5 font-semibold">
-                          {header}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {block.table.rows.map((row, rowIndex) => (
-                      <tr key={rowIndex} className="border-t border-line text-ink-soft">
-                        {row.map((cell, cellIndex) => (
-                          <td key={`${rowIndex}-${cellIndex}`} className="px-3 py-2.5 align-top">
-                            {cell}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            );
+            return <GuideDataTable key={key} block={block} />;
           case "comparison":
             return <GuideComparisonBlock key={key} block={block} />;
           case "handoff":

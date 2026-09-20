@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2, CircleHelp, Download, FolderArchive, Layers3, Settings2, ShieldCheck } from "lucide-react";
 import type { GitHubSnapshot } from "@/lib/github";
 import { SiteHeader } from "@/components/home/home-header";
-import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { formatMegabytes } from "@/components/home/home-shared";
@@ -26,8 +25,6 @@ export function BuildComparisonContent({ github }: BuildComparisonContentProps) 
     <main id="main-content" className="secondary-page overflow-x-hidden">
       <div className="mx-auto max-w-6xl px-5 pb-16 pt-8 sm:px-8 sm:pb-20">
         <SiteHeader currentPage="compare" />
-        <SubpageRouteStrip currentPage="compare" />
-
         <nav aria-label="Breadcrumb" className="mt-6 flex items-center gap-2 text-sm text-ink-muted">
           <Link href="/" className="transition-colors hover:text-ink">Home</Link>
           <span>/</span>
@@ -40,8 +37,8 @@ export function BuildComparisonContent({ github }: BuildComparisonContentProps) 
           <div className="relative grid gap-10 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:items-center">
             <div className="max-w-xl">
               <div className="eyebrow"><Layers3 className="h-3.5 w-3.5" /> Build comparison</div>
-              <h1 className="mt-5 font-display text-4xl font-semibold tracking-[-0.04em] text-ink sm:text-5xl lg:text-[3.65rem]">The right build is about the <span className="text-ink-soft">setup boundary.</span></h1>
-              <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">This is not a Pro-versus-Basic split. Full is the recommended default. Lite gives you more direct responsibility for the toolchain. Portable keeps the app in one self-contained folder.</p>
+              <h1 className="mt-5 font-display text-4xl font-semibold tracking-[-0.04em] text-ink sm:text-5xl lg:text-[3.65rem]">Which HalalDL build <span className="text-ink-soft">should you choose?</span></h1>
+              <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">Choose Full unless you already know you want to manage the supporting tools yourself. Choose Portable when you want one folder instead of an installer.</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a href={github.fullSetupUrl} target="_blank" rel="noreferrer" className="glass-cta inline-flex items-center gap-2 rounded-2xl px-5 py-3.5 text-sm font-semibold transition-all hover:-translate-y-0.5"><Download className="h-4 w-4" />Download Full<ArrowRight className="h-4 w-4" /></a>
                 <Link href="/download" className="inline-flex items-center gap-2 rounded-2xl border border-line-strong bg-paper-strong px-5 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-paper">See all download options</Link>
@@ -78,10 +75,13 @@ export function BuildComparisonContent({ github }: BuildComparisonContentProps) 
           <div className="section-divider mb-12" />
           <ScrollReveal className="overflow-hidden rounded-[1.8rem] border border-line bg-paper/70">
             <div className="border-b border-line px-6 py-6 sm:px-7"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Compare the practical difference</p><h2 className="mt-3 font-display text-3xl font-semibold text-ink">Convenience, control, and portability.</h2></div>
-            <div className="overflow-x-auto"><div className="min-w-[44rem]">
+            <div className="hidden lg:block">
               <div className="grid grid-cols-[0.8fr_1fr_1fr_1fr] border-b border-line bg-paper-strong/85 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted"><div className="px-5 py-4">Decision point</div><div className="border-l border-line px-5 py-4">Full</div><div className="border-l border-line px-5 py-4">Lite</div><div className="border-l border-line px-5 py-4">Portable</div></div>
               {comparisonRows.map((row) => <div key={row.label} className="grid grid-cols-[0.8fr_1fr_1fr_1fr] border-b border-line last:border-b-0"><div className="px-5 py-5 text-sm font-semibold text-ink">{row.label}</div><div className="border-l border-line px-5 py-5 text-sm leading-relaxed text-ink-soft">{row.full}</div><div className="border-l border-line px-5 py-5 text-sm leading-relaxed text-ink-soft">{row.lite}</div><div className="border-l border-line px-5 py-5 text-sm leading-relaxed text-ink-soft">{row.portable}</div></div>)}
-            </div></div>
+            </div>
+            <div className="grid gap-3 p-4 sm:p-5 lg:hidden">
+              {comparisonRows.map((row) => <article key={row.label} className="rounded-2xl border border-line bg-paper-strong/60 p-4"><h3 className="font-display text-lg font-semibold text-ink">{row.label}</h3><dl className="mt-4 grid gap-3 sm:grid-cols-3"><div><dt className="text-xs font-semibold uppercase tracking-[0.08em] text-mint-strong">Full</dt><dd className="mt-1 text-sm leading-relaxed text-ink-soft">{row.full}</dd></div><div><dt className="text-xs font-semibold uppercase tracking-[0.08em] text-sky-strong">Lite</dt><dd className="mt-1 text-sm leading-relaxed text-ink-soft">{row.lite}</dd></div><div><dt className="text-xs font-semibold uppercase tracking-[0.08em] text-ink-muted">Portable</dt><dd className="mt-1 text-sm leading-relaxed text-ink-soft">{row.portable}</dd></div></dl></article>)}
+            </div>
           </ScrollReveal>
         </section>
 

@@ -49,13 +49,13 @@ function HeroCopy({ github }: { github: GitHubSnapshot }) {
       </div>
 
       <h1 className="control-room-headline mt-6 font-display text-[2.55rem] font-semibold leading-[0.98] tracking-[-0.04em] text-ink sm:text-[3.45rem] lg:text-[4.25rem] xl:text-[4.85rem]">
-        Choose it.
+        Download with control.
         <br />
         <span className="text-ink-soft">Keep it local.</span>
       </h1>
 
       <p className="control-room-supporting mt-5 max-w-xl text-base leading-relaxed text-ink-soft sm:text-lg">
-        HalalDL is a local yt-dlp GUI for Windows. Preview supported links, select what matters, choose your output, and keep completed media under your control.
+        HalalDL is a free yt-dlp GUI for Windows. Preview a link, choose the files and format, then download directly on your PC.
       </p>
 
       <div className="control-room-capabilities mt-5" aria-label="Core product capabilities">

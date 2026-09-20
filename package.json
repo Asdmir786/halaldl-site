@@ -46,7 +46,11 @@
       "@babel/core": "7.29.6",
       "baseline-browser-mapping": "2.11.25",
       "browserslist": "4.29.0",
-      "nanoid@3": "3.3.19"
+      "nanoid@3": "3.3.19",
+      "picomatch": "4.0.7",
+      "brace-expansion@<1.1.18": "1.1.18",
+      "@humanfs/node@<0.16.8": "0.16.8",
+      "js-yaml@>=4.0.0 <4.3.2": "4.3.2"
     }
   }
 }

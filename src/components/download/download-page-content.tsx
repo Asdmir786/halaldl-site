@@ -15,7 +15,6 @@ import type { GitHubSnapshot } from "@/lib/github";
 import { SITE_LINKS } from "@/lib/site";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
 import { SiteHeader } from "@/components/home/home-header";
-import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { ProductRelatedGuides } from "@/components/guides/product-related-guides";
 import { MotionField } from "@/components/ui/motion-field";
 import { CopyCommand } from "@/components/ui/copy-command";
@@ -54,8 +53,6 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
     <main id="main-content" className="overflow-x-hidden">
       <div className="mx-auto max-w-6xl px-5 pb-16 pt-8 sm:px-8 sm:pb-20">
         <SiteHeader currentPage="download" />
-        <SubpageRouteStrip currentPage="download" />
-
         <nav aria-label="Breadcrumb" className="mt-6 flex items-center gap-2 text-sm text-ink-muted">
           <Link href="/" className="transition-colors hover:text-ink">Home</Link>
           <span>/</span>
@@ -73,8 +70,8 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
                 Official GitHub releases
               </div>
               <h1 className="mt-5 font-display text-4xl font-semibold tracking-[-0.04em] text-ink sm:text-5xl lg:text-[3.65rem]">
-                Install with a
-                <span className="block text-ink-soft">clear local path.</span>
+                Download HalalDL
+                <span className="block text-ink-soft">for Windows.</span>
               </h1>
               <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">
                 Full is the recommended first install. Lite is for people who want more control over the toolchain. Portable stays self-contained when you prefer a folder you can carry and replace yourself.
@@ -107,7 +104,7 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative hidden lg:block">
               <div className="screenshot-frame p-3 shadow-[0_24px_64px_rgba(8,14,23,0.2)]">
                 <div className="feature-stage min-h-[15rem] sm:min-h-[21rem]">
                   <ThemedScreenshot
@@ -128,8 +125,6 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
             </div>
           </div>
         </MotionField>
-
-        <OpenInHalalDl surface="download_page" className="mt-8" />
 
         <section className="pt-16 sm:pt-20">
           <ScrollReveal>
@@ -176,9 +171,14 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
           </div>
         </section>
 
+        <OpenInHalalDl surface="download_page" className="mt-12" />
+
         <section className="pt-16 sm:pt-20">
+          <details className="rounded-[1.75rem] border border-line bg-paper/55 p-5 sm:p-7">
+            <summary className="cursor-pointer list-none font-display text-2xl font-semibold text-ink [&::-webkit-details-marker]:hidden">Other install and discovery options</summary>
+            <p className="mt-2 text-sm leading-relaxed text-ink-soft">Open this for WinGet package commands and the AlternativeTo listing.</p>
           <ScrollReveal>
-            <div className="max-w-2xl">
+            <div className="mt-8 max-w-2xl">
               <div className="eyebrow"><ExternalLink className="h-3.5 w-3.5" /> Other ways to find HalalDL</div>
               <h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.03em] text-ink sm:text-4xl">WinGet for installs. AlternativeTo for discovery.</h2>
               <p className="mt-4 text-base leading-relaxed text-ink-soft">GitHub Releases remains the canonical source. WinGet offers package-manager convenience for each build, while AlternativeTo helps people compare HalalDL with other tools.</p>
@@ -205,6 +205,7 @@ export function DownloadPageContent({ github }: DownloadPageContentProps) {
               <p className="mt-6 rounded-xl border border-amber/40 bg-amber/15 p-3 text-xs leading-relaxed text-ink-soft"><span className="font-semibold text-ink">Chocolatey:</span> no verified public package or install command yet.</p>
             </ScrollReveal>
           </div>
+          </details>
         </section>
 
         <section className="pt-16 sm:pt-20">

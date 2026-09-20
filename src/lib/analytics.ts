@@ -19,6 +19,7 @@ export type ComparisonToolId =
 
 export type ComparisonAction =
   | "compare_full_vs_lite"
+  | "compare_tool"
   | "open_official_source"
   | "filter_all"
   | "filter_windows"

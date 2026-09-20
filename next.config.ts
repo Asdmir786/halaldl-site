@@ -36,6 +36,13 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 85],
   },
+  async redirects() {
+    return [
+      { source: "/guides/full-vs-lite", destination: "/compare/full-vs-lite", permanent: true },
+      { source: "/guides/install-halaldl-windows", destination: "/install/windows", permanent: true },
+      { source: "/guides/verify-sha256-smartscreen", destination: "/trust/verify-checksum", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

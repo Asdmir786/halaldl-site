@@ -3279,7 +3279,7 @@ html.lenis {
 
 .local-control-hero-depth {
   z-index: -2;
-  inset: 8% -10% -26% 28%;
+  inset: 8% 0 -26% 28%;
   border-radius: 999px;
   background: radial-gradient(circle, rgba(38, 224, 198, 0.09), rgba(71, 124, 170, 0.055) 34%, transparent 70%);
   filter: blur(26px);

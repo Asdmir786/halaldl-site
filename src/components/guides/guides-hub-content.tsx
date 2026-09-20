@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Compass, FileStack, Sparkles } from "lucide-react";
 import { CURRENT_RELEASE } from "@/content/releases/registry";
 import { SiteHeader } from "@/components/home/home-header";
-import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { ThemedScreenshot } from "@/components/themed-screenshot";
 import { GuideIndexCard } from "@/components/guides/guide-index-card";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
@@ -23,8 +22,6 @@ export function GuidesHubContent({ tier1, tier2, tier3, currentReleaseGuide }: G
     <main id="main-content" className="secondary-page overflow-x-hidden">
       <div className="mx-auto max-w-6xl px-5 pb-16 pt-8 sm:px-8 sm:pb-20">
         <SiteHeader currentPage="guides" />
-        <SubpageRouteStrip currentPage="guides" />
-
         <nav aria-label="Breadcrumb" className="mt-6 flex items-center gap-2 text-sm text-ink-muted">
           <Link href="/" className="transition-colors hover:text-ink">Home</Link>
           <span>/</span>
@@ -37,23 +34,23 @@ export function GuidesHubContent({ tier1, tier2, tier3, currentReleaseGuide }: G
           <div className="relative grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center">
             <div className="max-w-xl">
               <div className="eyebrow"><BookOpen className="h-3.5 w-3.5" /> Practical Windows guides</div>
-              <h1 className="mt-5 font-display text-4xl font-semibold tracking-[-0.04em] text-ink sm:text-5xl lg:text-[3.65rem]">Find the next step. <span className="text-ink-soft">Skip the filler.</span></h1>
-              <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">Use these guides when you need to choose a frontend, install safely, understand a local workflow, or recover when the underlying tools change.</p>
+              <h1 className="mt-5 font-display text-4xl font-semibold tracking-[-0.04em] text-ink sm:text-5xl lg:text-[3.65rem]">What do you want <span className="text-ink-soft">to do?</span></h1>
+              <p className="mt-5 text-base leading-relaxed text-ink-soft sm:text-lg">Choose HalalDL, install it, or fix a download problem. Start with the task in front of you.</p>
               <div className="mt-7 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-2xl border border-line bg-paper-strong/80 p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Start</p><p className="mt-2 text-sm font-semibold text-ink">Choose and install</p></div>
-                <div className="rounded-2xl border border-line bg-paper-strong/80 p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Learn</p><p className="mt-2 text-sm font-semibold text-ink">Use the product well</p></div>
-                <div className="rounded-2xl border border-line bg-paper-strong/80 p-4"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Verify</p><p className="mt-2 text-sm font-semibold text-ink">Keep the source clear</p></div>
+                <Link href="/guides/best-yt-dlp-gui-windows" className="rounded-2xl border border-line bg-paper-strong/80 p-4 transition-colors hover:bg-paper"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Choose</p><p className="mt-2 text-sm font-semibold text-ink">Compare yt-dlp apps</p></Link>
+                <Link href="/install/windows" className="rounded-2xl border border-line bg-paper-strong/80 p-4 transition-colors hover:bg-paper"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Install</p><p className="mt-2 text-sm font-semibold text-ink">Get HalalDL on Windows</p></Link>
+                <Link href="/guides/troubleshooting-windows" className="rounded-2xl border border-line bg-paper-strong/80 p-4 transition-colors hover:bg-paper"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Fix</p><p className="mt-2 text-sm font-semibold text-ink">Troubleshoot a download</p></Link>
               </div>
             </div>
 
-            {currentReleaseGuide ? <Link href={currentReleaseGuide.canonicalPath} className="group rounded-[1.6rem] border border-line bg-paper-strong/80 p-3 shadow-[0_20px_52px_rgba(8,14,23,0.12)] transition-transform hover:-translate-y-1">
+            {currentReleaseGuide ? <Link href={currentReleaseGuide.canonicalPath} className="group hidden rounded-[1.6rem] border border-line bg-paper-strong/80 p-3 shadow-[0_20px_52px_rgba(8,14,23,0.12)] transition-transform hover:-translate-y-1 lg:block">
               <div className="screenshot-frame min-h-[13rem] p-2 sm:min-h-[18rem]"><div className="feature-stage min-h-[11rem] sm:min-h-[16rem]"><ThemedScreenshot lightSrc={featuredMedia.lightSrc} darkSrc={featuredMedia.darkSrc} alt={featuredMedia.alt} sizes="(min-width: 1024px) 600px, 100vw" renderMode="active" className="inset-0" imageClassName="border border-line bg-paper object-contain" /></div></div>
               <div className="flex items-start justify-between gap-4 px-3 pb-2 pt-5"><div><p className="text-xs font-semibold uppercase tracking-[0.12em] text-mint-strong">New in {CURRENT_RELEASE.tag}</p><h2 className="mt-2 font-display text-2xl font-semibold text-ink">{currentReleaseGuide.title}</h2><p className="mt-2 text-sm leading-relaxed text-ink-soft">{currentReleaseGuide.description}</p></div><ArrowRight className="mt-1 h-5 w-5 shrink-0 text-ink-muted transition-transform group-hover:translate-x-1" /></div>
             </Link> : null}
           </div>
         </section>
 
-        <section className="pt-16 sm:pt-20">
+        <section id="start-here" className="scroll-mt-24 pt-16 sm:pt-20">
           <ScrollReveal><div className="flex flex-wrap items-end justify-between gap-4"><div><div className="eyebrow"><Compass className="h-3.5 w-3.5" /> Start here</div><h2 className="mt-5 font-display text-3xl font-semibold tracking-[-0.03em] text-ink sm:text-4xl">Pick the question you actually have.</h2></div><p className="max-w-md text-sm leading-relaxed text-ink-soft">These are the highest-value reading paths: choosing a GUI, deciding on a build, installing, and verifying the release source.</p></div></ScrollReveal>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{tier1.map((guide, index) => <ScrollReveal key={guide.slug} delay={index * 0.05}><GuideIndexCard guide={guide} /></ScrollReveal>)}</div>
         </section>

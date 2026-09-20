@@ -25,7 +25,7 @@ export function FaqSection() {
         </div>
 
         <div className="faq-grid mt-10 grid gap-3 lg:grid-cols-2">
-          {FAQ_ITEMS.map((item, index) => (
+          {FAQ_ITEMS.slice(0, 6).map((item, index) => (
             <ScrollReveal key={item.question} delay={(index % 6) * 0.03}>
               <details className="faq-item group rounded-2xl p-5">
                 <summary className="flex cursor-pointer items-start justify-between gap-4">
@@ -39,6 +39,25 @@ export function FaqSection() {
             </ScrollReveal>
           ))}
         </div>
+
+        {FAQ_ITEMS.length > 6 ? (
+          <details className="mt-5 rounded-2xl border border-line bg-paper/55 p-4 sm:p-5">
+            <summary className="cursor-pointer font-semibold text-ink">Show {FAQ_ITEMS.length - 6} more questions</summary>
+            <div className="mt-5 grid gap-3 lg:grid-cols-2">
+              {FAQ_ITEMS.slice(6).map((item) => (
+                <details key={item.question} className="faq-item group rounded-2xl p-5">
+                  <summary className="flex cursor-pointer items-start justify-between gap-4">
+                    <span className="font-display text-base font-semibold text-ink">{item.question}</span>
+                    <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-ink-muted transition-transform group-open:rotate-90" />
+                  </summary>
+                  <div className="faq-answer-grid">
+                    <p className="faq-answer-content text-sm leading-relaxed text-ink-soft">{item.answer}</p>
+                  </div>
+                </details>
+              ))}
+            </div>
+          </details>
+        ) : null}
 
         <ScrollReveal className="mt-8">
           <nav

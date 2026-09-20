@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { SiteHeader } from "@/components/home/home-header";
-import { SubpageRouteStrip } from "@/components/site/subpage-route-strip";
 import { MarketingShell } from "@/components/site/marketing-shell";
 import { GuideCtaButton, RelatedGuides } from "@/components/guides/guide-article";
 import { GuideToc } from "@/components/guides/guide-toc";
@@ -16,7 +15,6 @@ type GuideShellProps = {
   tocItems?: Array<{ id: string; text: string }>;
   relatedGuides?: GuideMeta[];
   cta: GuideCta;
-  showRouteStrip?: boolean;
 };
 
 export function GuideShell({
@@ -27,7 +25,6 @@ export function GuideShell({
   tocItems = [],
   relatedGuides = [],
   cta,
-  showRouteStrip = true,
 }: GuideShellProps) {
   return (
     <main id="main-content" className="secondary-page overflow-x-hidden">
@@ -36,12 +33,6 @@ export function GuideShell({
         <MarketingShell>
           <GuideReadingProgress targetId="guide-article-body" />
           <ScrollBeats>
-            {showRouteStrip ? (
-              <div data-scroll-beat="">
-                <SubpageRouteStrip currentPage="guides" />
-              </div>
-            ) : null}
-
             <nav
               aria-label="Breadcrumb"
               className="mt-6 flex flex-wrap items-center gap-2 text-sm text-ink-muted"
@@ -70,7 +61,10 @@ export function GuideShell({
                     <p className="mt-5 max-w-3xl text-base leading-relaxed text-ink-soft sm:text-lg">
                       {description}
                     </p>
-                    <div className="mt-6 flex items-center gap-2 text-sm font-medium text-mint-strong"><span className="h-1.5 w-1.5 rounded-full bg-mint-strong" /> Practical local-first Windows guidance</div>
+                    <div className="mt-6 flex flex-wrap items-center gap-3">
+                      <GuideCtaButton cta={cta} analyticsSurface="guide_body" />
+                      <span className="inline-flex items-center gap-2 text-sm font-medium text-mint-strong"><span className="h-1.5 w-1.5 rounded-full bg-mint-strong" /> Windows guide · local app · no account</span>
+                    </div>
                   </div>
                 </header>
 
