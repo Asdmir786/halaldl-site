@@ -31,7 +31,7 @@ export const FAQ_ITEMS = [
   {
     question: "Is HalalDL a cloud service?",
     answer:
-      "No. HalalDL is a local desktop app. There is no account system, no hosted sync, and no telemetry layer in the product pitch or current release path.",
+      "No. HalalDL is a local desktop app. There is no account system, hosted sync, or desktop usage telemetry. The public website may use privacy-limited traffic analytics to understand page and download-option usage.",
   },
   {
     question: "Which build should most people use?",
@@ -56,7 +56,7 @@ export const FAQ_ITEMS = [
   {
     question: "Does HalalDL send telemetry or analytics?",
     answer:
-      "No telemetry is part of the current product story or release path. The value proposition is explicitly local-first and account-free.",
+      "The desktop app does not send usage telemetry. The public website may use privacy-limited traffic analytics, but custom events never include media URLs, filenames, download history, local paths, or clipboard content.",
   },
   {
     question: "Does the app bundle yt-dlp and ffmpeg?",
