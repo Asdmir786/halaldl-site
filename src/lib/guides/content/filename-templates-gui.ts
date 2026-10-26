@@ -4,6 +4,14 @@ export const filenameTemplatesGuiArticle: GuideArticle = {
   slug: "filename-templates-gui",
   faqs: [
     {
+      question: "Why does a filename contain NA?",
+      answer: "The source did not supply that metadata field. yt-dlp uses NA for missing fields by default; choose a template using fields available for that source.",
+    },
+    {
+      question: "Does ending a template in .mp4 convert the file?",
+      answer: "No. A filename does not select or convert the media format. Keep %(ext)s in the template so the name reflects the actual output extension.",
+    },
+    {
       question: "Do I need %(ext)s in every template?",
       answer:
         "It is still good practice, but HalalDL repairs missing extension tokens so files keep a usable suffix when a template leaves the extension out.",
@@ -85,16 +93,25 @@ export const filenameTemplatesGuiArticle: GuideArticle = {
     },
     {
       type: "table",
-      caption: "Examples of intent — adapt tokens to your library layout.",
+      caption: "Filename templates for the desktop app or yt-dlp output setting. Source metadata determines the available fields.",
       table: {
-        headers: ["Intent", "Example idea", "Why it helps"],
+        headers: ["Intent", "Template", "Why it helps"],
         rows: [
-          ["Simple title + ext", "title + extension", "Readable everyday downloads"],
-          ["Uploader libraries", "uploader / title", "Sort by channel later"],
-          ["ID-stable archives", "id + title", "Survive title edits on the site"],
-          ["Date-aware folders", "upload date + title", "Chronological browsing"],
+          ["Readable filenames", "%(title)s.%(ext)s", "Use the media title and actual extension"],
+          ["Uploader folders", "%(uploader)s/%(title)s [%(id)s].%(ext)s", "Group files in an uploader folder"],
+          ["Include the video ID", "%(title)s [%(id)s].%(ext)s", "Distinguish files with the same title"],
+          ["Upload dates", "%(upload_date)s - %(title)s.%(ext)s", "Put the source upload date before the title"],
         ],
       },
+    },
+    {
+      type: "paragraph",
+      text: "Paste only the pattern into the desktop preset's filename-template field; the -o flag belongs to the command line. These patterns do not apply to the hosted /fetch tool.",
+    },
+    {
+      type: "link",
+      label: "Official yt-dlp output-template documentation",
+      href: "https://github.com/yt-dlp/yt-dlp#output-template",
     },
     {
       type: "callout",

@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local analytics exports and one-off operational diagnostics are not source.
+    ".analytics/**",
   ]),
 ]);
 

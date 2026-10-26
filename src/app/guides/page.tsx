@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { GuidesHubContent } from "@/components/guides/guides-hub-content";
 import { getGuidesByTier, getGuideBySlug } from "@/lib/guides";
 import { getSocialImage } from "@/lib/site";
+import { CURRENT_RELEASE } from "@/content/releases/registry";
 import { absoluteUrl, getBreadcrumbSchema, serializeJsonLd } from "@/lib/seo";
 
 const META_TITLE = "Windows yt-dlp GUI Guides — Install, Playlists, FFmpeg & SHA256 | HalalDL";
@@ -47,7 +48,7 @@ export default function GuidesHubPage() {
         tier1={getGuidesByTier(1)}
         tier2={getGuidesByTier(2)}
         tier3={getGuidesByTier(3)}
-        currentReleaseGuide={getGuideBySlug("halaldl-0-6-0") ?? undefined}
+        currentReleaseGuide={getGuideBySlug(`halaldl-${CURRENT_RELEASE.tag.slice(1).replaceAll(".", "-")}`) ?? undefined}
       />
     </>
   );

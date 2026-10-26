@@ -3,7 +3,7 @@ export type GuideTier = 1 | 2 | 3;
 export type GuideCta = {
   label: string;
   href: string;
-  eventCta: "go_to_download" | "compare_full_vs_lite";
+  eventCta: "go_to_download" | "compare_full_vs_lite" | "open_web_fetch";
 };
 
 export type GuideFaqItem = {
@@ -65,6 +65,7 @@ export type GuideComparisonBlock = {
 export type GuideBlock =
   | { type: "heading"; level: 2 | 3; id: string; text: string }
   | { type: "paragraph"; text: string }
+  | { type: "link"; label: string; href: string }
   | { type: "list"; ordered?: boolean; items: string[] }
   | { type: "callout"; tone: "mint" | "sky" | "amber" | "coral"; title: string; body: string }
   | { type: "table"; caption?: string; table: GuideTable }

@@ -224,11 +224,11 @@ function DownloadCard({
 
 export function HeroAppMockup({ theme }: { theme: "light" | "dark" }) {
   const reducedMotion = usePrefersReducedMotion();
-  const [stage, setStage] = useState<Stage>("idle");
-  const [typedUrl, setTypedUrl] = useState("");
-  const [presetOpen, setPresetOpen] = useState(false);
-  const [selectedPreset, setSelectedPreset] = useState("Best Video");
-  const [downloadProgress, setDownloadProgress] = useState(0);
+  const [animationStage, setStage] = useState<Stage>("idle");
+  const [animationTypedUrl, setTypedUrl] = useState("");
+  const [animationPresetOpen, setPresetOpen] = useState(false);
+  const [animationSelectedPreset, setSelectedPreset] = useState("Best Video");
+  const [animationDownloadProgress, setDownloadProgress] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rafRef = useRef<number | null>(null);
 
@@ -253,14 +253,7 @@ export function HeroAppMockup({ theme }: { theme: "light" | "dark" }) {
   };
 
   useEffect(() => {
-    if (reducedMotion) {
-      // Static final state under reduced motion
-      setStage("done");
-      setTypedUrl(URL_TEXT);
-      setSelectedPreset(SELECTED_PRESET);
-      setDownloadProgress(100);
-      return;
-    }
+    if (reducedMotion) return;
 
     // ── Animation loop ──
     const runLoop = () => {
@@ -322,10 +315,15 @@ export function HeroAppMockup({ theme }: { theme: "light" | "dark" }) {
       }, 900);
     };
 
-    runLoop();
+    schedule(runLoop, 0);
     return clear;
   }, [reducedMotion]);
 
+  const stage = reducedMotion ? "done" : animationStage;
+  const typedUrl = reducedMotion ? URL_TEXT : animationTypedUrl;
+  const presetOpen = !reducedMotion && animationPresetOpen;
+  const selectedPreset = reducedMotion ? SELECTED_PRESET : animationSelectedPreset;
+  const downloadProgress = reducedMotion ? 100 : animationDownloadProgress;
   const isDownloading = stage === "downloading";
   const isDone = stage === "done";
   const speed = isDownloading

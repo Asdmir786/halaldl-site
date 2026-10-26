@@ -1,0 +1,47 @@
+[Unit]
+Description=HalalDL public media worker
+After=network-online.target halaldl-fetch-egress.service
+Requires=halaldl-fetch-egress.service
+RequiresMountsFor=/var/lib/halaldl-fetch/work
+ConditionPathIsMountPoint=/var/lib/halaldl-fetch/work
+
+[Service]
+Type=simple
+User=halaldl-fetch
+Group=halaldl-fetch
+WorkingDirectory=/opt/halaldl-fetch
+EnvironmentFile=/etc/halaldl-fetch.env
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=FETCH_WORK_ROOT=/var/lib/halaldl-fetch/work
+Environment=FETCH_RECEIPT_ROOT=/var/lib/halaldl-fetch/receipts
+ExecStartPre=/usr/bin/env node /opt/halaldl-fetch/worker.mjs --preflight
+ExecStart=/usr/bin/env node /opt/halaldl-fetch/worker.mjs
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=30
+KillMode=control-group
+UMask=0077
+CPUQuota=100%
+MemoryHigh=1G
+MemoryMax=1536M
+MemorySwapMax=0
+TasksMax=64
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+LockPersonality=yes
+ReadWritePaths=/var/lib/halaldl-fetch/work /var/lib/halaldl-fetch/receipts
+LimitNOFILE=256
+LimitCORE=0
+
+[Install]
+WantedBy=multi-user.target

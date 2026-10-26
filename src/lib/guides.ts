@@ -20,6 +20,14 @@ import { audioWorkflowArticle } from "@/lib/guides/content/audio-workflow";
 import { subtitlesMetadataGuiArticle } from "@/lib/guides/content/subtitles-metadata-gui";
 import { troubleshootingWindowsArticle } from "@/lib/guides/content/troubleshooting-windows";
 import { windowsFirstPhilosophyArticle } from "@/lib/guides/content/windows-first-philosophy";
+import {
+  facebookFetchArticle,
+  instagramFetchArticle,
+  otherFetchArticle,
+  tiktokFetchArticle,
+  webFetchArticle,
+  youtubeFetchArticle,
+} from "@/lib/guides/content/web-fetch-guides";
 
 export type { GuideArticle, GuideBlock, GuideFaqItem, GuideMeta, GuideTier } from "@/lib/guides/types";
 
@@ -103,13 +111,13 @@ export const GUIDES: GuideMeta[] = [
   },
   {
     slug: "filename-templates-gui",
-    title: "Filename templates in a GUI — yt-dlp naming without flags",
+    title: "yt-dlp Filename Templates: Windows Examples & GUI Presets",
     description:
-      "Learn how yt-dlp output templates work, and how HalalDL carries filename patterns inside presets so repeat jobs stay consistent.",
+      "Copy yt-dlp filename templates for titles, uploader folders, video IDs and upload dates. Learn how to keep extensions correct and reuse patterns in HalalDL presets.",
     primaryKeyword: "yt-dlp filename template Windows",
     tier: 2,
     publishedAt: GUIDE_DATE,
-    updatedAt: GUIDE_DATE,
+    updatedAt: "2026-10-26T00:00:00Z",
     canonicalPath: "/guides/filename-templates-gui",
     hostedInGuides: true,
     relatedSlugs: ["halaldl-0-4-1", "quick-panel-workflow", "best-yt-dlp-gui-windows"],
@@ -356,6 +364,91 @@ export const GUIDES: GuideMeta[] = [
     cta: { label: "Download HalalDL", href: "/download", eventCta: "go_to_download" },
     eyebrow: "Philosophy",
   },
+  {
+    slug: "web-fetch",
+    title: "Paste a link and save the file",
+    description: "How to use HalalDL /fetch: one public link, the resolutions you can save, and how long the file stays.",
+    primaryKeyword: "paste a link and save a video",
+    tier: 1,
+    publishedAt: "2026-10-24T00:00:00Z",
+    updatedAt: "2026-10-26T00:00:00Z",
+    canonicalPath: "/guides/web-fetch",
+    hostedInGuides: true,
+    relatedSlugs: ["save-public-youtube-video", "save-public-instagram-post"],
+    cta: { label: "Paste a link", href: "/fetch", eventCta: "open_web_fetch" },
+    eyebrow: "Web tool",
+  },
+  {
+    slug: "save-public-youtube-video",
+    title: "Try a public YouTube video link",
+    description: "How to try one public YouTube video in HalalDL. Some links may have download or verification issues.",
+    primaryKeyword: "save a YouTube video",
+    tier: 2,
+    publishedAt: "2026-10-24T00:00:00Z",
+    updatedAt: "2026-10-26T00:00:00Z",
+    canonicalPath: "/guides/save-public-youtube-video",
+    hostedInGuides: true,
+    relatedSlugs: ["web-fetch", "save-public-instagram-post", "save-public-tiktok"],
+    cta: { label: "Paste a link", href: "/fetch", eventCta: "open_web_fetch" },
+    eyebrow: "YouTube",
+  },
+  {
+    slug: "save-public-instagram-post",
+    title: "Save an Instagram Reel or post",
+    description: "How to copy a public Instagram video or Reel link and try it in HalalDL. Some links may have download issues.",
+    primaryKeyword: "save an Instagram Reel",
+    tier: 2,
+    publishedAt: "2026-10-24T00:00:00Z",
+    updatedAt: "2026-10-26T00:00:00Z",
+    canonicalPath: "/guides/save-public-instagram-post",
+    hostedInGuides: true,
+    relatedSlugs: ["web-fetch", "save-public-youtube-video"],
+    cta: { label: "Paste a link", href: "/fetch", eventCta: "open_web_fetch" },
+    eyebrow: "Instagram",
+  },
+  {
+    slug: "save-public-tiktok",
+    title: "Save a TikTok video",
+    description: "Copy one public TikTok video link and try it in HalalDL. Some sources may have temporary download issues.",
+    primaryKeyword: "save a TikTok video",
+    tier: 2,
+    publishedAt: "2026-10-24T00:00:00Z",
+    updatedAt: "2026-10-26T00:00:00Z",
+    canonicalPath: "/guides/save-public-tiktok",
+    hostedInGuides: true,
+    relatedSlugs: ["web-fetch", "save-public-instagram-post", "save-public-facebook-video"],
+    cta: { label: "Paste a link", href: "/fetch", eventCta: "open_web_fetch" },
+    eyebrow: "TikTok",
+  },
+  {
+    slug: "save-public-facebook-video",
+    title: "Save one public Facebook video",
+    description: "How to try one public Facebook video link in HalalDL. Some links may have download or verification issues.",
+    primaryKeyword: "save public Facebook video",
+    tier: 2,
+    publishedAt: "2026-10-24T00:00:00Z",
+    updatedAt: "2026-10-26T00:00:00Z",
+    canonicalPath: "/guides/save-public-facebook-video",
+    hostedInGuides: true,
+    relatedSlugs: ["web-fetch", "save-public-tiktok", "save-public-x-reddit-vimeo"],
+    cta: { label: "Paste a link", href: "/fetch", eventCta: "open_web_fetch" },
+    eyebrow: "Facebook",
+  },
+  {
+    slug: "save-public-x-reddit-vimeo",
+    title: "Try public video and audio links",
+    description: "Public link formats to try from X, Reddit, Vimeo, Dailymotion and SoundCloud, plus what to do if a download has issues.",
+    primaryKeyword: "save public Vimeo Reddit X",
+    tier: 2,
+    publishedAt: "2026-10-24T00:00:00Z",
+    updatedAt: "2026-10-26T00:00:00Z",
+    canonicalPath: "/guides/save-public-x-reddit-vimeo",
+    hostedInGuides: true,
+    relatedSlugs: ["web-fetch", "save-public-youtube-video", "save-public-facebook-video"],
+    cta: { label: "Paste a link", href: "/fetch", eventCta: "open_web_fetch" },
+    eyebrow: "More sites",
+  },
+
 ];
 
 const ARTICLES: Record<string, GuideArticle> = {
@@ -378,6 +471,12 @@ const ARTICLES: Record<string, GuideArticle> = {
   "subtitles-metadata-gui": subtitlesMetadataGuiArticle,
   "troubleshooting-windows": troubleshootingWindowsArticle,
   "windows-first-philosophy": windowsFirstPhilosophyArticle,
+  "web-fetch": webFetchArticle,
+  "save-public-youtube-video": youtubeFetchArticle,
+  "save-public-instagram-post": instagramFetchArticle,
+  "save-public-tiktok": tiktokFetchArticle,
+  "save-public-facebook-video": facebookFetchArticle,
+  "save-public-x-reddit-vimeo": otherFetchArticle,
 };
 
 export function getGuideBySlug(slug: string) {
@@ -407,7 +506,7 @@ export function getRelatedGuides(slug: string) {
 export function getGuideSitemapEntries(): MetadataRoute.Sitemap {
   const hub: MetadataRoute.Sitemap[number] = {
     url: "/guides",
-    lastModified: new Date(GUIDE_DATE),
+    lastModified: new Date(Math.max(...GUIDES.map(guide => new Date(guide.updatedAt).getTime()))),
     changeFrequency: "weekly",
     priority: 0.85,
   };

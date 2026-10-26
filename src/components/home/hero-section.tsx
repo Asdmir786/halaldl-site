@@ -57,6 +57,9 @@ function HeroCopy({ github }: { github: GitHubSnapshot }) {
       <p className="control-room-supporting mt-5 max-w-xl text-base leading-relaxed text-ink-soft sm:text-lg">
         HalalDL is a free yt-dlp GUI for Windows. Preview a link, choose the files and format, then download directly on your PC.
       </p>
+      <p className="control-room-supporting mt-3 max-w-xl text-sm leading-relaxed text-ink-soft">
+        No install on this computer? <Link href="/fetch" className="font-semibold text-ink underline">Paste a public link and save the file</Link>.
+      </p>
 
       <div className="control-room-capabilities mt-5" aria-label="Core product capabilities">
         <span>Playlist control</span>

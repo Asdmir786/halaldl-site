@@ -11,10 +11,17 @@
     "typecheck": "tsc --noEmit",
     "test:handoff": "node --experimental-strip-types --test tests/handoff.test.ts",
     "analytics:gsc-baseline": "node scripts/export-search-console-baseline.mjs",
-    "optimize:images": "python3 scripts/convert-content-images.py"
+    "optimize:images": "python3 scripts/convert-content-images.py",
+    "test:fetch": "node --experimental-strip-types --test tests/fetch-*.test.ts tests/fetch-worker.test.mjs",
+    "test:fetch:http": "node --test tests/fetch-http.test.mjs",
+    "test:fetch:media": "node --test tests/fetch-media-file.test.mjs",
+    "test:fetch:db": "node tests/fetch-db.integration.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1156.0",
+    "@aws-sdk/s3-request-presigner": "^3.1156.0",
     "@gsap/react": "^2.1.2",
+    "@neondatabase/serverless": "^1.2.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.7.0",
     "@vercel/speed-insights": "^2.0.0",
@@ -24,7 +31,7 @@
     "lenis": "^1.3.25",
     "lucide-react": "1.28.0",
     "motion": "12.43.0",
-    "next": "16.3.5",
+    "next": "16.4.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "tailwind-merge": "3.6.0",
@@ -37,7 +44,7 @@
     "@types/react-dom": "19.2.4",
     "@types/three": "^0.185.3",
     "eslint": "9.39.5",
-    "eslint-config-next": "16.3.5",
+    "eslint-config-next": "16.4.1",
     "tailwindcss": "4.3.3",
     "typescript": "5.9.3"
   },
@@ -48,9 +55,10 @@
       "browserslist": "4.29.0",
       "nanoid@3": "3.3.19",
       "picomatch": "4.0.7",
-      "brace-expansion@<1.1.18": "1.1.18",
       "@humanfs/node@<0.16.8": "0.16.8",
-      "js-yaml@>=4.0.0 <4.3.2": "4.3.2"
+      "js-yaml@>=4.0.0 <4.3.2": "4.3.2",
+      "source-map-js": "1.2.2",
+      "brace-expansion@<1.1.21": "1.1.21"
     }
   }
 }

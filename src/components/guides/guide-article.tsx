@@ -39,6 +39,20 @@ export function GuideCtaButton({
   className?: string;
   analyticsSurface?: Extract<AnalyticsSurface, "guide_body" | "guide_next_step">;
 }) {
+  if (cta.eventCta === "open_web_fetch") {
+    return (
+      <Link
+        href={cta.href}
+        className={
+          className ??
+          "glass-cta inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5"
+        }
+      >
+        {cta.label}
+      </Link>
+    );
+  }
+
   const analyticsEvent: AnalyticsEvent = cta.eventCta === "compare_full_vs_lite"
     ? {
         name: "comparison_interaction" as const,
@@ -152,6 +166,12 @@ export function GuideBlocks({
             return (
               <p key={key} className="text-base leading-relaxed text-ink-soft">
                 {block.text}
+              </p>
+            );
+          case "link":
+            return (
+              <p key={key} className="text-sm leading-relaxed">
+                <a href={block.href} className="font-medium text-ink underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-mint-strong">{block.label}</a>
               </p>
             );
           case "list":

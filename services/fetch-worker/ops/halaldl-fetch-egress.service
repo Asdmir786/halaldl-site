@@ -1,0 +1,18 @@
+[Unit]
+Description=HalalDL worker scoped outbound firewall
+After=network-online.target nftables.service
+Before=halaldl-fetch.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+RuntimeDirectory=halaldl-fetch-egress
+RuntimeDirectoryMode=0755
+ExecStart=/usr/bin/python3 /opt/halaldl-fetch/ops/apply-egress.py --apply
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/run/halaldl-fetch-egress
+
+[Install]
+WantedBy=multi-user.target

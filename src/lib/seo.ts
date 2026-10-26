@@ -10,7 +10,7 @@ export const SITE_DESCRIPTION = CURRENT_RELEASE.homepage!.description;
 export const HOMEPAGE_OG_DESCRIPTION =
   "A free, local-first yt-dlp GUI for Windows. Preview, select, download, organize, recover, and create from local media—without an account.";
 export const HOMEPAGE_TWITTER_DESCRIPTION = HOMEPAGE_OG_DESCRIPTION;
-export const SITE_UPDATED_AT = new Date("2026-08-14T00:00:00Z");
+export const SITE_UPDATED_AT = new Date(CURRENT_RELEASE.date);
 
 export const SITEMAP_ROUTES: MetadataRoute.Sitemap = [
   {
@@ -50,6 +50,11 @@ export const SITEMAP_ROUTES: MetadataRoute.Sitemap = [
     changeFrequency: "monthly",
     priority: 0.75,
   },
+  { url: "/fetch", lastModified: new Date("2026-10-26T00:00:00Z"), changeFrequency: "weekly", priority: 0.9 },
+  { url: "/legal/terms", lastModified: new Date("2026-10-26T00:00:00Z"), changeFrequency: "monthly", priority: 0.3 },
+  { url: "/legal/privacy", lastModified: new Date("2026-10-26T00:00:00Z"), changeFrequency: "monthly", priority: 0.3 },
+  { url: "/legal/acceptable-use", lastModified: new Date("2026-10-26T00:00:00Z"), changeFrequency: "monthly", priority: 0.3 },
+  { url: "/legal/copyright", lastModified: new Date("2026-10-26T00:00:00Z"), changeFrequency: "monthly", priority: 0.3 },
 ];
 
 export function absoluteUrl(path = "/") {

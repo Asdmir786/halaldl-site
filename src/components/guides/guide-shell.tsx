@@ -63,7 +63,7 @@ export function GuideShell({
                     </p>
                     <div className="mt-6 flex flex-wrap items-center gap-3">
                       <GuideCtaButton cta={cta} analyticsSurface="guide_body" />
-                      <span className="inline-flex items-center gap-2 text-sm font-medium text-mint-strong"><span className="h-1.5 w-1.5 rounded-full bg-mint-strong" /> Windows guide · local app · no account</span>
+                      <span className="inline-flex items-center gap-2 text-sm font-medium text-mint-strong"><span className="h-1.5 w-1.5 rounded-full bg-mint-strong" /> {cta.eventCta === "open_web_fetch" ? "Web tool · hosted fetch · daily limit" : "Windows guide · local app · no account"}</span>
                     </div>
                   </div>
                 </header>
@@ -75,7 +75,7 @@ export function GuideShell({
                     Next step
                   </p>
                   <p className="mt-3 font-display text-2xl font-semibold text-ink">
-                    Ready to install on Windows?
+                    {cta.eventCta === "open_web_fetch" ? "Open the web tool" : "Ready to install on Windows?"}
                   </p>
                   <div className="mt-5">
                     <GuideCtaButton cta={cta} analyticsSurface="guide_next_step" />

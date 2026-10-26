@@ -1,0 +1,12 @@
+[Unit]
+Description=Bounded HalalDL temporary media filesystem
+Before=halaldl-fetch.service
+
+[Mount]
+What=/var/lib/halaldl-fetch-work.img
+Where=/var/lib/halaldl-fetch/work
+Type=ext4
+Options=loop,nodev,nosuid,noexec
+
+[Install]
+WantedBy=multi-user.target

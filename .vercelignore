@@ -1,0 +1,11 @@
+.git/
+.vercel/
+.analytics/
+.next/
+node_modules/
+.env*
+!.env.example
+.playwright-cli/
+output/
+*.log
+*.tsbuildinfo

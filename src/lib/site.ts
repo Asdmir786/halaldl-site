@@ -33,7 +33,7 @@ export const FAQ_ITEMS = [
   {
     question: "Is HalalDL a cloud service?",
     answer:
-      "No. HalalDL is a local desktop app. There is no account system, hosted sync, or desktop usage telemetry. The public website may use privacy-limited traffic analytics to understand page and download-option usage.",
+      "The desktop app is local. It has no account, hosted sync, or desktop telemetry. The web tool at /fetch is a separate hosted fetch service with its own limits. The public website may use privacy-limited traffic analytics.",
   },
   {
     question: "Which build should most people use?",

@@ -23,7 +23,7 @@ export const safeAlternativesArticle: GuideArticle = {
     },
     {
       type: "paragraph",
-      text: "Random “free YouTube to MP4” websites are a malware and privacy lottery. Prefer open-source desktop tools with public GitHub Releases and checksums — whether that is yt-dlp itself or a GUI like HalalDL.",
+      text: "Random “free YouTube to MP4” websites are a malware and privacy lottery. Prefer the local HalalDL app, or this site’s own limited web tool at /fetch. Other web downloaders are not the same thing.",
     },
     {
       type: "callout",

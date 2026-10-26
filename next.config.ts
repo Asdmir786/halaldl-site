@@ -6,11 +6,12 @@ const contentSecurityPolicy = [
   "form-action 'self'",
   "frame-ancestors 'none'",
   "object-src 'none'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://*.google-analytics.com",
+  "frame-src https://challenges.cloudflare.com",
+  "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://*.google-analytics.com https://challenges.cloudflare.com",
   "media-src 'self'",
   "manifest-src 'self'",
   "worker-src 'self' blob:",
@@ -38,6 +39,7 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      { source: "/guides/pro-private-posts-and-stories", destination: "/guides/web-fetch", permanent: true },
       { source: "/guides/full-vs-lite", destination: "/compare/full-vs-lite", permanent: true },
       { source: "/guides/install-halaldl-windows", destination: "/install/windows", permanent: true },
       { source: "/guides/verify-sha256-smartscreen", destination: "/trust/verify-checksum", permanent: true },
