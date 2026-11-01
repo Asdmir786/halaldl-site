@@ -9,7 +9,7 @@ import type { DeliveryMode, PublicFormat } from "@/lib/fetch/formats";
 
 type PageStatus = { available: boolean; cleared?: boolean; jobId?: string | null; supportedPlatforms?: string[] };
 type Job = { id: string; status: string; platform: string; errorCode: string | null; formats: PublicFormat[]; ready: boolean;
-  title: string | null; thumbnail: string | null; duration: number | null; deliveryMode?: DeliveryMode | null; bytes?: number; queuePosition?: number | null; expiresAt: string | null; extension: string | null };
+  title: string | null; thumbnail: string | null; duration: number | null; deliveryMode?: DeliveryMode | null; bytes?: number; queuePosition?: number | null; expiresAt: string | null; extension: string | null; sourceUrl?: string | null };
 const SAVED_JOB = "halaldl.current-job";
 const TERMINAL = ["ready", "failed", "expired", "cancelled"];
 const STEPS = ["Link", "Queue", "Choose", "File"];
@@ -141,6 +141,7 @@ export function FetchTool({ siteKey }: { siteKey: string }) {
         const value = await request<Job>(`/api/fetch/jobs/${id}`, {}, controller.signal);
         setJob(value);
         setFormatId(value.formats?.[0]?.formatId ?? "");
+        if (value.sourceUrl) setUrl(current => current || value.sourceUrl || "");
         remember(value.id);
       } catch { if (!controller.signal.aborted) remember(null); }
     }
@@ -179,6 +180,7 @@ export function FetchTool({ siteKey }: { siteKey: string }) {
       try {
         const next = await request<Job>(`/api/fetch/jobs/${id}`, {}, controller.signal);
         setJob(next); setConnection("");
+        if (next.sourceUrl) setUrl(current => current || next.sourceUrl || "");
         if (next.status === "waiting_choice") setFormatId(current => next.formats?.some(f => f.formatId === current) ? current : next.formats?.[0]?.formatId ?? "");
         if (TERMINAL.includes(next.status)) return;
       } catch { if (!controller.signal.aborted) setConnection("Still checking. This download is saved."); }
@@ -231,7 +233,7 @@ export function FetchTool({ siteKey }: { siteKey: string }) {
     await run("probe", async signal => {
       const result = await request<{ id: string; platform: string; queuePosition?: number }>("/api/fetch/probe", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token, url: url.trim(), rights }) }, signal);
       remember(result.id);
-      setJob({ id: result.id, platform: result.platform, status: result.queuePosition ? "queued" : "probing", queuePosition: result.queuePosition ?? null, errorCode: null, formats: [], ready: false, title: null, thumbnail: null, duration: null, expiresAt: null, extension: null });
+      setJob({ id: result.id, platform: result.platform, status: result.queuePosition ? "queued" : "probing", queuePosition: result.queuePosition ?? null, errorCode: null, formats: [], ready: false, title: null, thumbnail: null, duration: null, expiresAt: null, extension: null, sourceUrl: url.trim() });
     });
   }
   async function confirm(event: React.FormEvent) {
@@ -265,6 +267,21 @@ export function FetchTool({ siteKey }: { siteKey: string }) {
     document.getElementById("fetch-url")?.focus();
   }
   function startAnother() { if (lock.current) return; setJob(null); setFormatId(""); setPreview(null); setPreviewNote(""); setMessage(""); setConnection(""); remember(null); setToken(""); setReset(value => value + 1); }
+  async function checkAgain() {
+    const link = (url.trim() || job?.sourceUrl || "").trim();
+    if (!link) { setMessage("Paste the link, then try again."); return; }
+    setUrl(link);
+    setRights(true);
+    setPreview(null);
+    setPreviewNote("");
+    setMessage("");
+    setConnection("");
+    await run("probe", async signal => {
+      const result = await request<{ id: string; platform: string; queuePosition?: number }>("/api/fetch/probe", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token, url: link, rights: true }) }, signal);
+      remember(result.id);
+      setJob({ id: result.id, platform: result.platform, status: result.queuePosition ? "queued" : "probing", queuePosition: result.queuePosition ?? null, errorCode: null, formats: [], ready: false, title: null, thumbnail: null, duration: null, expiresAt: null, extension: null, sourceUrl: link });
+    });
+  }
   async function notifications() {
     if (typeof Notification === "undefined") return;
     if (Notification.permission === "granted") { setDecision("granted"); return; }
@@ -299,7 +316,7 @@ export function FetchTool({ siteKey }: { siteKey: string }) {
             {job.thumbnail ? <Image unoptimized width={640} height={360} src={job.thumbnail} alt={job.title ? `${job.title} thumbnail` : "Video thumbnail"} referrerPolicy="no-referrer" className="max-h-64 w-full rounded-xl bg-paper object-contain" /> : null}
             <div className="min-w-0"><p className="text-sm font-medium text-ink-soft">{SOURCE_NAMES[job.platform] ?? "Link"} {duration(job.duration) ? `· ${duration(job.duration)}` : ""}</p>{job.title ? <h2 className="mt-1 break-words text-lg font-semibold text-ink">{job.title}</h2> : null}</div>
           </div> : null}
-          {job.errorCode || ["failed", "expired"].includes(job.status) ? <div className="mt-5"><p role="alert" className="text-sm leading-relaxed text-ink">{ERRORS[job.errorCode ?? "failed"] ?? ERRORS.failed}</p><button type="button" onClick={startAnother} className={`${primary} mt-4`}>Check link again</button></div>
+          {job.errorCode || ["failed", "expired"].includes(job.status) ? <div className="mt-5"><p role="alert" className="text-sm leading-relaxed text-ink">{ERRORS[job.errorCode ?? "failed"] ?? ERRORS.failed}</p><button type="button" onClick={() => void checkAgain()} disabled={!!busy} className={`${primary} mt-4`}>{busy === "probe" ? "Checking…" : "Check link again"}</button></div>
           : job.status === "waiting_choice" ? <form onSubmit={confirm} className="mt-5 grid gap-5">
             <fieldset><legend className="mb-3 text-sm font-semibold text-ink">File</legend><div className="flex flex-wrap gap-2">{FILE_MODES.map(mode => {
               const first = job.formats.find(f => modeOf(f) === mode.value);

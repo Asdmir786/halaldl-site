@@ -293,7 +293,7 @@ export async function jobForSession(sessionId: string, jobId: string) {
     const session = await loadSession(client, sessionId);
     await expireStale(client);
     const result = await client.query(
-      `SELECT id, status, platform, error_code, formats, choice, bytes, created_at, title, thumbnail, duration, expires_at, actual_ext, flagged,
+      `SELECT id, status, platform, error_code, formats, choice, bytes, created_at, title, thumbnail, duration, expires_at, actual_ext, source_url, flagged,
         CASE WHEN status = 'queued' THEN (SELECT count(*) + 1 FROM halaldl_fetch.jobs q
           WHERE q.status = 'queued' AND q.private_job = false AND q.flagged = false
           AND (COALESCE(q.queued_at, q.confirmed_at, q.created_at), q.id) <
@@ -318,6 +318,7 @@ export async function jobForSession(sessionId: string, jobId: string) {
       duration: row.duration as number | null,
       expiresAt: row.expires_at as string | null,
       extension: row.actual_ext as string | null,
+      sourceUrl: row.source_url as string,
       deliveryMode: row.choice ? publicFormat(row.choice as DownloadVariant).deliveryMode : null,
       ready: row.status === "ready" && !row.flagged && (!row.expires_at || new Date(row.expires_at).getTime() > Date.now()),
       ...queue,
