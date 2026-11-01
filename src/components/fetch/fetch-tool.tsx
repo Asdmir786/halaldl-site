@@ -45,6 +45,14 @@ function statusWord(status: string) {
   if (status === "ready") return "Ready";
   return "Queued";
 }
+function placeNote(status: string, ready: boolean, queuePosition?: number | null) {
+  if (ready || status === "ready") return "Preview the file here, or save it.";
+  if (status === "downloading") return "Preparing the file you chose. Larger files take longer.";
+  if (status === "waiting_choice") return "Choose a file. Nothing is prepared until you do.";
+  if (status === "probing") return "Checking this link for a title and file choices.";
+  if (queuePosition) return `Submitting this link took place ${queuePosition}. Earlier requests go first.`;
+  return "Taking a place in line.";
+}
 async function request<T>(url: string, init: RequestInit = {}, signal?: AbortSignal): Promise<T> {
   const bounded = AbortSignal.timeout(15_000);
   const response = await fetch(url, { ...init, cache: "no-store", signal: signal ? AbortSignal.any([bounded, signal]) : bounded });
@@ -74,9 +82,11 @@ function Progress({ status, ready, queuePosition }: { status: string; ready: boo
     <div className="mb-5 rounded-2xl border border-line-strong bg-paper p-4">
       {moving ? <div role="status" className="mb-5 flex items-center gap-3">
         <div className="grid h-16 min-w-16 place-items-center rounded-2xl bg-ink px-2 text-paper">
-          {queued && queuePosition ? <span className="font-display text-3xl font-semibold leading-none">{queuePosition}</span> : <LoaderCircle className="h-6 w-6 animate-spin motion-reduce:animate-none" aria-hidden="true" />}
+          {queued && queuePosition ? <span className="text-center"><span className="block text-[10px] font-semibold uppercase tracking-wide text-paper/75">Place</span><span className="font-display text-3xl font-semibold leading-none">{queuePosition}</span></span> : <LoaderCircle className="h-6 w-6 animate-spin motion-reduce:animate-none" aria-hidden="true" />}
         </div>
-        <p className="text-sm font-semibold text-ink">{statusWord(status)}</p>
+        <div>
+          <p className="text-sm font-semibold text-ink">{queued ? "In line" : statusWord(status)}</p>
+        </div>
       </div> : null}
       <ol className="grid grid-cols-4" aria-label="Progress">
         {STEPS.map((name, index) => {
@@ -93,6 +103,7 @@ function Progress({ status, ready, queuePosition }: { status: string; ready: boo
           );
         })}
       </ol>
+      <p className="mt-4 text-sm leading-relaxed text-ink">{placeNote(status, ready, queuePosition)}</p>
     </div>
   );
 }
@@ -189,10 +200,8 @@ export function FetchTool({ siteKey }: { siteKey: string }) {
 
   const cleared = !!status?.cleared;
   const available = !!status?.available && (cleared || !!siteKey);
-  const queued = job?.status === "queued";
   const selectedFormat = job?.formats.find(f => f.formatId === formatId) ?? job?.formats[0];
   const selectedMode = selectedFormat ? modeOf(selectedFormat) : "video_audio";
-  const queueLabel = job?.queuePosition ? `Queue #${job.queuePosition}` : "Queued";
   const showCheck = !!siteKey && !cleared && (!job || job.status === "waiting_choice" || TERMINAL.includes(job.status));
 
   async function run(action: "probe" | "confirm" | "download", operation: (signal: AbortSignal) => Promise<void>) {
@@ -275,9 +284,9 @@ export function FetchTool({ siteKey }: { siteKey: string }) {
               <button type="button" onClick={() => void paste()} disabled={!!busy || !!job && !TERMINAL.includes(job.status)} className={`inline-flex min-h-11 items-center gap-1.5 rounded-lg px-2 text-sm font-semibold text-ink hover:bg-line disabled:opacity-40 ${focus}`} aria-label="Paste link"><ClipboardPaste className="h-4 w-4" aria-hidden="true" /><span className="hidden lg:inline">Paste</span></button>
               {url ? <button type="button" aria-label="Clear link" disabled={!!busy || !!job && !TERMINAL.includes(job.status)} onClick={() => setUrl("")} className={`min-h-11 min-w-9 rounded-lg text-ink ${focus}`}><X className="mx-auto h-4 w-4" aria-hidden="true" /></button> : null}
             </div>
-            {!job || TERMINAL.includes(job.status) || queued ? <button type="submit" disabled={queued || !!busy || !rights || !url.trim() || !available || (!cleared && !token)} className={primary}>{queued || busy === "probe" ? <LoaderCircle className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" /> : <ArrowRight className="h-4 w-4" aria-hidden="true" />}{queued ? queueLabel : busy === "probe" ? "Joining…" : "Get download options"}</button> : null}
+            {!job || TERMINAL.includes(job.status) ? <button type="submit" disabled={!!busy || !rights || !url.trim() || !available || (!cleared && !token)} className={primary}>{busy === "probe" ? <LoaderCircle className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" /> : <ArrowRight className="h-4 w-4" aria-hidden="true" />}{busy === "probe" ? "Joining…" : "Get download options"}</button> : null}
           </div>
-          <p id="fetch-input-help" className="-mt-2 text-sm text-ink-soft">One public video.</p>
+          <p id="fetch-input-help" className="-mt-2 text-sm text-ink-soft">One public video. Submit takes a place in line.</p>
           {!job || TERMINAL.includes(job.status) ? <label className="flex items-start gap-3 text-sm leading-relaxed text-ink"><input type="checkbox" required checked={rights} onChange={e => setRights(e.target.checked)} className="mt-1 size-4 accent-mint-strong" /><span>I have the right to download this. <Link className="font-semibold underline underline-offset-4" href="/legal/terms">Terms</Link></span></label> : null}
           {status && !status.available ? <p role="status" className="rounded-xl border border-line-strong bg-paper px-4 py-3 text-sm text-ink">Downloads are paused. This page checks again.</p> : null}
           {showCheck ? <TurnstileField siteKey={siteKey} resetKey={reset} onToken={rememberToken} /> : null}
