@@ -24,6 +24,10 @@ test("jobs, confirmations and worker operations reject unauthenticated callers",
     assert.equal((await call(path, { method })).status, 401, `${method} ${path}`);
   }
 });
+test("playback preview requires the same browser session as download", async () => {
+  assert.equal((await call("/api/fetch/jobs/11111111-1111-4111-8111-111111111111?preview=1", { method: "POST" })).status, 401);
+});
+
 test("the retired guide redirects and is absent from the sitemap", async () => {
   const redirect = await call("/guides/pro-private-posts-and-stories");
   assert.equal(redirect.status, 308);
@@ -36,4 +40,12 @@ test("the public page names the downloader and contains no private upload pitch"
   assert.match(html, /Download a video from a link/);
   assert.match(html, /Online downloader/);
   assert.doesNotMatch(html, /Use the cookies saved|Pro account|Stories need Pro/);
+});
+
+test("media playback policy only permits self and the configured R2 account", async () => {
+  const response = await call("/fetch");
+  const policy = response.headers.get("content-security-policy") ?? "";
+  const media = policy.split(";").map(s => s.trim()).find(s => s.startsWith("media-src "));
+  assert.match(media ?? "", /^media-src 'self'(?: https:\/\/[a-f0-9]{32}\.r2\.cloudflarestorage\.com(?: https:\/\/[a-z0-9-]+\.[a-f0-9]{32}\.r2\.cloudflarestorage\.com)?)?$/);
+  if (process.env.FETCH_TEST_MEDIA_ORIGIN) assert.ok(media.includes(process.env.FETCH_TEST_MEDIA_ORIGIN));
 });

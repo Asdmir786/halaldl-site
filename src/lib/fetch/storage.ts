@@ -22,11 +22,12 @@ function client() {
   });
 }
 
-export async function presignDownload(objectKey: string, filename: string, expiresAt: Date | null) {
+export async function presignDownload(objectKey: string, filename: string, expiresAt: Date | null, preview = false) {
   const command = new GetObjectCommand({
     Bucket: process.env.R2_BUCKET,
     Key: objectKey,
-    ResponseContentDisposition: `attachment; filename="${filename.replace(/[^A-Za-z0-9._-]+/g, "_")}"`,
+    ResponseContentDisposition: `${preview ? "inline" : "attachment"}; filename="${filename.replace(/[^A-Za-z0-9._-]+/g, "_")}"`,
+    ...(preview ? { ResponseContentType: ({ mp4: "video/mp4", m4v: "video/mp4", mov: "video/quicktime", webm: "video/webm", m4a: "audio/mp4", mp3: "audio/mpeg", opus: "audio/ogg", ogg: "audio/ogg", aac: "audio/aac", wav: "audio/wav", flac: "audio/flac", mkv: "video/x-matroska" } as Record<string, string>)[filename.split(".").at(-1)!] ?? "application/octet-stream" } : {}),
   });
   const seconds = expiresAt ? Math.floor((new Date(expiresAt).getTime() - Date.now()) / 1000) : 0;
   if (seconds < 1) throw new Error("File expired");

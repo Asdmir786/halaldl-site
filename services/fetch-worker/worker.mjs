@@ -13,6 +13,23 @@ const GiB = 1024 ** 3;
 const MAX_BYTES = 800 * 1024 ** 2;
 const log = (event, detail = {}) => console.log(JSON.stringify({ time: new Date().toISOString(), event, ...detail }));
 
+export function canProcess({ receiptPending, memoryFreeBytes, hostDiskFreeBytes, workDiskFreeBytes }) {
+  // Host load includes unrelated applications. This worker's CPU/memory/tasks
+  // are already bounded by its required cgroup, so load alone must not stall it.
+  return !receiptPending && memoryFreeBytes >= 3 * GiB && hostDiskFreeBytes >= 12 * GiB && workDiskFreeBytes >= 2 * GiB;
+}
+
+export function durationForProbe(value, maximum) {
+  if (value == null) return null;
+  if (!Number.isFinite(value) || value <= 0) throw new Error("unsupported");
+  if (value > maximum) throw new Error("too_long");
+  return value;
+}
+
+export function extractorFailure(platform, stderr = "") {
+  return platform === "youtube" && /sign in to confirm (?:you[’']re|you are) not a bot/i.test(stderr) ? "source_challenge" : "blocked";
+}
+
 export function validateJob(job) {
   if (!job || !/^[a-f0-9-]{36}$/.test(job.id) || job.protocolVersion !== 2) throw new Error("unsupported");
   if ("cookies" in job || "proxy" in job || job.private_job) throw new Error("public_only");
@@ -22,6 +39,7 @@ export function validateJob(job) {
   if (!Number.isInteger(job.maxHeight) || job.maxHeight < 1 || job.maxHeight > 2160) throw new Error("unsupported");
   if (!["probe", "download"].includes(job.kind)) throw new Error("unsupported");
   if (job.kind === "download" && (!/^[A-Za-z0-9][A-Za-z0-9._-]*(?:\+[A-Za-z0-9][A-Za-z0-9._-]*)?$/.test(job.formatSelector ?? "") || !MEDIA_EXTENSIONS.includes(job.extension) || !["video", "audio"].includes(job.mediaType))) throw new Error("unsupported");
+  if (job.deliveryMode != null && (!["video_audio", "video_only", "audio"].includes(job.deliveryMode) || (job.deliveryMode === "audio") !== (job.mediaType === "audio"))) throw new Error("unsupported");
   return job;
 }
 
@@ -51,41 +69,54 @@ export async function handleJob(job, { ytDlp, ffmpeg, ffprobe, workRoot, upload,
     if (job.kind === "probe") {
       stage = "probe";
       const probe = await run(ytDlp, [...args, "--dump-single-json", "--skip-download", "--", job.url], { timeoutMs: 180_000, cwd: directory, signal });
-      if (probe.code !== 0) throw new Error(probe.reason === "timeout" ? "failed" : "blocked");
+      if (probe.code !== 0) throw new Error(probe.reason === "timeout" ? "failed" : extractorFailure(job.platform, probe.stderr));
       const payload = JSON.parse(probe.stdout);
       if (payload.is_live || payload._type === "playlist" || payload._type === "multi_video" || Array.isArray(payload.entries)) throw new Error("too_many_items");
-      if (!Number.isFinite(payload.duration) || payload.duration <= 0) throw new Error("unsupported");
-      if (payload.duration > job.maxSeconds) throw new Error("too_long");
+      const duration = durationForProbe(payload.duration, job.maxSeconds);
       const fields = ["format_id", "ext", "height", "fps", "filesize", "filesize_approx", "vcodec", "acodec", "abr", "tbr"];
       const formats = (payload.formats ?? []).slice(0, 500).map(f => Object.fromEntries(fields.filter(k => k in f).map(k => [k, f[k]])));
-      result = { ok: true, title: String(payload.title ?? "").slice(0, 250), thumbnail: typeof payload.thumbnail === "string" ? payload.thumbnail.slice(0, 2048) : undefined, duration: payload.duration, itemCount: 1, formats };
+      result = { ok: true, title: String(payload.title ?? "").slice(0, 250), thumbnail: typeof payload.thumbnail === "string" ? payload.thumbnail.slice(0, 2048) : undefined, duration, itemCount: 1, formats };
     } else {
       stage = "download";
       const output = join(directory, `${job.id}.%(ext)s`);
       const merge = job.formatSelector.includes("+") ? ["--merge-output-format", job.extension] : [];
       const command = [...args, "--downloader", "native", "--hls-prefer-native", "--ffmpeg-location", ffmpeg, "--postprocessor-args", "ffmpeg:-threads 1", "-f", job.formatSelector, "--max-filesize", String(job.maxBytes), ...merge, "--print", "after_move:%(filepath)j", "-o", output, "--", job.url];
       const download = await run(ytDlp, command, { timeoutMs: 18 * 60_000, maxOutput: 256 * 1024, cwd: directory, signal });
-      if (download.code !== 0) throw new Error("failed");
+      if (download.code !== 0) throw new Error(extractorFailure(job.platform, download.stderr));
       const filepath = JSON.parse(download.stdout.trim().split("\n").at(-1));
       if (typeof filepath !== "string" || !isAbsolute(filepath)) throw new Error("failed");
-      const actual = await realpath(filepath);
+      let actual = await realpath(filepath);
       const rel = relative(directory, actual);
       if (rel.startsWith("..") || isAbsolute(rel) || basename(actual).split(".")[0] !== job.id) throw new Error("failed");
-      const info = await stat(actual);
+      let info = await stat(actual);
       if (!info.isFile() || info.size < 1 || info.size > job.maxBytes) throw new Error("too_big");
+      // Explicit modes copy only the requested track. No transcoding, network
+      // inputs, or client-provided ffmpeg arguments are accepted here.
+      if (job.deliveryMode === "video_only" || job.deliveryMode === "audio") {
+        stage = "extract_track";
+        const target = join(directory, `${job.id}-selected.${job.extension}`);
+        const tracks = job.deliveryMode === "audio" ? ["-map", "0:a:0", "-vn", "-c:a", "copy"] : ["-map", "0:v:0", "-an", "-c:v", "copy"];
+        const copy = await run(ffmpeg, ["-nostdin", "-v", "error", "-protocol_whitelist", "file,pipe", "-i", actual, ...tracks, "-map_metadata", "-1", "-threads", "1", "-y", target], { timeoutMs: 120_000, maxOutput: 64 * 1024, cwd: directory, signal });
+        if (copy.code !== 0) throw new Error("no_format");
+        await rm(actual);
+        actual = target;
+        info = await stat(actual);
+        if (!info.isFile() || info.size < 1 || info.size > job.maxBytes) throw new Error("too_big");
+      }
       const extension = extname(actual).slice(1).toLowerCase();
       if (extension !== job.extension) throw new Error("failed");
       stage = "verify";
       const probe = await run(ffprobe, ["-v", "error", "-protocol_whitelist", "file,pipe", "-show_entries", "stream=codec_type,height:format=duration,format_name", "-of", "json", actual], { timeoutMs: 20_000, maxOutput: 64 * 1024, cwd: directory, signal });
       if (probe.code !== 0) throw new Error("no_format");
-      verifyMedia(JSON.parse(probe.stdout), job);
+      const media = JSON.parse(probe.stdout);
+      verifyMedia(media, job);
       const objectKey = `fetch/${job.id}-${randomUUID()}`;
       stage = "upload";
       await upload(objectKey, actual, info.size, signal);
-      result = { ok: true, objectKey, bytes: info.size, extension };
+      result = { ok: true, objectKey, bytes: info.size, extension, duration: Number(media.format.duration) };
     }
   } catch (error) {
-    const code = ["too_long", "too_big", "public_only", "unsupported", "too_many_items", "blocked", "no_audio", "no_format"].includes(error.message) ? error.message : "failed";
+    const code = ["too_long", "too_big", "public_only", "unsupported", "too_many_items", "blocked", "source_challenge", "no_audio", "no_format"].includes(error.message) ? error.message : "failed";
     result = { ok: false, errorCode: code };
     log("job_failed", { jobId: job.id, stage, errorCode: code, errorName: error.name, httpStatus: error.$metadata?.httpStatusCode ?? null });
   } finally {
@@ -145,14 +176,14 @@ export async function main() {
   async function heartbeat() {
     const disk = await statfs(workRoot);
     const parentDisk = await statfs("/var/lib");
-    const healthy = !state.receiptPending && freemem() >= 3 * GiB && loadavg()[0] <= 8 && parentDisk.bavail * parentDisk.bsize >= 12 * GiB && disk.bavail * disk.bsize >= 2 * GiB;
+    const healthy = canProcess({ receiptPending: state.receiptPending, memoryFreeBytes: freemem(), hostDiskFreeBytes: parentDisk.bavail * parentDisk.bsize, workDiskFreeBytes: disk.bavail * disk.bsize });
     const paused = process.env.FETCH_INTAKE_PAUSED === "true";
     const accepting = healthy && !paused;
     await call("POST", { protocolVersion: 2, runningJobs: state.running, waitingJobs: 0, loadAverage: loadavg()[0], memoryFreeMb: Math.round(freemem() / 1048576), diskFreeMb: Math.round(parentDisk.bavail * parentDisk.bsize / 1048576), cpuCount: availableParallelism(), accepting, transcoding: false, detail: paused ? "updating" : accepting ? null : state.running ? "processing" : "high-limit" });
-    // Maintenance pauses admission while existing jobs and explicit canaries drain.
-    return healthy;
+    // New requests can remain queued during maintenance; pause new claims.
+    return healthy && !paused;
   }
-  const upkeep = (async () => { let cleanupAt = 0; while (!stop.signal.aborted) { try { await heartbeat(); if (Date.now() >= cleanupAt) { await call("DELETE"); cleanupAt = Date.now() + 5 * 60_000; } } catch { if (!stop.signal.aborted) log("upkeep_retry"); } await pause(8000); } })();
+  const upkeep = (async () => { let cleanupAt = 0; while (!stop.signal.aborted) { try { await heartbeat(); if (Date.now() >= cleanupAt) { await call("DELETE"); cleanupAt = Date.now() + 5 * 60_000; } } catch (error) { if (!stop.signal.aborted) log("upkeep_retry", { errorName: error.name, httpStatus: error.status ?? null }); } await pause(8000); } })();
   try {
     while (!stop.signal.aborted) {
       try {
@@ -163,7 +194,7 @@ export async function main() {
         state.running = 1;
         await handleJob(job, { ytDlp: process.env.YT_DLP_PATH || "/opt/halaldl-fetch/bin/yt-dlp", ffmpeg: process.env.FFMPEG_PATH || "/usr/bin/ffmpeg", ffprobe: process.env.FFPROBE_PATH || "/usr/bin/ffprobe", workRoot, proxyPort: 18656, signal: stop.signal, blockedAddresses: (process.env.FETCH_BLOCKED_ADDRESSES || "").split(",").filter(Boolean), upload, receipt: async (id, result) => { const next = join(spool, `${id}.next`); await writeFile(next, JSON.stringify({ id, ...result }), { mode: 0o600 }); await rename(next, join(spool, `${id}.json`)); state.receiptPending = true; } });
         state.running = 0;
-      } catch { state.running = 0; if (!stop.signal.aborted) log("worker_retry"); await pause(5000); }
+      } catch (error) { state.running = 0; if (!stop.signal.aborted) log("worker_retry", { errorName: error.name, httpStatus: error.status ?? null }); await pause(5000); }
     }
   } finally { stop.abort(); await upkeep; s3.destroy(); }
 }

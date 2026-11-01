@@ -4,8 +4,30 @@ import { connect } from "node:net";
 import test from "node:test";
 import { createEgressProxy, isPublicAddress, resolvePublic } from "../services/fetch-worker/egress.mjs";
 import { run } from "../services/fetch-worker/process.mjs";
-import { validateJob } from "../services/fetch-worker/worker.mjs";
+import { canProcess, durationForProbe, extractorFailure, validateJob } from "../services/fetch-worker/worker.mjs";
 import { verifyMedia } from "../services/fetch-worker/media.mjs";
+
+test("YouTube bot challenges have a specific error without mislabelling other failures", () => {
+  assert.equal(extractorFailure("youtube", "Sign in to confirm you’re not a bot."), "source_challenge");
+  assert.equal(extractorFailure("youtube", "Sign in to confirm you're not a bot."), "source_challenge");
+  assert.equal(extractorFailure("youtube", "HTTP Error 403"), "blocked");
+  assert.equal(extractorFailure("instagram", "Login required"), "blocked");
+});
+
+test("worker processing relies on bounded resource capacity rather than unrelated host load", () => {
+  const GiB = 1024 ** 3;
+  const capacity = { receiptPending: false, memoryFreeBytes: 4 * GiB, hostDiskFreeBytes: 20 * GiB, workDiskFreeBytes: 2.5 * GiB, hostLoad: 100 };
+  assert.equal(canProcess(capacity), true);
+  for (const change of [{ receiptPending: true }, { memoryFreeBytes: 2 * GiB }, { hostDiskFreeBytes: 10 * GiB }, { workDiskFreeBytes: GiB }]) assert.equal(canProcess({ ...capacity, ...change }), false);
+});
+
+test("missing probe duration permits choices while known duration limits still apply", () => {
+  assert.equal(durationForProbe(undefined,600),null);
+  assert.equal(durationForProbe(null,600),null);
+  assert.equal(durationForProbe(60,600),60);
+  assert.throws(()=>durationForProbe(601,600),/too_long/);
+  assert.throws(()=>durationForProbe(-1,600),/unsupported/);
+});
 
 test("egress rejects internal, special, mapped and host addresses", () => {
   for (const ip of ["0.0.0.0", "127.0.0.1", "10.0.1.20", "100.64.1.1", "172.16.0.2", "192.168.1.1", "169.254.169.254", "224.0.0.1", "::1", "::ffff:127.0.0.1", "::ffff:8.8.8.8", "fc00::1", "fe80::1", "2002:7f00:1::", "2001:db8::1"]) assert.equal(isPublicAddress(ip), false, ip);
@@ -46,7 +68,8 @@ test("runner enforces output and wall-clock bounds and scrubs credentials", asyn
 test("worker rejects legacy credentials, invalid paths and arbitrary format arguments", () => {
   const job = { id: "11111111-1111-4111-8111-111111111111", protocolVersion: 2, kind: "download", url: "https://youtu.be/example", maxBytes: 1000, maxSeconds: 600, maxHeight: 1080, formatSelector: "137+140", extension: "mp4", mediaType: "video" };
   assert.equal(validateJob(job), job);
-  for (const override of [{ cookies: null }, { proxy: "http://127.0.0.1" }, { private_job: true }, { id: "../../outside" }, { formatSelector: "best; rm -rf /" }, { maxBytes: 9e12 }]) assert.throws(() => validateJob({ ...job, ...override }));
+  assert.equal(validateJob({ ...job, deliveryMode: "video_only" }).deliveryMode, "video_only");
+  for (const override of [{ cookies: null }, { proxy: "http://127.0.0.1" }, { private_job: true }, { id: "../../outside" }, { formatSelector: "best; rm -rf /" }, { maxBytes: 9e12 }, { deliveryMode: "--exec" }, { deliveryMode: "audio" }]) assert.throws(() => validateJob({ ...job, ...override }));
 });
 
 test("actual files require audio, bounded duration/resolution and the expected container", () => {
@@ -59,4 +82,7 @@ test("actual files require audio, bounded duration/resolution and the expected c
   assert.throws(() => verifyMedia({ ...valid, format: { ...valid.format, duration: "900" } }, job), /too_long/);
   assert.throws(() => verifyMedia({ ...valid, format: { ...valid.format, format_name: "matroska,webm" } }, job), /no_format/);
   assert.equal(verifyMedia({ streams: [{ codec_type: "audio" }], format: { duration: "60", format_name: "ogg" } }, { mediaType: "audio", extension: "opus", maxSeconds: 600 }), true);
+  assert.equal(verifyMedia({ ...valid, streams: [{ codec_type: "video", height: 720 }] }, { ...job, deliveryMode: "video_only" }), true);
+  assert.throws(() => verifyMedia(valid, { ...job, deliveryMode: "video_only" }), /no_format/);
+  assert.throws(() => verifyMedia(valid, { ...job, mediaType: "audio", deliveryMode: "audio" }), /no_format/);
 });

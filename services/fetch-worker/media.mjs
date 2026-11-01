@@ -3,7 +3,11 @@ export const MEDIA_EXTENSIONS = ["mp4", "webm", "mkv", "m4a", "mp3", "aac", "ogg
 /** Check the actual downloaded file, independently of extractor metadata. */
 export function verifyMedia(info, job) {
   const streams = Array.isArray(info?.streams) ? info.streams : [];
-  if (!streams.some(s => s.codec_type === "audio")) throw new Error("no_audio");
+  const audio = streams.some(s => s.codec_type === "audio");
+  const mode = job.deliveryMode ?? (job.mediaType === "audio" ? "audio" : "video_audio");
+  if (mode !== "video_only" && !audio) throw new Error("no_audio");
+  if (mode === "video_only" && audio) throw new Error("no_format");
+  if (mode === "audio" && streams.some(s => s.codec_type === "video")) throw new Error("no_format");
   const duration = Number(info?.format?.duration);
   if (!Number.isFinite(duration) || duration <= 0) throw new Error("unsupported");
   if (duration > job.maxSeconds + 1) throw new Error("too_long");

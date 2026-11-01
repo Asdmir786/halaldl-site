@@ -1,8 +1,17 @@
+import { FetchError, hasClearance } from "@/lib/fetch/http";
+
 const VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+
+export async function ensureClearance(token: unknown, ip: string | null) {
+  if (await hasClearance()) return false;
+  const turnstile = await verifyTurnstile(typeof token === "string" ? token : "", ip);
+  if (!turnstile.ok) throw new FetchError(400, "turnstile", turnstile.message);
+  return true;
+}
 
 export async function verifyTurnstile(token: string, ip: string | null) {
   const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
-  if (!secret) return { ok: false as const, message: "Turnstile is not configured." };
+  if (!secret) return { ok: false as const, message: "The check could not be verified." };
   if (typeof token !== "string" || token.length > 2048 || !token.trim()) return { ok: false as const, message: "Complete the check and try again." };
 
   const body = new URLSearchParams({ secret, response: token });

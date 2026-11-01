@@ -1,5 +1,11 @@
 import type { NextConfig } from "next";
 
+const storageAccount = process.env.R2_ACCOUNT_ID?.trim();
+const storageBucket = process.env.R2_BUCKET?.trim();
+const storageHost = storageAccount && /^[a-f0-9]{32}$/.test(storageAccount) ? `${storageAccount}.r2.cloudflarestorage.com` : null;
+const mediaOrigins = storageHost ? [`https://${storageHost}`] : [];
+if (storageHost && storageBucket && /^[a-z0-9][a-z0-9-]{1,61}[a-z0-9]$/.test(storageBucket)) mediaOrigins.push(`https://${storageBucket}.${storageHost}`);
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -12,7 +18,7 @@ const contentSecurityPolicy = [
   "font-src 'self' data:",
   "frame-src https://challenges.cloudflare.com",
   "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://*.google-analytics.com https://challenges.cloudflare.com",
-  "media-src 'self'",
+  `media-src ${["'self'", ...mediaOrigins].join(" ")}`,
   "manifest-src 'self'",
   "worker-src 'self' blob:",
   "upgrade-insecure-requests",

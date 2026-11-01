@@ -15,12 +15,12 @@ export async function GET(_request: Request, context: Context) {
   }
 }
 
-export async function POST(_request: Request, context: Context) {
+export async function POST(request: Request, context: Context) {
   try {
     const { id } = await context.params;
     const sessionId = await readSignedCookie(SESSION_COOKIE);
     if (!sessionId) return NextResponse.json({ error: "session", message: "Complete the page check first." }, { status: 401 });
-    return NextResponse.json(await downloadLink(sessionId, id));
+    return NextResponse.json(await downloadLink(sessionId, id, new URL(request.url).searchParams.get("preview") === "1"));
   } catch (error) {
     return jsonError(error);
   }

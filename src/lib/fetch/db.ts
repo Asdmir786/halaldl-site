@@ -79,6 +79,8 @@ const STATEMENTS = [
     detail text
   )`,
   "ALTER TABLE halaldl_fetch.jobs ADD COLUMN IF NOT EXISTS confirmed_at timestamptz",
+  "ALTER TABLE halaldl_fetch.jobs ADD COLUMN IF NOT EXISTS queued_at timestamptz",
+  "CREATE INDEX IF NOT EXISTS halaldl_fetch_jobs_queue_idx ON halaldl_fetch.jobs (COALESCE(queued_at, confirmed_at, created_at), id) WHERE status = 'queued' AND private_job = false AND flagged = false",
   `CREATE TABLE IF NOT EXISTS halaldl_fetch.source_limits (
     source_hash text PRIMARY KEY, window_started timestamptz NOT NULL, hits int NOT NULL
   )`,

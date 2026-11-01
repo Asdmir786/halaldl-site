@@ -3932,3 +3932,23 @@ html.lenis {
     opacity: 1 !important;
   }
 }
+
+.fetch-panel {
+  background: #ffffff;
+  border: 1px solid rgba(8, 14, 23, 0.12);
+  box-shadow: 0 1px 2px rgba(8, 14, 23, 0.04);
+}
+
+:root[data-theme="dark"] .fetch-panel {
+  background: #243044;
+  border-color: rgba(245, 247, 251, 0.22);
+  box-shadow: none;
+}
+
+.fetch-progress-track {
+  background: rgba(8, 14, 23, 0.12);
+}
+
+:root[data-theme="dark"] .fetch-progress-track {
+  background: rgba(245, 247, 251, 0.22);
+}

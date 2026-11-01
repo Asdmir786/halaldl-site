@@ -42,7 +42,7 @@ async function loadSession(client: PoolClient, sessionId: string): Promise<Sessi
     [sessionId],
   );
   const row = result.rows[0];
-  if (!row) throw new FetchError(401, "session", "Start again from the check on this page.");
+  if (!row) throw new FetchError(401, "session", "Open this page again.");
   return { ...row, tier: effectiveTier(row.user_id) };
 }
 
@@ -76,7 +76,8 @@ export async function requireSession(sessionId: string | null) {
 
 async function expireStale(client: PoolClient) {
   await client.query(`UPDATE halaldl_fetch.jobs SET status = 'expired', error_code = 'expired', updated_at = now()
-    WHERE status = 'waiting_choice' AND NOT (COALESCE(formats, '[]'::jsonb) @> '[{"hasAudio":true}]'::jsonb)`);
+    WHERE status = 'waiting_choice' AND NOT EXISTS
+      (SELECT 1 FROM jsonb_array_elements(COALESCE(formats, '[]'::jsonb)) f WHERE f->>'selector' IS NOT NULL)`);
   await client.query(`UPDATE halaldl_fetch.jobs SET status = 'failed', error_code = 'public_only', updated_at = now()
     WHERE private_job = true AND status = ANY($1::text[])`, [ACTIVE]);
   await client.query(
@@ -84,11 +85,11 @@ async function expireStale(client: PoolClient) {
      SET status = 'expired', error_code = 'expired', updated_at = now()
      WHERE status = ANY($1::text[])
        AND updated_at < now() - interval '20 minutes'`,
-    [ACTIVE],
+    [ACTIVE.filter(status => status !== "queued")],
   );
 }
 
-async function serverGate(client: PoolClient) {
+async function queueSnapshot(client: PoolClient) {
   const status = await client.query<{
     reported_at: Date | null;
     accepting: boolean;
@@ -98,42 +99,21 @@ async function serverGate(client: PoolClient) {
     load_average: number | null;
     cpu_count: number | null;
     protocol_version: number;
+    detail: string | null;
   }>("SELECT * FROM halaldl_fetch.worker_status WHERE id = 1");
   const worker = status.rows[0];
-  const fresh = worker?.reported_at && Date.now() - new Date(worker.reported_at).getTime() < SERVER_LIMITS.heartbeatTtlMs;
-  if (fresh && worker.protocol_version < 2) throw new FetchError(503, "updating", "The downloader is being updated. Please try again shortly.");
-  if (!fresh) throw new FetchError(503, "worker_offline", "The fetch server is not connected yet. Try again later.");
+  const connected = Boolean(worker?.reported_at && Date.now() - new Date(worker.reported_at).getTime() < SERVER_LIMITS.heartbeatTtlMs);
   const counts = await client.query<{ running: string; waiting: string }>(
     `SELECT
        count(*) FILTER (WHERE status IN ('probing', 'downloading')) AS running,
        count(*) FILTER (WHERE status = 'queued') AS waiting
-     FROM halaldl_fetch.jobs`,
+     FROM halaldl_fetch.jobs WHERE private_job = false AND flagged = false`,
   );
   const running = Number(counts.rows[0]?.running ?? 0);
   const waiting = Number(counts.rows[0]?.waiting ?? 0);
-  const hot =
-    !worker.accepting ||
-    worker.transcoding ||
-    waiting >= SERVER_LIMITS.maxWaiting ||
-    (worker.disk_free_mb != null && worker.disk_free_mb < SERVER_LIMITS.minFreeDiskMb) ||
-    (worker.memory_free_mb != null && worker.memory_free_mb < SERVER_LIMITS.minFreeMemoryMb) ||
-    (worker.load_average != null && worker.load_average > SERVER_LIMITS.maxLoad);
-  if (hot || (running >= SERVER_LIMITS.maxRunning && waiting >= SERVER_LIMITS.maxWaiting)) {
-    throw new FetchError(429, "busy", "The server is at its high limit. Wait a minute and try again.");
-  }
-  return { running, waiting };
-}
-
-async function workerDetail(client: PoolClient) {
-  const result = await client.query<{ detail: string | null }>("SELECT detail FROM halaldl_fetch.worker_status WHERE id = 1");
-  return result.rows[0]?.detail ?? null;
-}
-
-function noticeFor(detail: string | null, accepting: boolean, connected: boolean) {
-  if (!connected) return "offline";
-  if (detail === "updating") return "updating";
-  if (!accepting) return "busy";
-  return "ok";
+  const processing = connected && worker.protocol_version >= 2 && worker.accepting && !worker.transcoding;
+  const notice = !connected ? "offline" : worker.protocol_version < 2 || worker.detail === "updating" ? "updating" : processing ? "ok" : "busy";
+  return { running, waiting, processing, notice, workerConnected: connected, accepting: true, storageConfigured: storageConfigured() };
 }
 
 export async function publicStatus() {
@@ -141,26 +121,52 @@ export async function publicStatus() {
     const result = await withClient(async (client) => {
       await admissionLock(client);
       await expireStale(client);
-      try {
-        const gate = await serverGate(client);
-        const detail = await workerDetail(client);
-        return { workerConnected: true, accepting: true, notice: noticeFor(detail, true, true), running: gate.running, waiting: gate.waiting, storageConfigured: storageConfigured() };
-      } catch (error) {
-        const detail = await workerDetail(client).catch(() => null);
-        if (error instanceof FetchError && error.code === "updating") return { workerConnected: true, accepting: false, notice: "updating", storageConfigured: storageConfigured() };
-        if (error instanceof FetchError && error.code === "busy") {
-          return { workerConnected: true, accepting: false, notice: noticeFor(detail, false, true), running: null, waiting: null, storageConfigured: storageConfigured() };
-        }
-        if (error instanceof FetchError && error.code === "worker_offline") {
-          return { workerConnected: false, accepting: false, notice: "offline", running: null, waiting: null, storageConfigured: storageConfigured() };
-        }
-        throw error;
-      }
+      return queueSnapshot(client);
     });
     return { ...result, supportedPlatforms: hostedPlatforms() };
   } catch {
-    return { workerConnected: false, accepting: false, notice: "offline", running: null, waiting: null, storageConfigured: storageConfigured(), supportedPlatforms: hostedPlatforms() };
+    return { workerConnected: false, accepting: false, processing: false, notice: "connection", running: null, waiting: null, storageConfigured: storageConfigured(), supportedPlatforms: hostedPlatforms() };
   }
+}
+
+export async function browserStatus() {
+  const supportedPlatforms = hostedPlatforms();
+  if (!storageConfigured()) return { available: false, supportedPlatforms };
+  try {
+    await withClient((client) => client.query("SELECT 1"));
+    return { available: true, supportedPlatforms };
+  } catch {
+    return { available: false, supportedPlatforms };
+  }
+}
+
+export async function sessionJobId(sessionId: string | null) {
+  if (!sessionId) return null;
+  try {
+    return await withClient(async (client) => {
+      const session = await loadSession(client, sessionId);
+      const owned = session.user_id ? "user_id = $1" : "session_id = $1";
+      const owner = session.user_id ?? session.id;
+      const result = await client.query<{ id: string }>(
+        `SELECT id FROM halaldl_fetch.jobs
+         WHERE ${owned} AND private_job = false AND flagged = false AND status = ANY($2::text[])
+         ORDER BY updated_at DESC LIMIT 1`,
+        [owner, ACTIVE],
+      );
+      return result.rows[0]?.id ?? null;
+    });
+  } catch {
+    return null;
+  }
+}
+
+async function queueDetails(client: PoolClient, id: string) {
+  const result = await client.query<{ position: string }>(
+    `SELECT (count(*) + 1)::text AS position FROM halaldl_fetch.jobs q
+     WHERE q.status = 'queued' AND q.private_job = false AND q.flagged = false
+     AND (COALESCE(q.queued_at, q.confirmed_at, q.created_at), q.id) <
+       (SELECT COALESCE(j.queued_at, j.confirmed_at, j.created_at), j.id FROM halaldl_fetch.jobs j WHERE j.id = $1)`, [id]);
+  return { queuePosition: Number(result.rows[0].position) };
 }
 
 function assertRights(rights: boolean) {
@@ -188,7 +194,6 @@ export async function probeUrl(sessionId: string, rawUrl: string, rights: boolea
         return { id: duplicate.rows[0].id as string, platform: classified.platform, guideSlug: classified.guideSlug };
       }
 
-      await serverGate(client);
       const clientHash = ip ? hashClient(ip) : null;
       const limits = TIER_LIMITS[session.tier];
       const recent = await client.query<{ created_at: Date }>(
@@ -216,12 +221,13 @@ export async function probeUrl(sessionId: string, rawUrl: string, rights: boolea
       const id = randomUUID();
       await client.query(
         `INSERT INTO halaldl_fetch.jobs
-          (id, session_id, user_id, source_url, platform, kind, status, tier, private_job, rights_ack, client_hash)
-         VALUES ($1,$2,$3,$4,$5,'probe','queued',$6,$7,true,$8)`,
+          (id, session_id, user_id, source_url, platform, kind, status, tier, private_job, rights_ack, client_hash, queued_at)
+         VALUES ($1,$2,$3,$4,$5,'probe','queued',$6,$7,true,$8,clock_timestamp())`,
         [id, session.id, session.user_id, classified.href, classified.platform, session.tier, false, clientHash],
       );
+      const queue = await queueDetails(client, id);
       await client.query("COMMIT");
-      return { id, platform: classified.platform, guideSlug: classified.guideSlug };
+      return { id, platform: classified.platform, guideSlug: classified.guideSlug, ...queue };
     } catch (error) {
       await client.query("ROLLBACK");
       throw error;
@@ -231,7 +237,7 @@ export async function probeUrl(sessionId: string, rawUrl: string, rights: boolea
 
 export async function confirmDownload(sessionId: string, jobId: string, formatId: string) {
   assertJobId(jobId);
-  if (!storageConfigured()) throw new FetchError(503, "storage", "File storage is not connected yet.");
+  if (!storageConfigured()) throw new FetchError(503, "storage", "Downloads are paused. Try again later.");
   if (!/^[A-Za-z0-9._+-]+$/.test(formatId)) throw new FetchError(400, "format", "Choose one of the listed resolutions.");
   return withClient(async (client) => {
     await client.query("BEGIN");
@@ -239,7 +245,6 @@ export async function confirmDownload(sessionId: string, jobId: string, formatId
       await admissionLock(client);
       await expireStale(client);
       const session = await loadSession(client, sessionId);
-      await serverGate(client);
       const job = await client.query<{
         id: string;
         status: string;
@@ -254,7 +259,7 @@ export async function confirmDownload(sessionId: string, jobId: string, formatId
         throw new FetchError(404, "missing", "That job is not available.");
       }
       if (row.status !== "waiting_choice") throw new FetchError(409, "state", "Choose a resolution from the current result.");
-      const match = (row.formats ?? []).find((format) => format.formatId === formatId && format.selector && format.hasAudio);
+      const match = (row.formats ?? []).find((format) => format.formatId === formatId && format.selector);
       if (!match) throw new FetchError(400, "format", "Choose one of the listed resolutions.");
       const limits = TIER_LIMITS[session.tier];
       const owned = session.user_id ? "user_id = $1" : "session_id = $1";
@@ -268,12 +273,13 @@ export async function confirmDownload(sessionId: string, jobId: string, formatId
       }
       await client.query(
         `UPDATE halaldl_fetch.jobs
-         SET kind = 'download', status = 'queued', choice = $2::jsonb, quota_spent = true, confirmed_at = now(), tier = $3, updated_at = now()
+         SET kind = 'download', status = 'queued', choice = $2::jsonb, quota_spent = true, confirmed_at = now(), queued_at = clock_timestamp(), tier = $3, updated_at = now()
          WHERE id = $1`,
         [jobId, JSON.stringify(match), session.tier],
       );
+      const queue = await queueDetails(client, jobId);
       await client.query("COMMIT");
-      return { id: jobId };
+      return { id: jobId, ...queue };
     } catch (error) {
       await client.query("ROLLBACK");
       throw error;
@@ -287,19 +293,19 @@ export async function jobForSession(sessionId: string, jobId: string) {
     const session = await loadSession(client, sessionId);
     await expireStale(client);
     const result = await client.query(
-      `SELECT id, status, platform, error_code, formats, bytes, created_at, title, thumbnail, duration, expires_at, actual_ext, flagged
-       FROM halaldl_fetch.jobs
+      `SELECT id, status, platform, error_code, formats, choice, bytes, created_at, title, thumbnail, duration, expires_at, actual_ext, flagged,
+        CASE WHEN status = 'queued' THEN (SELECT count(*) + 1 FROM halaldl_fetch.jobs q
+          WHERE q.status = 'queued' AND q.private_job = false AND q.flagged = false
+          AND (COALESCE(q.queued_at, q.confirmed_at, q.created_at), q.id) <
+            (COALESCE(j.queued_at, j.confirmed_at, j.created_at), j.id)) ELSE NULL END AS queue_position
+       FROM halaldl_fetch.jobs j
        WHERE id = $1 AND private_job = false AND (session_id = $2 OR user_id = $3)`,
       [jobId, session.id, session.user_id],
     );
     const row = result.rows[0];
     if (!row || row.flagged) throw new FetchError(404, "missing", "That job is not available.");
     const expired = row.expires_at && new Date(row.expires_at).getTime() <= Date.now();
-    const ahead = await client.query<{ count: string }>(
-      `SELECT count(*) FROM halaldl_fetch.jobs
-       WHERE status = 'queued' AND created_at < $1 AND id <> $2`,
-      [row.created_at, row.id],
-    );
+    const queue = row.status === "queued" ? { queuePosition: Number(row.queue_position) } : { queuePosition: null };
     return {
       id: row.id as string,
       status: expired ? "expired" : row.status as string,
@@ -312,13 +318,14 @@ export async function jobForSession(sessionId: string, jobId: string) {
       duration: row.duration as number | null,
       expiresAt: row.expires_at as string | null,
       extension: row.actual_ext as string | null,
+      deliveryMode: row.choice ? publicFormat(row.choice as DownloadVariant).deliveryMode : null,
       ready: row.status === "ready" && !row.flagged && (!row.expires_at || new Date(row.expires_at).getTime() > Date.now()),
-      queueAhead: Number(ahead.rows[0]?.count ?? 0),
+      ...queue,
     };
   });
 }
 
-export async function downloadLink(sessionId: string, jobId: string) {
+export async function downloadLink(sessionId: string, jobId: string, preview = false) {
   assertJobId(jobId);
   if (!storageConfigured()) throw new FetchError(503, "storage", "File downloads are having temporary issues. Please try again later.");
   return withClient(async (client) => {
@@ -336,7 +343,7 @@ export async function downloadLink(sessionId: string, jobId: string) {
     if (row.expires_at && new Date(row.expires_at).getTime() < Date.now()) {
       throw new FetchError(410, "expired", "The file has expired.");
     }
-    const url = await presignDownload(row.object_key, `${row.platform}-${jobId.slice(0, 8)}.${row.actual_ext || "bin"}`, row.expires_at);
+    const url = await presignDownload(row.object_key, `${row.platform}-${jobId.slice(0, 8)}.${row.actual_ext || "bin"}`, row.expires_at, preview);
     return { url };
   });
 }
@@ -422,7 +429,8 @@ export async function claimJob(request: Request) {
       await expireStale(client);
       const queued = await client.query<{ id: string; session_id: string; kind: string }>(
         `SELECT id, session_id, kind FROM halaldl_fetch.jobs
-         WHERE status = 'queued' ORDER BY created_at FOR UPDATE SKIP LOCKED LIMIT 20`,
+         WHERE status = 'queued' AND private_job = false AND flagged = false
+         ORDER BY COALESCE(queued_at, confirmed_at, created_at), id FOR UPDATE SKIP LOCKED LIMIT 1`,
       );
       const running = await client.query<{ session_id: string }>(
         `SELECT session_id FROM halaldl_fetch.jobs WHERE status IN ('probing', 'downloading')`,
@@ -452,6 +460,7 @@ export async function claimJob(request: Request) {
         formatSelector: (row.choice as DownloadVariant | null)?.selector ?? null,
         extension: (row.choice as DownloadVariant | null)?.ext ?? null,
         mediaType: (row.choice as DownloadVariant | null)?.mediaType ?? null,
+        deliveryMode: (row.choice as DownloadVariant | null)?.deliveryMode ?? null,
         expectedHeight: (row.choice as DownloadVariant | null)?.height ?? null,
         protocolVersion: 2,
         tier: effectiveTier(row.user_id),
@@ -534,12 +543,13 @@ export async function completeJob(request: Request, jobId: string, body: {
     if (!Number.isSafeInteger(body.bytes) || !body.bytes || body.bytes < 1 || body.bytes > cap.maxBytes) throw new FetchError(400, "too_big", "The file exceeds the size limit.");
     const extension = body.extension ?? (!row.choice?.selector ? row.choice?.ext : null);
     if (!extension || !/^[a-z0-9]{2,5}$/.test(extension) || (row.choice?.ext && extension !== row.choice.ext)) throw new FetchError(400, "format", "Unexpected output format.");
+    if (body.duration != null && (!Number.isFinite(body.duration) || body.duration <= 0 || body.duration > cap.maxSeconds + 1)) throw new FetchError(400, "too_long", "The file exceeds the duration limit.");
     await client.query(
       `UPDATE halaldl_fetch.jobs
        SET status = 'ready', object_key = $2, bytes = $3, ready_at = now(),
-           expires_at = now() + interval '6 hours', actual_ext = $4, updated_at = now()
+           expires_at = now() + interval '6 hours', actual_ext = $4, duration = COALESCE($5, duration), updated_at = now()
        WHERE id = $1`,
-      [jobId, body.objectKey, body.bytes, extension],
+      [jobId, body.objectKey, body.bytes, extension, body.duration ?? null],
     );
   });
 }
@@ -547,7 +557,7 @@ export async function completeJob(request: Request, jobId: string, body: {
 // Called by the supervised worker even when the download queue is paused.
 export async function cleanupExpired(request: Request) {
   authenticateWorker(request);
-  if (!storageConfigured()) throw new FetchError(503, "storage", "File storage is having an issue. Please try again later.");
+  if (!storageConfigured()) throw new FetchError(503, "storage", "Downloads are paused. Try again later.");
   const expired = await withClient(client => client.query<{ id: string; object_key: string }>(
     `SELECT id, object_key FROM halaldl_fetch.jobs WHERE object_key IS NOT NULL AND
      (flagged = true OR expires_at <= now() OR created_at < now() - interval '30 days') ORDER BY created_at LIMIT 100`));

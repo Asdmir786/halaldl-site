@@ -34,8 +34,6 @@ export const TIER_LIMITS: Record<FetchTier, TierLimits> = {
 
 export const SERVER_LIMITS = {
   maxRunning: 1,
-  maxWaiting: 4,
-  maxLoad: 8,
   minFreeDiskMb: 12 * 1024,
   minFreeMemoryMb: 3 * 1024,
   staleJobMs: 20 * 60 * 1000,

@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
-import { jsonError } from "@/lib/fetch/http";
-import { publicStatus } from "@/lib/fetch/service";
+import { hasClearance, jsonError, readSignedCookie, SESSION_COOKIE } from "@/lib/fetch/http";
+import { browserStatus, sessionJobId } from "@/lib/fetch/service";
 
 export async function GET() {
   try {
-    return NextResponse.json(await publicStatus());
+    const [status, sessionId, cleared] = await Promise.all([
+      browserStatus(),
+      readSignedCookie(SESSION_COOKIE),
+      hasClearance(),
+    ]);
+    return NextResponse.json({ ...status, cleared, jobId: await sessionJobId(sessionId) });
   } catch (error) {
     return jsonError(error);
   }

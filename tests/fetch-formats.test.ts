@@ -4,8 +4,11 @@ import { downloadVariants, publicFormat, safeThumbnail, type WorkerFormat } from
 
 const video: WorkerFormat = { format_id: "137", ext: "mp4", height: 1080, vcodec: "avc1", acodec: "none", filesize: 10_000 };
 const audio: WorkerFormat = { format_id: "140", ext: "m4a", vcodec: "none", acodec: "aac", filesize: 1000 };
-test("video-only streams require an audio mate and a server-stored selector", () => {
-  assert.equal(downloadVariants([video], "anonymous").length, 0);
+test("silent streams remain available while video with audio is the default when possible", () => {
+  const silent = downloadVariants([video], "anonymous");
+  assert.equal(silent.length, 1);
+  assert.equal(silent[0].deliveryMode, "video_only");
+  assert.equal(silent[0].hasAudio, false);
   const result = downloadVariants([video, audio], "anonymous");
   assert.equal(result[0].selector, "137+140");
   assert.equal(result[0].filesize, 11_000);
@@ -13,16 +16,28 @@ test("video-only streams require an audio mate and a server-stored selector", ()
   assert.equal("selector" in publicFormat(result[0]), false);
   assert.equal(result[1].mediaType, "audio");
   assert.equal(result[1].ext, "m4a");
+  assert.equal(result[2].deliveryMode, "video_only");
+  assert.equal(result[2].selector, "137");
 });
 test("quality caps and combined file-size limits are enforced", () => {
   assert.equal(downloadVariants([{ ...video, height: 2160 }, audio], "anonymous").filter(f => f.mediaType === "video").length, 0);
   assert.equal(downloadVariants([{ ...video, height: 2160 }, audio], "free")[0].height, 2160);
-  assert.equal(downloadVariants([{ ...video, filesize: 200 * 1048576 }, audio], "anonymous").filter(f => f.mediaType === "video").length, 0);
+  assert.equal(downloadVariants([{ ...video, filesize: 200 * 1048576 }, audio], "anonymous").filter(f => f.deliveryMode === "video_audio").length, 0);
 });
 test("muxed files retain audio and unsafe selectors never enter choices", () => {
   const formats = downloadVariants([{ ...video, acodec: "aac" }, { ...video, format_id: "--exec" }], "anonymous");
   assert.equal(formats[0].selector, "137");
+  assert.deepEqual(formats.map(f => f.deliveryMode), ["video_audio", "audio", "video_only"]);
+  assert.equal(formats[1].ext, "m4a");
+  assert.equal(formats[1].filesize, null);
+  assert.equal(formats[2].hasAudio, false);
+  assert.equal(formats[2].filesize, null);
+});
+test("Instagram silent DASH formats work without inventing audio or guessing missing codecs", () => {
+  const formats = downloadVariants([{ format_id: "0", ext: "mp4", acodec: "none" }, { format_id: "dash-1v", ext: "mp4", height: 1080, vcodec: "vp9", acodec: "none" }], "anonymous");
   assert.equal(formats.length, 1);
+  assert.equal(formats[0].selector, "dash-1v");
+  assert.equal(formats[0].deliveryMode, "video_only");
 });
 test("unknown sizes are honest and missing codecs are not called audio", () => {
   const [f] = downloadVariants([{ ...video, filesize: undefined }, audio], "anonymous");

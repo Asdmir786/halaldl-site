@@ -94,4 +94,12 @@ export function gateIsValid(value: string | null) {
   return Number.isFinite(exp) && exp > Date.now();
 }
 
+export async function hasClearance() {
+  return gateIsValid(await readSignedCookie(GATE_COOKIE));
+}
+
+export function grantClearance(response: NextResponse) {
+  setSignedCookie(response, GATE_COOKIE, gateCookieValue(), SERVER_LIMITS.gateTtlMs / 1000);
+}
+
 export { cookieSuffix };

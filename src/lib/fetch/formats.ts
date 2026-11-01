@@ -6,10 +6,11 @@ export type WorkerFormat = {
   filesize?: number | null; filesize_approx?: number | null;
   vcodec?: string; acodec?: string; abr?: number; tbr?: number;
 };
+export type DeliveryMode = "video_audio" | "video_only" | "audio";
 export type DownloadVariant = {
   formatId: string; selector: string; label: string; ext: string;
   height: number | null; fps: number | null; filesize: number | null;
-  mediaType: "video" | "audio"; hasAudio: true;
+  mediaType: "video" | "audio"; hasAudio: boolean; deliveryMode?: DeliveryMode;
 };
 export type PublicFormat = Omit<DownloadVariant, "selector">;
 
@@ -29,10 +30,19 @@ export function downloadVariants(input: WorkerFormat[], tier: FetchTier): Downlo
   const video = formats.filter(f => codec(f.vcodec) && Number.isFinite(f.height) && f.height! > 0 && f.height! <= cap.maxHeight)
     .sort((a, b) => b.height! - a.height! || (b.tbr ?? 0) - (a.tbr ?? 0));
   const results: DownloadVariant[] = [];
+  const silent: DownloadVariant[] = [];
   const seen = new Set<string>();
   for (const f of video) {
     const ext = extension(f)!;
     const mate = codec(f.acodec) ? null : audio.find(a => ext === "mp4" ? a.ext === "m4a" : ext === "webm" ? a.ext === "webm" : true);
+    // A silent source remains downloadable. Keep the explicit silent choice
+    // separate so a normal video still defaults to including its audio.
+    const silentKey = `silent:${f.height}:${ext}:${f.fps ?? 0}`;
+    if (!seen.has(silentKey) && (bytes(f) ?? 0) <= cap.maxBytes && silent.length < 12) {
+      seen.add(silentKey);
+      silent.push({ formatId: `s${silent.length}`, selector: f.format_id!, label: `${f.height}p${f.fps && f.fps > 30 ? ` · ${f.fps} fps` : ""}`, ext,
+        height: f.height!, fps: f.fps ?? null, filesize: codec(f.acodec) ? null : bytes(f), mediaType: "video", hasAudio: false, deliveryMode: "video_only" });
+    }
     if (!codec(f.acodec) && !mate) continue;
     const outExt = mate ? (ext === "mp4" && mate.ext === "m4a" ? "mp4" : ext === "webm" && mate.ext === "webm" ? "webm" : "mkv") : ext;
     const size = mate ? (bytes(f) && bytes(mate) ? bytes(f)! + bytes(mate)! : null) : bytes(f);
@@ -42,7 +52,7 @@ export function downloadVariants(input: WorkerFormat[], tier: FetchTier): Downlo
     seen.add(key);
     results.push({ formatId: `v${results.length}`, selector: mate ? `${f.format_id}+${mate.format_id}` : f.format_id!,
       label: `${f.height}p${f.fps && f.fps > 30 ? ` · ${f.fps} fps` : ""}`, ext: outExt,
-      height: f.height!, fps: f.fps ?? null, filesize: size, mediaType: "video", hasAudio: true });
+      height: f.height!, fps: f.fps ?? null, filesize: size, mediaType: "video", hasAudio: true, deliveryMode: "video_audio" });
     if (results.length === 12) break;
   }
   for (const f of audio) {
@@ -50,14 +60,23 @@ export function downloadVariants(input: WorkerFormat[], tier: FetchTier): Downlo
     if (seen.has(`audio:${ext}`) || (bytes(f) ?? 0) > cap.maxBytes) continue;
     seen.add(`audio:${ext}`);
     results.push({ formatId: `a${results.length}`, selector: f.format_id!, label: "Audio · original format", ext,
-      height: null, fps: null, filesize: bytes(f), mediaType: "audio", hasAudio: true });
+      height: null, fps: null, filesize: bytes(f), mediaType: "audio", hasAudio: true, deliveryMode: "audio" });
     if (results.length >= 16) break;
   }
-  return results;
+  // When the source only offers a combined file, copy its existing audio track
+  // into a compatible container. This does not convert the audio to MP3.
+  if (!results.some(f => f.mediaType === "audio")) {
+    const source = [...video].reverse().find(f => codec(f.acodec) && (bytes(f) ?? 0) <= cap.maxBytes);
+    const audioExt = source && (/^(?:mp4a|aac)/i.test(source.acodec!) ? "m4a" : /^(?:opus|vorbis)/i.test(source.acodec!) ? "webm" : /^mp3/i.test(source.acodec!) ? "mp3" : null);
+    if (source && audioExt) results.push({ formatId: "a0", selector: source.format_id!, label: "Full audio · original quality", ext: audioExt,
+      height: null, fps: null, filesize: null, mediaType: "audio", hasAudio: true, deliveryMode: "audio" });
+  }
+  return [...results, ...silent];
 }
 
 export function publicFormat(f: DownloadVariant): PublicFormat {
-  return { formatId: f.formatId, label: f.label, ext: f.ext, height: f.height, fps: f.fps, filesize: f.filesize, mediaType: f.mediaType, hasAudio: f.hasAudio };
+  return { formatId: f.formatId, label: f.label, ext: f.ext, height: f.height, fps: f.fps, filesize: f.filesize, mediaType: f.mediaType, hasAudio: f.hasAudio,
+    deliveryMode: f.deliveryMode ?? (f.mediaType === "audio" ? "audio" : f.hasAudio ? "video_audio" : "video_only") };
 }
 
 export function safeThumbnail(raw: unknown): string | null {
