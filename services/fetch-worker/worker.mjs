@@ -73,7 +73,7 @@ export async function handleJob(job, { ytDlp, ffmpeg, ffprobe, workRoot, upload,
       const payload = JSON.parse(probe.stdout);
       if (payload.is_live || payload._type === "playlist" || payload._type === "multi_video" || Array.isArray(payload.entries)) throw new Error("too_many_items");
       const duration = durationForProbe(payload.duration, job.maxSeconds);
-      const fields = ["format_id", "ext", "height", "fps", "filesize", "filesize_approx", "vcodec", "acodec", "abr", "tbr"];
+      const fields = ["format_id", "ext", "width", "height", "fps", "filesize", "filesize_approx", "vcodec", "acodec", "abr", "tbr"];
       const formats = (payload.formats ?? []).slice(0, 500).map(f => Object.fromEntries(fields.filter(k => k in f).map(k => [k, f[k]])));
       result = { ok: true, title: String(payload.title ?? "").slice(0, 250), thumbnail: typeof payload.thumbnail === "string" ? payload.thumbnail.slice(0, 2048) : undefined, duration, itemCount: 1, formats };
     } else {
@@ -106,7 +106,7 @@ export async function handleJob(job, { ytDlp, ffmpeg, ffprobe, workRoot, upload,
       const extension = extname(actual).slice(1).toLowerCase();
       if (extension !== job.extension) throw new Error("failed");
       stage = "verify";
-      const probe = await run(ffprobe, ["-v", "error", "-protocol_whitelist", "file,pipe", "-show_entries", "stream=codec_type,height:format=duration,format_name", "-of", "json", actual], { timeoutMs: 20_000, maxOutput: 64 * 1024, cwd: directory, signal });
+      const probe = await run(ffprobe, ["-v", "error", "-protocol_whitelist", "file,pipe", "-show_entries", "stream=codec_type,width,height:format=duration,format_name", "-of", "json", actual], { timeoutMs: 20_000, maxOutput: 64 * 1024, cwd: directory, signal });
       if (probe.code !== 0) throw new Error("no_format");
       const media = JSON.parse(probe.stdout);
       verifyMedia(media, job);

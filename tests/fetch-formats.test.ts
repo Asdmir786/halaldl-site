@@ -44,6 +44,19 @@ test("unknown sizes are honest and missing codecs are not called audio", () => {
   assert.equal(f.filesize, null);
   assert.deepEqual(downloadVariants([{ format_id: "x", ext: "mp4", acodec: "aac" }], "anonymous"), []);
 });
+test("portrait video is labeled by its shorter side and still respects the guest cap", () => {
+  const ladder = [
+    { format_id: "ig1080", ext: "mp4", width: 1080, height: 1920, vcodec: "avc1", acodec: "none", filesize: 20_000 },
+    { format_id: "ig720", ext: "mp4", width: 720, height: 1280, vcodec: "avc1", acodec: "none", filesize: 12_000 },
+    { format_id: "ig540", ext: "mp4", width: 540, height: 960, vcodec: "avc1", acodec: "none", filesize: 8_000 },
+    { format_id: "ig360", ext: "mp4", width: 360, height: 640, vcodec: "avc1", acodec: "none", filesize: 4_000 },
+    { format_id: "ig4k", ext: "mp4", width: 2160, height: 3840, vcodec: "avc1", acodec: "none", filesize: 40_000 },
+    audio,
+  ];
+  const guest = downloadVariants(ladder, "anonymous").filter(f => f.deliveryMode === "video_only");
+  assert.deepEqual(guest.map(f => f.label), ["1080p", "720p", "540p", "360p"]);
+  assert.equal(downloadVariants(ladder, "free").some(f => f.label === "2160p"), true);
+});
 test("thumbnails must use known HTTPS media hosts", () => {
   assert.equal(safeThumbnail("https://i.ytimg.com/vi/example/default.jpg"), "https://i.ytimg.com/vi/example/default.jpg");
   for (const url of ["http://i.ytimg.com/x", "https://127.0.0.1/x", "https://i.ytimg.com.evil.test/x", "https://user:pass@i.ytimg.com/x", "https://i.ytimg.com:444/x"]) assert.equal(safeThumbnail(url), null);

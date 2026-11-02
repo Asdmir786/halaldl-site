@@ -79,6 +79,8 @@ test("actual files require audio, bounded duration/resolution and the expected c
   assert.throws(() => verifyMedia({ ...valid, streams: [{ codec_type: "video", height: 720 }] }, job), /no_audio/);
   assert.throws(() => verifyMedia({ ...valid, streams: [{ codec_type: "audio" }] }, job), /no_format/);
   assert.throws(() => verifyMedia({ ...valid, streams: [{ codec_type: "video", height: 1080 }, { codec_type: "audio" }] }, job), /no_format/);
+  assert.equal(verifyMedia({ ...valid, streams: [{ codec_type: "video", width: 1080, height: 1920 }, { codec_type: "audio" }] }, { ...job, expectedHeight: 1080 }), true);
+  assert.throws(() => verifyMedia({ ...valid, streams: [{ codec_type: "video", width: 1080, height: 1920 }, { codec_type: "audio" }] }, job), /no_format/);
   assert.throws(() => verifyMedia({ ...valid, format: { ...valid.format, duration: "900" } }, job), /too_long/);
   assert.throws(() => verifyMedia({ ...valid, format: { ...valid.format, format_name: "matroska,webm" } }, job), /no_format/);
   assert.equal(verifyMedia({ streams: [{ codec_type: "audio" }], format: { duration: "60", format_name: "ogg" } }, { mediaType: "audio", extension: "opus", maxSeconds: 600 }), true);

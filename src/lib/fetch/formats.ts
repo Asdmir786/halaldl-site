@@ -1,8 +1,8 @@
 import { TIER_LIMITS, type FetchTier } from "./limits.ts";
-import { MEDIA_EXTENSIONS } from "../../../services/fetch-worker/media.mjs";
+import { MEDIA_EXTENSIONS, pictureEdge } from "../../../services/fetch-worker/media.mjs";
 
 export type WorkerFormat = {
-  format_id?: string; ext?: string; height?: number | null; fps?: number | null;
+  format_id?: string; ext?: string; width?: number | null; height?: number | null; fps?: number | null;
   filesize?: number | null; filesize_approx?: number | null;
   vcodec?: string; acodec?: string; abr?: number; tbr?: number;
 };
@@ -27,8 +27,10 @@ export function downloadVariants(input: WorkerFormat[], tier: FetchTier): Downlo
   const formats = input.slice(0, 500).filter(f => validId(f.format_id) && extension(f));
   const audio = formats.filter(f => f.vcodec === "none" && codec(f.acodec))
     .sort((a, b) => (b.abr ?? b.tbr ?? 0) - (a.abr ?? a.tbr ?? 0));
-  const video = formats.filter(f => codec(f.vcodec) && Number.isFinite(f.height) && f.height! > 0 && f.height! <= cap.maxHeight)
-    .sort((a, b) => b.height! - a.height! || (b.tbr ?? 0) - (a.tbr ?? 0));
+  const video = formats.flatMap(f => {
+    const edge = pictureEdge(f.width, f.height);
+    return codec(f.vcodec) && edge != null && edge <= cap.maxHeight ? [{ ...f, edge }] : [];
+  }).sort((a, b) => b.edge - a.edge || (b.tbr ?? 0) - (a.tbr ?? 0));
   const results: DownloadVariant[] = [];
   const silent: DownloadVariant[] = [];
   const seen = new Set<string>();
@@ -37,22 +39,22 @@ export function downloadVariants(input: WorkerFormat[], tier: FetchTier): Downlo
     const mate = codec(f.acodec) ? null : audio.find(a => ext === "mp4" ? a.ext === "m4a" : ext === "webm" ? a.ext === "webm" : true);
     // A silent source remains downloadable. Keep the explicit silent choice
     // separate so a normal video still defaults to including its audio.
-    const silentKey = `silent:${f.height}:${ext}:${f.fps ?? 0}`;
+    const silentKey = `silent:${f.edge}:${ext}:${f.fps ?? 0}`;
     if (!seen.has(silentKey) && (bytes(f) ?? 0) <= cap.maxBytes && silent.length < 12) {
       seen.add(silentKey);
-      silent.push({ formatId: `s${silent.length}`, selector: f.format_id!, label: `${f.height}p${f.fps && f.fps > 30 ? ` · ${f.fps} fps` : ""}`, ext,
-        height: f.height!, fps: f.fps ?? null, filesize: codec(f.acodec) ? null : bytes(f), mediaType: "video", hasAudio: false, deliveryMode: "video_only" });
+      silent.push({ formatId: `s${silent.length}`, selector: f.format_id!, label: `${f.edge}p${f.fps && f.fps > 30 ? ` · ${f.fps} fps` : ""}`, ext,
+        height: f.edge, fps: f.fps ?? null, filesize: codec(f.acodec) ? null : bytes(f), mediaType: "video", hasAudio: false, deliveryMode: "video_only" });
     }
     if (!codec(f.acodec) && !mate) continue;
     const outExt = mate ? (ext === "mp4" && mate.ext === "m4a" ? "mp4" : ext === "webm" && mate.ext === "webm" ? "webm" : "mkv") : ext;
     const size = mate ? (bytes(f) && bytes(mate) ? bytes(f)! + bytes(mate)! : null) : bytes(f);
     if (size && size > cap.maxBytes) continue;
-    const key = `${f.height}:${outExt}:${f.fps ?? 0}`;
+    const key = `${f.edge}:${outExt}:${f.fps ?? 0}`;
     if (seen.has(key)) continue;
     seen.add(key);
     results.push({ formatId: `v${results.length}`, selector: mate ? `${f.format_id}+${mate.format_id}` : f.format_id!,
-      label: `${f.height}p${f.fps && f.fps > 30 ? ` · ${f.fps} fps` : ""}`, ext: outExt,
-      height: f.height!, fps: f.fps ?? null, filesize: size, mediaType: "video", hasAudio: true, deliveryMode: "video_audio" });
+      label: `${f.edge}p${f.fps && f.fps > 30 ? ` · ${f.fps} fps` : ""}`, ext: outExt,
+      height: f.edge, fps: f.fps ?? null, filesize: size, mediaType: "video", hasAudio: true, deliveryMode: "video_audio" });
     if (results.length === 12) break;
   }
   for (const f of audio) {
