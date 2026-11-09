@@ -2,6 +2,22 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { classifyFetchUrl } from "../src/lib/fetch/url.ts";
 
+test("joined links are rejected before normalization, including encoded links", () => {
+  const old = "https://www.instagram.com/reel/DfN0sXwRKGV/?psln=x";
+  const next = "https://www.instagram.com/p/Ddt1o_Us_ns/?cplk=x";
+  for (const second of [next, encodeURIComponent(next), encodeURIComponent(encodeURIComponent(next))]) {
+    assert.throws(() => classifyFetchUrl(old + second), (error: unknown) => error instanceof Error && "code" in error && error.code === "multiple_links");
+  }
+  assert.throws(() => classifyFetchUrl(old + "\n" + next), /Two links/);
+  assert.throws(() => classifyFetchUrl(old + "%zz&next=" + encodeURIComponent(next)), /Two links/);
+});
+
+test("Instagram aliases and share tracking normalize to one shortcode", () => {
+  for (const input of ["https://www.instagram.com/p/Ddt1o_Us_ns/?cplk=x", "https://instagram.com/reel/Ddt1o_Us_ns/?psln=x", "https://www.instagram.com/reels/Ddt1o_Us_ns/#x"]) {
+    assert.equal(classifyFetchUrl(input).href, "https://www.instagram.com/p/Ddt1o_Us_ns/");
+  }
+});
+
 test("accepts a public youtube video and drops the hash", () => {
   const result = classifyFetchUrl("https://www.youtube.com/watch?v=abc123&list=PL#t=10");
   assert.equal(result.platform, "youtube");

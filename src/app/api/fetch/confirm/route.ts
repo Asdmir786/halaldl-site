@@ -1,3 +1,4 @@
+import { queueWorkerWake } from "@/lib/fetch/wake-after";
 import { NextResponse } from "next/server";
 import { clientIp, grantClearance, jsonError, readJsonObject, readSignedCookie, SESSION_COOKIE } from "@/lib/fetch/http";
 import { confirmDownload } from "@/lib/fetch/service";
@@ -12,7 +13,7 @@ export async function POST(request: Request) {
     const body = await readJsonObject(request);
     if (typeof body.jobId !== "string" || typeof body.formatId !== "string") throw new InputError("body", "Choose a download option.");
     grant = await ensureClearance(body.token, clientIp(request));
-    const response = NextResponse.json(await confirmDownload(sessionId, body.jobId, body.formatId));
+    const response = NextResponse.json(await confirmDownload(sessionId, body.jobId, body.formatId, queueWorkerWake));
     if (grant) grantClearance(response);
     return response;
   } catch (error) {

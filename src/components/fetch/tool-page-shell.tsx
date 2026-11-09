@@ -16,13 +16,13 @@ export function ToolPageShell({
 }) {
   return (
     <main id="main-content" className="secondary-page overflow-x-hidden">
-      <div className="mx-auto max-w-6xl px-5 pb-16 pt-8 sm:px-8 sm:pb-20">
+      <div className={`mx-auto max-w-6xl px-5 pb-16 sm:px-8 sm:pb-20 ${currentPage === "fetch" ? "pt-4" : "pt-8"}`}>
         <SiteHeader currentPage={currentPage} />
-        <header className={`mx-auto mt-12 max-w-3xl ${currentPage === "fetch" ? "text-center sm:mt-16" : ""}`}>
-          <h1 className="font-display text-4xl font-semibold tracking-[-0.03em] text-ink">{title}</h1>
-          <p className="mt-4 text-base leading-relaxed text-ink-soft">{lede}</p>
+        <header className={`mx-auto max-w-3xl ${currentPage === "fetch" ? "mt-5" : "mt-12"}`}>
+          <h1 className={`font-display font-semibold tracking-[-0.03em] text-ink ${currentPage === "fetch" ? "text-3xl" : "text-4xl"}`}>{title}</h1>
+          <p className={`${currentPage === "fetch" ? "mt-2" : "mt-4"} text-base leading-relaxed text-ink-soft`}>{lede}</p>
         </header>
-        <div className="mx-auto mt-8 max-w-3xl">{children}</div>
+        <div className={`mx-auto max-w-3xl ${currentPage === "fetch" ? "mt-5" : "mt-8"}`}>{children}</div>
         <nav aria-label="Footer" className="mt-16 grid gap-6 border-t border-line pt-8 sm:grid-cols-4">
           {HOME_FOOTER_GROUPS.map((group) => (
             <div key={group.label}>

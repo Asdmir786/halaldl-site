@@ -4,6 +4,7 @@ neonConfig.poolQueryViaFetch = true;
 
 const globalPool = globalThis as typeof globalThis & { __halaldlFetchPool?: Pool };
 let schemaReady: Promise<void> | null = null;
+let databaseReady: Promise<void> | null = null;
 
 function connectionString() {
   const value = process.env.DATABASE_URL?.trim();
@@ -80,6 +81,13 @@ const STATEMENTS = [
   )`,
   "ALTER TABLE halaldl_fetch.jobs ADD COLUMN IF NOT EXISTS confirmed_at timestamptz",
   "ALTER TABLE halaldl_fetch.jobs ADD COLUMN IF NOT EXISTS queued_at timestamptz",
+  "ALTER TABLE halaldl_fetch.jobs ADD COLUMN IF NOT EXISTS worker_id uuid",
+  "ALTER TABLE halaldl_fetch.jobs ADD COLUMN IF NOT EXISTS lease_token uuid",
+  "ALTER TABLE halaldl_fetch.jobs ADD COLUMN IF NOT EXISTS lease_expires_at timestamptz",
+  "ALTER TABLE halaldl_fetch.jobs ADD COLUMN IF NOT EXISTS attempts int NOT NULL DEFAULT 0",
+  "ALTER TABLE halaldl_fetch.worker_status ADD COLUMN IF NOT EXISTS worker_id uuid",
+  "ALTER TABLE halaldl_fetch.worker_status ADD COLUMN IF NOT EXISTS capacity int NOT NULL DEFAULT 1",
+  "ALTER TABLE halaldl_fetch.worker_status ADD COLUMN IF NOT EXISTS download_accepting boolean NOT NULL DEFAULT false",
   "CREATE INDEX IF NOT EXISTS halaldl_fetch_jobs_queue_idx ON halaldl_fetch.jobs (COALESCE(queued_at, confirmed_at, created_at), id) WHERE status = 'queued' AND private_job = false AND flagged = false",
   `CREATE TABLE IF NOT EXISTS halaldl_fetch.source_limits (
     source_hash text PRIMARY KEY, window_started timestamptz NOT NULL, hits int NOT NULL
@@ -112,7 +120,8 @@ export async function ensureSchema() {
 }
 
 export async function withClient<T>(fn: (client: PoolClient) => Promise<T>) {
-  await ensureSchema();
+  if (!databaseReady) databaseReady = getPool().query("SELECT 1").then(() => undefined).catch(error => { databaseReady = null; throw error; });
+  await databaseReady;
   const client = await getPool().connect();
   try {
     return await fn(client);

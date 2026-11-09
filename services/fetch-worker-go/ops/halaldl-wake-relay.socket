@@ -1,0 +1,12 @@
+[Unit]
+Description=HalalDL private wake relay socket
+After=docker.service
+Requires=docker.service
+
+[Socket]
+ListenStream=10.0.1.1:18658
+NoDelay=true
+Accept=no
+
+[Install]
+WantedBy=sockets.target

@@ -1,0 +1,50 @@
+# Candidate only. Do not install until the verification report is approved.
+[Unit]
+Description=HalalDL Go media worker
+After=network-online.target halaldl-fetch-egress.service
+Requires=halaldl-fetch-egress.service
+RequiresMountsFor=/var/lib/halaldl-fetch/work
+ConditionPathIsMountPoint=/var/lib/halaldl-fetch/work
+
+[Service]
+Type=simple
+User=halaldl-fetch
+Group=halaldl-fetch
+WorkingDirectory=/opt/halaldl-fetch
+EnvironmentFile=/etc/halaldl-fetch.env
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=FETCH_WORK_ROOT=/var/lib/halaldl-fetch/work
+Environment=FETCH_RECEIPT_ROOT=/var/lib/halaldl-fetch/receipts
+Environment=FETCH_MAX_RUNNING=2
+Environment=FETCH_MAX_DOWNLOADS=1
+ExecStartPre=/opt/halaldl-fetch/halaldl-fetch --preflight
+ExecStart=/opt/halaldl-fetch/halaldl-fetch
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=35
+KillMode=control-group
+UMask=0077
+CPUQuota=200%
+MemoryHigh=1280M
+MemoryMax=1536M
+MemorySwapMax=0
+TasksMax=128
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+LockPersonality=yes
+ReadWritePaths=/var/lib/halaldl-fetch/work /var/lib/halaldl-fetch/receipts
+LimitNOFILE=1024
+LimitCORE=0
+
+[Install]
+WantedBy=multi-user.target

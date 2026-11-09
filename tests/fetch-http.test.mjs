@@ -1,6 +1,18 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+test("session setup rejects malformed or oversized bodies before verification", async () => {
+  const headers={"content-type":"application/json"};
+  assert.equal((await call('/api/fetch/clearance',{method:'POST',headers,body:'{'})).status,400);
+  assert.equal((await call('/api/fetch/clearance',{method:'POST',headers,body:JSON.stringify({token:'x'.repeat(9000)})})).status,413);
+});
+
+test("history is empty for guests without a session and recovery actions require ownership", async () => {
+  const response = await call("/api/fetch/history");
+  assert.equal(response.status,200);assert.deepEqual(await response.json(),{jobs:[]});
+  for(const method of ["PATCH","DELETE"])assert.equal((await call("/api/fetch/jobs/11111111-1111-4111-8111-111111111111",{method})).status,401);
+});
+
 const origin = new URL(process.env.FETCH_TEST_ORIGIN || "http://127.0.0.1:4180");
 if (!["127.0.0.1", "localhost", "[::1]"].includes(origin.hostname) || origin.protocol !== "http:") throw new Error("HTTP smoke tests require an isolated local preview");
 const call = (path, init = {}) => fetch(new URL(path, origin), { ...init, redirect: "manual", signal: AbortSignal.timeout(10_000) });
@@ -20,7 +32,7 @@ test("invalid and oversized request bodies return validation errors", async () =
   assert.equal(oversized.status, 413);
 });
 test("jobs, confirmations and worker operations reject unauthenticated callers", async () => {
-  for (const [path, method] of [["/api/fetch/jobs/11111111-1111-4111-8111-111111111111", "GET"], ["/api/fetch/confirm", "POST"], ["/api/worker", "PUT"], ["/api/worker", "DELETE"], ["/api/worker", "POST"], ["/api/worker/flag", "POST"]]) {
+  for (const [path, method] of [["/api/worker", "GET"], ["/api/fetch/jobs/11111111-1111-4111-8111-111111111111", "GET"], ["/api/fetch/confirm", "POST"], ["/api/worker", "PUT"], ["/api/worker", "DELETE"], ["/api/worker", "POST"], ["/api/worker/flag", "POST"]]) {
     assert.equal((await call(path, { method })).status, 401, `${method} ${path}`);
   }
 });

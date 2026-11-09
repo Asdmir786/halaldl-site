@@ -19,6 +19,7 @@ const generated=await mkdtemp(join(root,'.analytics','fetch-db-modules-'));
 const sourceDir=join(root,'src','lib','fetch');
 let pool;
 let upkeep;
+let automaticHeartbeat=true;
 const deleted=[];globalThis.__fetchIntegrationDeleted=deleted;
 try{
  for(const name of await readdir(sourceDir)){
@@ -35,7 +36,7 @@ try{
  await writeFile(join(generated,'storage.mjs'),`export function storageConfigured(){return true} export async function deleteMediaObject(key){globalThis.__fetchIntegrationDeleted.push(key)} export async function presignDownload(){return 'https://storage.example.test/file'}`);
  const db=await import(pathToFileURL(join(generated,'db.mjs')));
  const service=await import(pathToFileURL(join(generated,'service.mjs')));
- pool=db.getPool();pool.options.max=8;pool.options.connectionTimeoutMillis=15000;
+ pool=db.getPool();pool.options.max=20;pool.options.connectionTimeoutMillis=60000;
  await db.ensureSchema();console.log(JSON.stringify({stage:'schema_ready'}));
  const query=(s,v=[])=>pool.query(s,v);
  await query('TRUNCATE halaldl_fetch.jobs,halaldl_fetch.sessions,halaldl_fetch.secrets,halaldl_fetch.users,halaldl_fetch.source_limits CASCADE');
@@ -43,7 +44,7 @@ try{
  const req=new Request('https://test.example/api/worker',{headers:{authorization:`Bearer ${process.env.WORKER_TOKEN}`,'x-halaldl-worker-protocol':'2'}});
  await service.recordHeartbeat(req,{runningJobs:0,waitingJobs:0,loadAverage:0,memoryFreeMb:8000,diskFreeMb:30000,cpuCount:6,accepting:true,transcoding:false,protocolVersion:2,detail:null});
  console.log(JSON.stringify({stage:'heartbeat_recorded'}));
- upkeep=setInterval(()=>{void direct.query('UPDATE halaldl_fetch.worker_status SET reported_at=now() WHERE id=1').catch(()=>{});},5000);
+ upkeep=setInterval(()=>{if(automaticHeartbeat)void direct.query('UPDATE halaldl_fetch.worker_status SET reported_at=now() WHERE id=1').catch(()=>{});},5000);
  const a=await service.createSession(),b=await service.createSession();
  const link='https://vimeo.com/1084537';
  const duplicates=await Promise.all(Array.from({length:6},()=>service.probeUrl(a,link,true,false)));
@@ -85,7 +86,7 @@ try{
  // Queue admission is independent from processing capacity. All fixtures are
  // confined to this disposable DB, including timestamps used for waiting tests.
  await query("UPDATE halaldl_fetch.jobs SET status='failed' WHERE status='queued'");
- await service.recordHeartbeat(req,{runningJobs:0,waitingJobs:0,loadAverage:100,memoryFreeMb:8000,diskFreeMb:30000,cpuCount:1,accepting:false,transcoding:false,protocolVersion:2,detail:'high-limit'});
+ await service.recordHeartbeat(req,{runningJobs:0,waitingJobs:0,loadAverage:100,memoryFreeMb:8000,diskFreeMb:30000,cpuCount:1,accepting:true,transcoding:false,protocolVersion:2,detail:null});
  const pending=[];
  for(let i=0;i<8;i++){
   const session=await service.createSession();
@@ -94,7 +95,7 @@ try{
   assert.equal(job.queuePosition,i+1);
  }
  const busyStatus=await service.publicStatus();
- assert.equal(busyStatus.accepting,true);assert.equal(busyStatus.processing,false);assert.equal(busyStatus.waiting,8);
+ assert.equal(busyStatus.accepting,true);assert.equal(busyStatus.processing,true);assert.equal(busyStatus.waiting,8);
  await query("UPDATE halaldl_fetch.jobs SET updated_at=now()-interval '30 minutes' WHERE id=$1",[pending[7].id]);
  assert.equal((await service.jobForSession(pending[7].session,pending[7].id)).status,'queued');
  assert.equal((await service.jobForSession(pending[7].session,pending[7].id)).queuePosition,8);
@@ -111,10 +112,16 @@ try{
  assert.equal((await service.jobForSession(tied[0].session,tied[0].id)).queuePosition,1);
  assert.equal((await service.jobForSession(tied[1].session,tied[1].id)).queuePosition,2);
  const tiedClaim=await service.claimJob(req);assert.equal(tiedClaim.id,tied[0].id);await service.completeJob(req,tiedClaim.id,{ok:false,errorCode:'blocked'});
+ automaticHeartbeat=false;
  await query("UPDATE halaldl_fetch.worker_status SET reported_at=now()-interval '2 minutes' WHERE id=1");
- const offlineStatus=await service.publicStatus();assert.equal(offlineStatus.accepting,true);assert.equal(offlineStatus.processing,false);
- const offlineSession=await service.createSession();assert.ok((await service.probeUrl(offlineSession,link,true,false)).queuePosition>0);
- console.log(JSON.stringify({stage:'durable_queue_passed',admittedWhileBusy:8,positionsDecrease:true,oldQueuedJobPreserved:true,confirmationAtTail:true,stableTieOrder:true,offlineAdmission:true}));
+ const offlineStatus=await service.publicStatus();assert.equal(offlineStatus.accepting,false);assert.equal(offlineStatus.processing,false);
+ const offlineSession=await service.createSession();
+ const beforeOffline=(await query('SELECT count(*) FROM halaldl_fetch.jobs')).rows[0].count;
+ await assert.rejects(service.probeUrl(offlineSession,link,true,false),e=>e.status===503&&e.code==='worker_offline');
+ assert.equal((await query('SELECT count(*) FROM halaldl_fetch.jobs')).rows[0].count,beforeOffline);
+ await service.recordHeartbeat(req,{runningJobs:0,waitingJobs:0,loadAverage:0,memoryFreeMb:8000,diskFreeMb:30000,cpuCount:6,accepting:true,transcoding:false,protocolVersion:2,detail:null});
+ automaticHeartbeat=true;
+ console.log(JSON.stringify({stage:'durable_queue_passed',admittedWhileHealthy:8,positionsDecrease:true,oldQueuedJobPreserved:true,confirmationAtTail:true,stableTieOrder:true,offlineAdmissionRejected:true}));
  const unknownDuration=randomUUID(),unknownSession=await service.createSession();
  await query("INSERT INTO halaldl_fetch.jobs(id,session_id,source_url,platform,kind,status,tier,rights_ack) VALUES($1,$2,$3,'instagram','probe','probing','anonymous',true)",[unknownDuration,unknownSession,'https://www.instagram.com/reel/fixture/']);
  await service.completeJob(req,unknownDuration,{ok:true,duration:null,formats:[{format_id:'18',ext:'mp4',height:360,vcodec:'avc1',acodec:'aac',filesize:1000}]});
@@ -140,6 +147,83 @@ try{
  assert.equal((await service.jobForSession(silentSession,silentId)).deliveryMode,'video_only');
  await assert.rejects(service.downloadLink(a,silentId,true),e=>e.status===404);
  console.log(JSON.stringify({stage:'silent_video_mode_passed',serverStoredSelection:true,claimMode:true,previewOwnershipDenied:true}));
+ // Modern worker: real concurrent claim transactions, renewals and fencing.
+ await query("UPDATE halaldl_fetch.jobs SET status='failed' WHERE status IN ('queued','probing','downloading')");
+ process.env.FETCH_MAX_RUNNING='12';
+ const workerId=randomUUID();
+ const modern=new Request('https://test.example/api/worker',{headers:{authorization:`Bearer ${process.env.WORKER_TOKEN}`,'x-halaldl-worker-protocol':'3','x-halaldl-worker-id':workerId}});
+ const heartbeat={runningJobs:0,waitingJobs:0,loadAverage:0,memoryFreeMb:8000,diskFreeMb:30000,cpuCount:6,accepting:true,transcoding:false,protocolVersion:3,detail:'ready',downloadAccepting:true,workerId,capacity:12,activeJobs:[]};
+ await service.recordHeartbeat(modern,heartbeat);
+ for(let i=0;i<16;i++)await service.probeUrl(await service.createSession(),link,true,false);
+ const claims=(await Promise.all(Array.from({length:16},()=>service.claimJob(modern)))).filter(Boolean);
+ assert.equal(claims.length,12);assert.equal(new Set(claims.map(j=>j.id)).size,12);
+ const victim=claims[0];
+ const renewal=await service.recordHeartbeat(modern,{...heartbeat,activeJobs:claims.map(j=>({id:j.id,leaseToken:j.leaseToken}))});
+ assert.equal(renewal.activeJobIds.length,12);
+ await assert.rejects(service.completeJob(modern,victim.id,{ok:false,errorCode:'failed',workerId,leaseToken:randomUUID()}),e=>e.code==='lease');
+ await query("UPDATE halaldl_fetch.jobs SET lease_expires_at=now()-interval '1 second' WHERE id=$1",[victim.id]);
+ await assert.rejects(service.completeJob(modern,victim.id,{ok:false,errorCode:'failed',workerId,leaseToken:victim.leaseToken}),e=>e.code==='lease');
+ await service.publicStatus();
+ const retried=await service.claimJob(modern);assert.equal(retried.id,victim.id);assert.notEqual(retried.leaseToken,victim.leaseToken);
+ await assert.rejects(service.completeJob(modern,victim.id,{ok:false,errorCode:'failed',workerId,leaseToken:victim.leaseToken}),e=>e.code==='lease');
+ await service.completeJob(modern,retried.id,{ok:false,errorCode:'blocked',workerId,leaseToken:retried.leaseToken});
+ await service.completeJob(modern,retried.id,{ok:false,errorCode:'blocked',workerId,leaseToken:retried.leaseToken});
+ await query("UPDATE halaldl_fetch.jobs SET status='probing',worker_id=NULL,lease_token=NULL,lease_expires_at=NULL WHERE id=$1",[retried.id]);
+ await assert.rejects(service.completeJob(modern,retried.id,{ok:false,errorCode:'failed',workerId,leaseToken:retried.leaseToken}),e=>e.code==='lease');
+ await service.completeJob(req,retried.id,{ok:false,errorCode:'blocked'});
+ const pausedSession=await service.createSession();
+ const pausedChoice=randomUUID();
+ await query("INSERT INTO halaldl_fetch.jobs(id,session_id,source_url,platform,kind,status,tier,formats) VALUES($1,$2,$3,'vimeo','probe','waiting_choice','anonymous',$4::jsonb)",[pausedChoice,pausedSession,link,JSON.stringify([format])]);
+ await service.recordHeartbeat(modern,{...heartbeat,downloadAccepting:false});
+ assert.equal((await service.browserStatus()).available,true);assert.equal((await service.browserStatus()).canDownload,false);
+ await assert.rejects(service.confirmDownload(pausedSession,pausedChoice,'v0'),e=>e.status===503&&e.code==='worker_capacity');
+ assert.equal((await query('SELECT quota_spent FROM halaldl_fetch.jobs WHERE id=$1',[pausedChoice])).rows[0].quota_spent,false);
+ await service.recordHeartbeat(modern,{...heartbeat,accepting:false,detail:'low_work_disk'});
+ await assert.rejects(service.probeUrl(await service.createSession(),link,true,false),e=>e.status===503&&e.code==='worker_capacity');
+ assert.equal((await service.probeUrl(pausedSession,link,true,false)).id,pausedChoice,'Existing jobs remain recoverable during an outage');
+ await assert.rejects(service.confirmDownload(pausedSession,pausedChoice,'v0'),e=>e.status===503);
+ await query("UPDATE halaldl_fetch.jobs SET status='failed' WHERE status IN ('queued','probing','downloading')");
+ console.log(JSON.stringify({stage:'modern_worker_passed',parallelClaims:16,uniqueActive:12,leaseRenewals:12,expiredLeaseRequeued:true,staleReceiptDenied:true,idempotentReceipt:true,pausedAdmissionDenied:true}));
+ await service.recordHeartbeat(modern,heartbeat);
+ const recoverySession=await service.createSession(),outsider=await service.createSession();
+ const seed=async(status,source=link)=>{const next=randomUUID();await query("INSERT INTO halaldl_fetch.jobs(id,session_id,source_url,platform,kind,status,tier,rights_ack,created_at,formats,title,thumbnail) VALUES($1,$2,$3,'vimeo','probe',$4,'anonymous',true,now()-interval '1 minute',$5::jsonb,'Original source',NULL)",[next,recoverySession,source,status,JSON.stringify([format])]);return next;};
+ const queuedCancel=await seed('queued');
+ await assert.rejects(service.cancelJob(outsider,queuedCancel),e=>e.status===404);
+ await service.cancelJob(recoverySession,queuedCancel);await service.cancelJob(recoverySession,queuedCancel);
+ assert.equal((await service.jobForSession(recoverySession,queuedCancel)).status,'cancelled');
+ const runningCancel=await seed('downloading'),cancelLease=randomUUID();
+ await query("UPDATE halaldl_fetch.jobs SET kind='download',worker_id=$2,lease_token=$3,lease_expires_at=now()+interval '1 minute' WHERE id=$1",[runningCancel,workerId,cancelLease]);
+ assert.equal(await service.workerJobActive(req,runningCancel),true);
+ await service.cancelJob(recoverySession,runningCancel);
+ assert.equal(await service.workerJobActive(req,runningCancel),false);
+ const cancelledRenewal=await service.recordHeartbeat(modern,{...heartbeat,activeJobs:[{id:runningCancel,leaseToken:cancelLease}]});
+ assert.deepEqual(cancelledRenewal.activeJobIds,[]);
+ await assert.rejects(service.completeJob(modern,runningCancel,{ok:true,objectKey:`fetch/${runningCancel}-${randomUUID()}`,bytes:1000,extension:'mp4',workerId,leaseToken:cancelLease}),e=>e.status===409);
+ assert.equal((await query('SELECT object_key FROM halaldl_fetch.jobs WHERE id=$1',[runningCancel])).rows[0].object_key,null);
+ const oldReady=await seed('ready');
+ await query("UPDATE halaldl_fetch.jobs SET kind='download',choice=$2::jsonb,object_key=$3,bytes=1000,actual_ext='mp4',expires_at=now()+interval '6 hours' WHERE id=$1",[oldReady,JSON.stringify(format),`fetch/${oldReady}-${randomUUID()}`]);
+ await assert.rejects(service.cancelJob(recoverySession,oldReady),e=>e.status===409);
+ await assert.rejects(service.restartJob(outsider,oldReady),e=>e.status===404);
+ const redos=await Promise.all([service.restartJob(recoverySession,oldReady),service.restartJob(recoverySession,oldReady)]);
+ assert.equal(redos[0].id,redos[1].id);assert.notEqual(redos[0].id,oldReady);
+ const fresh=await service.jobForSession(recoverySession,redos[0].id);
+ assert.equal(fresh.sourceUrl,link);assert.equal(fresh.thumbnail,null);assert.equal(fresh.title,null);assert.deepEqual(fresh.formats,[]);
+ assert.equal((await service.jobForSession(recoverySession,oldReady)).status,'ready');
+ assert.ok((await service.downloadLink(recoverySession,oldReady)).url);
+ const recent=await service.recentJobs(recoverySession);
+ assert.ok(recent.some(j=>j.id===oldReady));assert.ok(recent.some(j=>j.id===fresh.id));
+ assert.equal(recent.some(j=>'object_key' in j||'session_id' in j||'selector' in j),false);
+ assert.ok(recent.every(j=>j.formats.every(f=>!('selector' in f))));
+ assert.equal((await service.recentJobs(otherSameAccount)).length,20);
+ assert.deepEqual(await service.recentJobs(outsider),[]);
+ await service.cancelJob(recoverySession,fresh.id);
+ const joinedRecord=await seed('failed','https://www.instagram.com/reel/old/?psln=xhttps://www.instagram.com/p/new/');
+ await assert.rejects(service.restartJob(recoverySession,joinedRecord),e=>e.code==='multiple_links');
+ await query("UPDATE halaldl_fetch.jobs SET status='ready',object_key=$2,expires_at=now()+interval '1 hour' WHERE id=$1",[joinedRecord,`fetch/${joinedRecord}-${randomUUID()}`]);
+ await assert.rejects(service.downloadLink(recoverySession,joinedRecord),e=>e.code==='multiple_links');
+ const waitingCancel=await seed('waiting_choice');await service.cancelJob(recoverySession,waitingCancel);
+ await assert.rejects(service.confirmDownload(recoverySession,waitingCancel,'v0'),e=>e.status===409);
+ console.log(JSON.stringify({stage:'recovery_and_history_passed',ownerCheckedCancel:true,repeatCancel:true,cancelledLeaseNotRenewed:true,lateUploadReceiptRejected:true,readyCancelConflict:true,newQualityJobKeepsOriginal:true,duplicateRestartIdempotent:true,newJobHasNoOldThumbnail:true,historyOwnerScoped:true,joinedLegacyRetryRejected:true}));
  const expired=randomUUID(),flagged=randomUUID(),old=randomUUID();
  for(const [next,age,flag] of [[expired,0,false],[flagged,0,true],[old,31,false]])await query("INSERT INTO halaldl_fetch.jobs (id,session_id,source_url,platform,kind,status,tier,flagged,object_key,expires_at,created_at) VALUES($1,$2,$3,'vimeo','download','ready','anonymous',$4,$5,now()-interval '1 second',now()-$6*interval '1 day')",[next,a,link,flag,`fetch/${next}-${randomUUID()}`,age]);
  assert.equal((await service.jobForSession(a,expired)).status,'expired');
@@ -147,7 +231,7 @@ try{
  await assert.rejects(service.jobForSession(a,flagged),e=>e.status===404);
  const cleanup=await service.cleanupExpired(req);assert.equal(cleanup.removed,3);assert.equal(deleted.length,3);
  assert.equal((await query('SELECT count(*) FROM halaldl_fetch.jobs WHERE id=$1',[old])).rows[0].count,'0');
- const result={event:'database_integration_passed',database:url.pathname.slice(1),connections:8,duplicateProbeRequests:6,singleConfirmationFrom:6,sourceThrottleAccepted:10,sourceThrottleDenied:1,atomicQuotaSpent:75,ownershipDenial:true,sameAccountAcrossSessions:true,legacyProGetsFree:true,expiredFilesRemoved:3,oldRecordsRemoved:true,storageAdapter:'Stubbed; real R2 tested independently'};
+ const result={event:'database_integration_passed',database:url.pathname.slice(1),connections:20,duplicateProbeRequests:6,singleConfirmationFrom:6,sourceThrottleAccepted:10,sourceThrottleDenied:1,atomicQuotaSpent:75,ownershipDenial:true,sameAccountAcrossSessions:true,legacyProGetsFree:true,expiredFilesRemoved:3,oldRecordsRemoved:true,storageAdapter:'Stubbed; real R2 tested independently'};
  console.log(JSON.stringify(result));
 }finally{
  clearInterval(upkeep);

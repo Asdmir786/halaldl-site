@@ -1,0 +1,15 @@
+[Unit]
+Description=HalalDL private wake relay
+Requires=halaldl-wake-relay.socket
+After=halaldl-wake-relay.socket
+
+[Service]
+ExecStart=/usr/lib/systemd/systemd-socket-proxyd 127.0.0.1:18657
+DynamicUser=yes
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+CapabilityBoundingSet=
+MemoryMax=32M
+TasksMax=16

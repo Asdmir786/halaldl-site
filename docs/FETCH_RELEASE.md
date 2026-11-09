@@ -1,3 +1,7 @@
+# Invocation reduction release
+
+See [the Go doorbell release and rollout](FETCH_INVOCATION_REDUCTION.md) for the current implementation. Historical receipts below describe earlier releases.
+
 # Public downloader implementation and release
 
 ## Preview and audio selection - 2026-10-29 (Asia/Karachi)

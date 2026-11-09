@@ -15,7 +15,13 @@
     "test:fetch": "node --experimental-strip-types --test tests/fetch-*.test.ts tests/fetch-worker.test.mjs",
     "test:fetch:http": "node --test tests/fetch-http.test.mjs",
     "test:fetch:media": "node --test tests/fetch-media-file.test.mjs",
-    "test:fetch:db": "node tests/fetch-db.integration.mjs"
+    "test:fetch:db": "node tests/fetch-db.integration.mjs",
+    "test:fetch:tick": "node tests/fetch-tick.integration.mjs",
+    "test:fetch:recovery": "node tests/fetch-recovery.integration.mjs",
+    "test:fetch:preview": "node --experimental-strip-types tests/fetch-preview.mjs",
+    "test:fetch:ui": "python tests/fetch-ui.py",
+    "fetch:db:init": "node --experimental-strip-types scripts/init-fetch-db.mjs",
+    "test:fetch:go": "go -C services/fetch-worker-go test ./..."
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1156.0",

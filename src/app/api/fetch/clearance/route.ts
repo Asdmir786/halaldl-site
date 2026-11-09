@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 import { createSession } from "@/lib/fetch/service";
-import { clientIp, gateCookieValue, jsonError, readSignedCookie, SESSION_COOKIE, setSignedCookie, GATE_COOKIE } from "@/lib/fetch/http";
+import { clientIp, gateCookieValue, jsonError, readJsonObject, readSignedCookie, SESSION_COOKIE, setSignedCookie, GATE_COOKIE } from "@/lib/fetch/http";
 import { SERVER_LIMITS } from "@/lib/fetch/limits";
-import { verifyTurnstile } from "@/lib/fetch/turnstile";
+import { ensureClearance } from "@/lib/fetch/turnstile";
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as { token?: string };
-    const turnstile = await verifyTurnstile(body.token ?? "", clientIp(request));
-    if (!turnstile.ok) return NextResponse.json({ error: "turnstile", message: turnstile.message }, { status: 400 });
+    const body = await readJsonObject(request);
+    // Existing verified clearance is valid here too. Establish the session in
+    // its own response before a slower probe can commit a recoverable job.
+    await ensureClearance(body.token, clientIp(request));
     let sessionId = await readSignedCookie(SESSION_COOKIE);
     if (!sessionId) sessionId = await createSession();
     const response = NextResponse.json({ ok: true });

@@ -1,0 +1,14 @@
+http:
+  routers:
+    halaldl-wake:
+      entryPoints:
+        - https
+      rule: Host(`halaldl-wake.13.140.157.250.sslip.io`) && Path(`/wake`)
+      service: halaldl-wake
+      tls:
+        certResolver: letsencrypt
+  services:
+    halaldl-wake:
+      loadBalancer:
+        servers:
+          - url: http://10.0.1.1:18658

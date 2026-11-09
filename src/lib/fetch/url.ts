@@ -53,6 +53,17 @@ function isIpHost(hostname: string) {
 
 export function classifyFetchUrl(raw: string): ClassifiedUrl {
   if (typeof raw !== "string" || raw.length > 2048) throw new InputError("invalid_url", "Paste a link shorter than 2,048 characters.");
+  // Check before normalization: stripping tracking fields must never hide a
+  // second link accidentally appended inside the first link's query string.
+  let inspected = raw;
+  for (let pass = 0; pass < 3; pass++) {
+    if ((inspected.match(/https?:\/\//gi) ?? []).length > 1) throw new InputError("multiple_links", "Two links were pasted. Keep one link and try again.");
+    // Decode ASCII escapes independently: a malformed unrelated tracking field
+    // must not hide a correctly encoded second URL.
+    const decoded = inspected.replace(/%([0-9a-f]{2})/gi, (_, hex: string) => String.fromCharCode(parseInt(hex, 16)));
+    if (decoded === inspected) break;
+    inspected = decoded;
+  }
   let url: URL;
   try {
     url = new URL(raw.trim());
@@ -93,6 +104,10 @@ export function classifyFetchUrl(raw: string): ClassifiedUrl {
   if (platform === "youtube") {
     const id = path === "/watch" ? url.searchParams.get("v")! : path.split("/").filter(Boolean).at(-1)!;
     url = new URL(`https://www.youtube.com/watch?v=${id}`);
+  } else if (platform === "instagram") {
+    // Public single-post identity is the shortcode, not share tracking or the
+    // /p versus /reel alias. Carousels are still refused by the worker.
+    url = new URL(`https://www.instagram.com/p/${path.split("/").filter(Boolean)[1]}/`);
   } else {
     for (const key of [...url.searchParams.keys()]) {
       if (key.startsWith("utm_") || ["si", "feature", "fbclid", "igsh", "igshid"].includes(key)) url.searchParams.delete(key);

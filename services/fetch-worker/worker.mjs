@@ -8,6 +8,7 @@ import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client
 import { createEgressProxy } from "./egress.mjs";
 import { run } from "./process.mjs";
 import { MEDIA_EXTENSIONS, verifyMedia } from "./media.mjs";
+import { createWorkerApi, retryDelay } from "./api.mjs";
 
 const GiB = 1024 ** 3;
 const MAX_BYTES = 800 * 1024 ** 2;
@@ -16,7 +17,9 @@ const log = (event, detail = {}) => console.log(JSON.stringify({ time: new Date(
 export function canProcess({ receiptPending, memoryFreeBytes, hostDiskFreeBytes, workDiskFreeBytes }) {
   // Host load includes unrelated applications. This worker's CPU/memory/tasks
   // are already bounded by its required cgroup, so load alone must not stall it.
-  return !receiptPending && memoryFreeBytes >= 3 * GiB && hostDiskFreeBytes >= 12 * GiB && workDiskFreeBytes >= 2 * GiB;
+  // Work files are confined to the separately mounted 3 GiB volume. Retain
+  // 4 GiB on the host (more than that volume can grow), plus 2 GiB in it.
+  return !receiptPending && memoryFreeBytes >= 3 * GiB && hostDiskFreeBytes >= 4 * GiB && workDiskFreeBytes >= 2 * GiB;
 }
 
 export function durationForProbe(value, maximum) {
@@ -34,6 +37,11 @@ export function validateJob(job) {
   if (!job || !/^[a-f0-9-]{36}$/.test(job.id) || job.protocolVersion !== 2) throw new Error("unsupported");
   if ("cookies" in job || "proxy" in job || job.private_job) throw new Error("public_only");
   const u = new URL(job.url);
+  let inspected = job.url;
+  for (let pass = 0; pass < 3; pass++) {
+    if ((inspected.match(/https?:\/\//gi) ?? []).length !== 1) throw new Error("unsupported");
+    inspected = inspected.replace(/%([0-9a-f]{2})/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+  }
   if (u.protocol !== "https:" || u.username || u.password || u.port) throw new Error("unsupported");
   if (!Number.isInteger(job.maxBytes) || job.maxBytes < 1 || job.maxBytes > MAX_BYTES || !Number.isFinite(job.maxSeconds) || job.maxSeconds > 1800 || job.maxSeconds < 1) throw new Error("unsupported");
   if (!Number.isInteger(job.maxHeight) || job.maxHeight < 1 || job.maxHeight > 2160) throw new Error("unsupported");
@@ -41,6 +49,20 @@ export function validateJob(job) {
   if (job.kind === "download" && (!/^[A-Za-z0-9][A-Za-z0-9._-]*(?:\+[A-Za-z0-9][A-Za-z0-9._-]*)?$/.test(job.formatSelector ?? "") || !MEDIA_EXTENSIONS.includes(job.extension) || !["video", "audio"].includes(job.mediaType))) throw new Error("unsupported");
   if (job.deliveryMode != null && (!["video_audio", "video_only", "audio"].includes(job.deliveryMode) || (job.deliveryMode === "audio") !== (job.mediaType === "audio"))) throw new Error("unsupported");
   return job;
+}
+
+export async function withJobCancellation(id, call, signal, operation, intervalMs = 3000) {
+  const controller = new AbortController();
+  let checking = false;
+  const timer = setInterval(async () => {
+    if (checking || controller.signal.aborted) return;
+    checking = true;
+    try { if ((await call("GET", undefined, id)).active === false) controller.abort(); }
+    catch { /* A transient API outage is not cancellation; receipt checks remain authoritative. */ }
+    finally { checking = false; }
+  }, intervalMs);
+  try { return await operation(AbortSignal.any([signal, controller.signal])); }
+  finally { clearInterval(timer); controller.abort(); }
 }
 
 export async function sandboxPreflight(workRoot, cgroupRoot = "/sys/fs/cgroup") {
@@ -142,11 +164,7 @@ export async function main() {
   for (const sig of ["SIGTERM", "SIGINT"]) process.once(sig, () => stop.abort());
   const state = { running: 0, receiptPending: false };
   const pause = ms => new Promise(resolvePause => { const t = setTimeout(done, ms); function done() { clearTimeout(t); stop.signal.removeEventListener("abort", done); resolvePause(); } stop.signal.addEventListener("abort", done, { once: true }); if (stop.signal.aborted) done(); });
-  async function call(method, body) {
-    const response = await fetch(`${api}/api/worker`, { method, headers: { authorization: `Bearer ${token}`, "x-halaldl-worker-protocol": "2", "content-type": "application/json" }, body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.any([stop.signal, AbortSignal.timeout(method === "DELETE" ? 60_000 : 15_000)]) });
-    if (!response.ok) { const e = new Error("worker_api_failed"); e.status = response.status; throw e; }
-    return response.json();
-  }
+  const call = createWorkerApi({ api, token, bypassToken: process.env.VERCEL_AUTOMATION_BYPASS_SECRET, signal: stop.signal });
   async function flushReceipts() {
     const files = (await readdir(spool)).filter(f => /^[a-f0-9-]{36}\.json$/.test(f));
     state.receiptPending = files.length > 0;
@@ -173,28 +191,33 @@ export async function main() {
     try { await s3.send(new PutObjectCommand({ Bucket: process.env.R2_BUCKET, Key: key, Body: stream, ContentLength: length }), { abortSignal: AbortSignal.any([signal, AbortSignal.timeout(120_000)]) }); }
     finally { stream.destroy(); }
   }
+  let lastCapacity = null;
   async function heartbeat() {
     const disk = await statfs(workRoot);
     const parentDisk = await statfs("/var/lib");
     const healthy = canProcess({ receiptPending: state.receiptPending, memoryFreeBytes: freemem(), hostDiskFreeBytes: parentDisk.bavail * parentDisk.bsize, workDiskFreeBytes: disk.bavail * disk.bsize });
     const paused = process.env.FETCH_INTAKE_PAUSED === "true";
     const accepting = healthy && !paused;
+    const capacity = paused ? "updating" : state.receiptPending ? "receipt_pending" : freemem() < 3 * GiB ? "low_memory" : parentDisk.bavail * parentDisk.bsize < 4 * GiB ? "low_host_disk" : disk.bavail * disk.bsize < 2 * GiB ? "low_work_disk" : "ready";
+    if (capacity !== lastCapacity) { log("processing_capacity", { capacity, hostDiskFreeMb: Math.round(parentDisk.bavail * parentDisk.bsize / 1048576), workDiskFreeMb: Math.round(disk.bavail * disk.bsize / 1048576) }); lastCapacity = capacity; }
     await call("POST", { protocolVersion: 2, runningJobs: state.running, waitingJobs: 0, loadAverage: loadavg()[0], memoryFreeMb: Math.round(freemem() / 1048576), diskFreeMb: Math.round(parentDisk.bavail * parentDisk.bsize / 1048576), cpuCount: availableParallelism(), accepting, transcoding: false, detail: paused ? "updating" : accepting ? null : state.running ? "processing" : "high-limit" });
     // New requests can remain queued during maintenance; pause new claims.
     return healthy && !paused;
   }
-  const upkeep = (async () => { let cleanupAt = 0; while (!stop.signal.aborted) { try { await heartbeat(); if (Date.now() >= cleanupAt) { await call("DELETE"); cleanupAt = Date.now() + 5 * 60_000; } } catch (error) { if (!stop.signal.aborted) log("upkeep_retry", { errorName: error.name, httpStatus: error.status ?? null }); } await pause(8000); } })();
+  const upkeep = (async () => { let cleanupAt = 0, failures = 0; while (!stop.signal.aborted) { try { await heartbeat(); if (Date.now() >= cleanupAt) { await call("DELETE"); cleanupAt = Date.now() + 5 * 60_000; } failures = 0; } catch (error) { failures++; if (!stop.signal.aborted) log("upkeep_retry", { errorName: error.name, httpStatus: error.status ?? null, mitigation: error.mitigation ?? null, retryMs: retryDelay(failures) }); } await pause(failures ? retryDelay(failures) : 15_000); } })();
+  let failures = 0;
   try {
     while (!stop.signal.aborted) {
       try {
         await flushReceipts();
         if (!await heartbeat()) { await pause(5000); continue; }
         const { job } = await call("PUT");
-        if (!job) { await pause(3000); continue; }
+        failures = 0;
+        if (!job) { await pause(15_000); continue; }
         state.running = 1;
-        await handleJob(job, { ytDlp: process.env.YT_DLP_PATH || "/opt/halaldl-fetch/bin/yt-dlp", ffmpeg: process.env.FFMPEG_PATH || "/usr/bin/ffmpeg", ffprobe: process.env.FFPROBE_PATH || "/usr/bin/ffprobe", workRoot, proxyPort: 18656, signal: stop.signal, blockedAddresses: (process.env.FETCH_BLOCKED_ADDRESSES || "").split(",").filter(Boolean), upload, receipt: async (id, result) => { const next = join(spool, `${id}.next`); await writeFile(next, JSON.stringify({ id, ...result }), { mode: 0o600 }); await rename(next, join(spool, `${id}.json`)); state.receiptPending = true; } });
+        await withJobCancellation(job.id, call, stop.signal, jobSignal => handleJob(job, { ytDlp: process.env.YT_DLP_PATH || "/opt/halaldl-fetch/bin/yt-dlp", ffmpeg: process.env.FFMPEG_PATH || "/usr/bin/ffmpeg", ffprobe: process.env.FFPROBE_PATH || "/usr/bin/ffprobe", workRoot, proxyPort: 18656, signal: jobSignal, blockedAddresses: (process.env.FETCH_BLOCKED_ADDRESSES || "").split(",").filter(Boolean), upload, receipt: async (id, result) => { const next = join(spool, `${id}.next`); await writeFile(next, JSON.stringify({ id, ...result }), { mode: 0o600 }); await rename(next, join(spool, `${id}.json`)); state.receiptPending = true; } }));
         state.running = 0;
-      } catch (error) { state.running = 0; if (!stop.signal.aborted) log("worker_retry", { errorName: error.name, httpStatus: error.status ?? null }); await pause(5000); }
+      } catch (error) { state.running = 0; failures++; if (!stop.signal.aborted) log("worker_retry", { errorName: error.name, httpStatus: error.status ?? null, mitigation: error.mitigation ?? null, retryMs: retryDelay(failures) }); await pause(retryDelay(failures)); }
     }
   } finally { stop.abort(); await upkeep; s3.destroy(); }
 }

@@ -4,8 +4,23 @@ import { connect } from "node:net";
 import test from "node:test";
 import { createEgressProxy, isPublicAddress, resolvePublic } from "../services/fetch-worker/egress.mjs";
 import { run } from "../services/fetch-worker/process.mjs";
-import { canProcess, durationForProbe, extractorFailure, validateJob } from "../services/fetch-worker/worker.mjs";
+import { canProcess, durationForProbe, extractorFailure, validateJob, withJobCancellation } from "../services/fetch-worker/worker.mjs";
 import { verifyMedia } from "../services/fetch-worker/media.mjs";
+import { createWorkerApi, retryDelay } from "../services/fetch-worker/api.mjs";
+
+test("server cancellation aborts a running Node job; outages do not mean cancelled", async () => {
+  let checks = 0;
+  await withJobCancellation("job", async () => { if (++checks === 1) throw Error("offline"); return {active: false}; }, new AbortController().signal,
+    signal => new Promise(resolve => signal.addEventListener("abort", resolve, {once:true})), 5);
+  assert.equal(checks, 2);
+});
+
+test("old joined sources cannot enter the Node media pipeline", () => {
+  const job={id:"11111111-1111-4111-8111-111111111111",protocolVersion:2,kind:"probe",platform:"instagram",maxBytes:1048576,maxSeconds:60,maxHeight:1080};
+  for(const query of ['xhttps://www.instagram.com/p/new/','https%3A%2F%2Fwww.instagram.com%2Fp%2Fnew%2F','https%253A%252F%252Fwww.instagram.com%252Fp%252Fnew%252F','%zz&next=https%3A%2F%2Fwww.instagram.com%2Fp%2Fnew%2F']) {
+    assert.throws(()=>validateJob({...job,url:'https://www.instagram.com/reel/old/?psln='+query}),/unsupported/);
+  }
+});
 
 test("YouTube bot challenges have a specific error without mislabelling other failures", () => {
   assert.equal(extractorFailure("youtube", "Sign in to confirm you’re not a bot."), "source_challenge");
@@ -18,7 +33,26 @@ test("worker processing relies on bounded resource capacity rather than unrelate
   const GiB = 1024 ** 3;
   const capacity = { receiptPending: false, memoryFreeBytes: 4 * GiB, hostDiskFreeBytes: 20 * GiB, workDiskFreeBytes: 2.5 * GiB, hostLoad: 100 };
   assert.equal(canProcess(capacity), true);
-  for (const change of [{ receiptPending: true }, { memoryFreeBytes: 2 * GiB }, { hostDiskFreeBytes: 10 * GiB }, { workDiskFreeBytes: GiB }]) assert.equal(canProcess({ ...capacity, ...change }), false);
+  assert.equal(canProcess({ ...capacity, hostDiskFreeBytes: 7.5 * GiB }), true);
+  assert.equal(canProcess({ ...capacity, hostDiskFreeBytes: 4 * GiB }), true);
+  for (const change of [{ receiptPending: true }, { memoryFreeBytes: 2 * GiB }, { hostDiskFreeBytes: 4 * GiB - 1 }, { workDiskFreeBytes: GiB }]) assert.equal(canProcess({ ...capacity, ...change }), false);
+});
+
+test("worker machine requests retain authentication without redirects or credential URLs", async () => {
+  const calls = [];
+  const call = createWorkerApi({ api: "https://project.vercel.app/", token: "worker-secret", bypassToken: "automation-secret", fetchImpl: async (url, options) => {
+    calls.push({ url, ...options }); return Response.json({ ok: true });
+  } });
+  await call("PATCH", { id: "job-id", ok: true });
+  assert.equal(calls[0].url, "https://project.vercel.app/api/worker");
+  assert.equal(calls[0].redirect, "error");
+  assert.equal(calls[0].headers.authorization, "Bearer worker-secret");
+  assert.equal(calls[0].headers["x-vercel-protection-bypass"], "automation-secret");
+  assert.equal(JSON.parse(calls[0].body).id, "job-id");
+  const denied = createWorkerApi({ api: "https://project.vercel.app", token: "worker-secret", fetchImpl: async () => new Response("private response", { status: 403, headers: { "x-vercel-mitigated": "deny" } }) });
+  await assert.rejects(denied("POST", {}), error => error.status === 403 && error.mitigation === "deny" && !error.message.includes("private response"));
+  assert.throws(() => createWorkerApi({ api: "https://user:secret@example.com", token: "secret" }), /invalid_worker_api/);
+  assert.deepEqual([1, 2, 3, 4, 5, 1000].map(retryDelay), [5000, 10000, 20000, 40000, 60000, 60000]);
 });
 
 test("missing probe duration permits choices while known duration limits still apply", () => {
